@@ -1,0 +1,6 @@
+@Angular18AspNetCore8.Server_HostAddress = http://localhost:5157
+
+GET {{Angular18AspNetCore8.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
