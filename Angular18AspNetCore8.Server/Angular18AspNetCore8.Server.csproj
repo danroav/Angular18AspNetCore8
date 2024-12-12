@@ -12,11 +12,11 @@
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
       <Version>8.*-*</Version>
     </PackageReference>
-    <PackageReference Include="Swashbuckle.AspNetCore"
-                      Version="6.4.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Angular18AspNetCore8.App\Angular18AspNetCore8.App.csproj" />
     <ProjectReference Include="..\angular18aspnetcore8.client\angular18aspnetcore8.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>

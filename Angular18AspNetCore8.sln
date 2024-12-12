@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Angular18AspNetCore8.Server
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "angular18aspnetcore8.client", "angular18aspnetcore8.client\angular18aspnetcore8.client.esproj", "{4F3CEC92-B0A6-4793-B718-FD35358820EA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Angular18AspNetCore8.Server.Tests", "Angular18AspNetCore8.Server.Tests\Angular18AspNetCore8.Server.Tests.csproj", "{ABE650D2-C2C1-463A-9A93-077F991651A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Angular18AspNetCore8.App", "Angular18AspNetCore8.App\Angular18AspNetCore8.App.csproj", "{A8E23685-3A32-4A1B-8D07-3C28F040940B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +27,14 @@ Global
 		{4F3CEC92-B0A6-4793-B718-FD35358820EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F3CEC92-B0A6-4793-B718-FD35358820EA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4F3CEC92-B0A6-4793-B718-FD35358820EA}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{ABE650D2-C2C1-463A-9A93-077F991651A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABE650D2-C2C1-463A-9A93-077F991651A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABE650D2-C2C1-463A-9A93-077F991651A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABE650D2-C2C1-463A-9A93-077F991651A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8E23685-3A32-4A1B-8D07-3C28F040940B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8E23685-3A32-4A1B-8D07-3C28F040940B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8E23685-3A32-4A1B-8D07-3C28F040940B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8E23685-3A32-4A1B-8D07-3C28F040940B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
