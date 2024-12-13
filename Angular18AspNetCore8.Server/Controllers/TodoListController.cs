@@ -46,6 +46,10 @@ public class TodoListController(IHandler<QueryGetAllTasks, QueryGetAllTasksResul
     try
     {
       var result = await updateTaskHandler.Execute(input);
+      if (result.HasValidationErrors)
+      {
+        return BadRequest(result);
+      }
       return Ok(result);
     }
     catch (Exception ex)

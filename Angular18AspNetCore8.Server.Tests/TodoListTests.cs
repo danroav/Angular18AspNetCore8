@@ -211,5 +211,40 @@ namespace Angular18AspNetCore8.Server.Tests
       problem.StatusCode.Should().Be(expectedStatus);
       problem.Value.Should().BeEquivalentTo(expectedProblem);
     }
+    [Fact]
+    public async Task UpdateTaskRequestError()
+    {
+      //Arrange
+      var givenItem = new ItemResultModel
+      {
+        Description = "Some Description",
+        DueDate = "",
+        Id = 123,
+        Status = TodoTaskStatusNames.Format[TodoTaskStatus.ToDo]
+      };
+      var expectedResult = new CommandUpdateTaskResult
+      {
+        Item = givenItem,
+        HasValidationErrors = true,
+        ValidationErrors = new Dictionary<string, string[]>{
+          { "someProperty",["Some validation Error"] }
+        }
+      };
+      var givenCommand = new CommandUpdateTask
+      {
+        Item = givenItem
+      };
+
+      mockUpdateTaskHandler.Setup(x => x.Execute(It.IsAny<CommandUpdateTask>())).ReturnsAsync(expectedResult);
+
+      //Act
+      var actualResult = await todoListController.UpdateTask(givenCommand);
+
+      //Assert
+      actualResult.Should().BeOfType<ActionResult<CommandUpdateTaskResult>>();
+      actualResult.Result.Should().NotBeNull();
+      actualResult.Result.Should().BeOfType<BadRequestObjectResult>();
+      ((BadRequestObjectResult)actualResult.Result!).Value.Should().BeEquivalentTo(expectedResult);
+    }
   }
 }
