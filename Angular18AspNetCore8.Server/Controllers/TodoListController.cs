@@ -43,7 +43,15 @@ public class TodoListController(IHandler<QueryGetAllTasks, QueryGetAllTasksResul
   [HttpPost("update")]
   public async Task<ActionResult<CommandUpdateTaskResult>> UpdateTask([FromBody] CommandUpdateTask input)
   {
-    var result = await updateTaskHandler.Execute(input);
-    return Ok(result);
+    try
+    {
+      var result = await updateTaskHandler.Execute(input);
+      return Ok(result);
+    }
+    catch (Exception ex)
+    {
+      return Problem(detail: ex.Message, statusCode: (int)HttpStatusCode.InternalServerError);
+    }
+
   }
 }

@@ -182,5 +182,34 @@ namespace Angular18AspNetCore8.Server.Tests
       actualResult.Result.Should().BeOfType<OkObjectResult>();
       ((OkObjectResult)actualResult.Result!).Value.Should().BeEquivalentTo(expectedResult);
     }
+    [Fact]
+    public async Task UpdateTaskUnexpectedError()
+    {
+      //Arrange
+      var givenCommand = new CommandUpdateTask
+      {
+        Item = new ItemResultModel { Description = "Some Description", DueDate = "", Id = 123, Status = TodoTaskStatusNames.Format[TodoTaskStatus.ToDo] }
+      };
+      var expectedErrorMessage = "Unexpected error";
+      var expectedStatus = (int)HttpStatusCode.InternalServerError;
+      var expectedProblem = new ProblemDetails
+      {
+        Detail = expectedErrorMessage,
+        Status = expectedStatus
+      };
+
+      mockUpdateTaskHandler.Setup(x => x.Execute(It.IsAny<CommandUpdateTask>())).ThrowsAsync(new Exception(expectedErrorMessage));
+
+      //Act
+      var actualResult = await todoListController.UpdateTask(givenCommand);
+
+      //Assert
+      actualResult.Should().BeOfType<ActionResult<CommandUpdateTaskResult>>();
+      actualResult.Result.Should().NotBeNull();
+      actualResult.Result.Should().BeOfType<ObjectResult>();
+      var problem = ((ObjectResult)actualResult.Result!);
+      problem.StatusCode.Should().Be(expectedStatus);
+      problem.Value.Should().BeEquivalentTo(expectedProblem);
+    }
   }
 }
