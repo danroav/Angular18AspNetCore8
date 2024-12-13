@@ -4,6 +4,7 @@ public class QueryGetAllTasksResult
 {
   public int Count { get; set; }
   public string Message { get; set; } = "";
+  public bool ErrorsFound { get; set; } = false;
   public IEnumerable<ItemResultModel> Items { get; set; } = [];
 }
 

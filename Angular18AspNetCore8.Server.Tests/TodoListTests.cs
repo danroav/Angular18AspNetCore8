@@ -25,6 +25,7 @@ namespace Angular18AspNetCore8.Server.Tests
       {
         Count = 2,
         Message = "",
+        ErrorsFound = false,
         Items = [new ItemResultModel(), new ItemResultModel()]
       };
 
