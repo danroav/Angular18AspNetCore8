@@ -24,6 +24,13 @@ public class TodoListController(IQueryGetAllTasks queryGetlAllTasks, ICommandHan
   [HttpPost("add")]
   public async Task<ActionResult<CommandAddNewTaskResult>> AddNewTask([FromBody] CommandAddNewTask input)
   {
-    return Ok(await addNewTaskHandler.Execute(input));
+    try
+    {
+      return Ok(await addNewTaskHandler.Execute(input));
+    }
+    catch (Exception ex)
+    {
+      return Problem(detail: ex.Message, statusCode: (int)HttpStatusCode.InternalServerError);
+    }
   }
 }
