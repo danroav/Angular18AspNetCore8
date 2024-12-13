@@ -1,6 +1,8 @@
 using Angular18AspNetCore8.App.Commands.AddNewTask;
+using Angular18AspNetCore8.App.Commands.UpdateTask;
 using Angular18AspNetCore8.App.Common;
 using Angular18AspNetCore8.App.Queries.GetAllTasks;
+using Angular18AspNetCore8.Core.Entities;
 using Angular18AspNetCore8.Server.Controllers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +16,13 @@ namespace Angular18AspNetCore8.Server.Tests
     readonly TodoListController todoListController;
     readonly Mock<IHandler<QueryGetAllTasks, QueryGetAllTasksResult>> mockGetAllTasks;
     readonly Mock<IHandler<CommandAddNewTask, CommandAddNewTaskResult>> mockAddNewTaskHandler;
+    readonly Mock<IHandler<CommandUpdateTask, CommandUpdateTaskResult>> mockUpdateTaskHandler;
     public TodoListTests()
     {
       mockGetAllTasks = new Mock<IHandler<QueryGetAllTasks, QueryGetAllTasksResult>>();
       mockAddNewTaskHandler = new Mock<IHandler<CommandAddNewTask, CommandAddNewTaskResult>>();
-      todoListController = new TodoListController(mockGetAllTasks.Object, mockAddNewTaskHandler.Object);
+      mockUpdateTaskHandler = new Mock<IHandler<CommandUpdateTask, CommandUpdateTaskResult>>();
+      todoListController = new TodoListController(mockGetAllTasks.Object, mockAddNewTaskHandler.Object, mockUpdateTaskHandler.Object);
     }
 
     [Fact]
@@ -151,6 +155,32 @@ namespace Angular18AspNetCore8.Server.Tests
       actualResult.Result.Should().NotBeNull();
       actualResult.Result.Should().BeOfType<BadRequestObjectResult>();
       ((BadRequestObjectResult)actualResult.Result!).Value.Should().BeEquivalentTo(expectedResult);
+    }
+    [Fact]
+    public async Task UpdateTaskSuccess()
+    {
+      //Arrange
+      var expectedResult = new CommandUpdateTaskResult
+      {
+        Item = new ItemResultModel { Description = "Some Description", DueDate = "", Id = 123, Status = TodoTaskStatusNames.Format[TodoTaskStatus.ToDo] },
+        HasValidationErrors = false,
+        ValidationErrors = new Dictionary<string, string[]>()
+      };
+      var givenCommand = new CommandUpdateTask
+      {
+        Item = new ItemResultModel { Description = "Some Description", DueDate = "", Id = 123, Status = TodoTaskStatusNames.Format[TodoTaskStatus.ToDo] }
+      };
+
+      mockUpdateTaskHandler.Setup(x => x.Execute(It.IsAny<CommandUpdateTask>())).ReturnsAsync(expectedResult);
+
+      //Act
+      var actualResult = await todoListController.UpdateTask(givenCommand);
+
+      //Assert
+      actualResult.Should().BeOfType<ActionResult<CommandUpdateTaskResult>>();
+      actualResult.Result.Should().NotBeNull();
+      actualResult.Result.Should().BeOfType<OkObjectResult>();
+      ((OkObjectResult)actualResult.Result!).Value.Should().BeEquivalentTo(expectedResult);
     }
   }
 }

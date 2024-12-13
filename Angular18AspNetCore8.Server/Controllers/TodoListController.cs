@@ -1,4 +1,5 @@
 ﻿using Angular18AspNetCore8.App.Commands.AddNewTask;
+using Angular18AspNetCore8.App.Commands.UpdateTask;
 using Angular18AspNetCore8.App.Common;
 using Angular18AspNetCore8.App.Queries.GetAllTasks;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ namespace Angular18AspNetCore8.Server.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class TodoListController(IHandler<QueryGetAllTasks, QueryGetAllTasksResult> queryGetlAllTasks, IHandler<CommandAddNewTask, CommandAddNewTaskResult> addNewTaskHandler) : ControllerBase
+public class TodoListController(IHandler<QueryGetAllTasks, QueryGetAllTasksResult> queryGetlAllTasks, IHandler<CommandAddNewTask, CommandAddNewTaskResult> addNewTaskHandler, IHandler<CommandUpdateTask, CommandUpdateTaskResult> updateTaskHandler) : ControllerBase
 {
   [HttpGet("get-all")]
   public async Task<ActionResult<QueryGetAllTasksResult>> GetAllTasks()
@@ -38,5 +39,11 @@ public class TodoListController(IHandler<QueryGetAllTasks, QueryGetAllTasksResul
     {
       return Problem(detail: ex.Message, statusCode: (int)HttpStatusCode.InternalServerError);
     }
+  }
+  [HttpPost("update")]
+  public async Task<ActionResult<CommandUpdateTaskResult>> UpdateTask([FromBody] CommandUpdateTask input)
+  {
+    var result = await updateTaskHandler.Execute(input);
+    return Ok(result);
   }
 }
