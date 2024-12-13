@@ -29,6 +29,7 @@ namespace Angular18AspNetCore8.App.Tests
       };
       var newTodoTask = new TodoTask { Id = 1000, Description = givenCommandAddNewTask.Description, Duedate = givenCommandAddNewTask.DueDate, Status = givenTodoTaskStatus };
       mockTodoTaskRepository.Setup(x => x.AddNew(It.IsAny<string>(), It.IsAny<DateTimeOffset?>(), It.IsAny<TodoTaskStatus>())).ReturnsAsync(newTodoTask);
+      mockTodoTaskRepository.Setup(x => x.SaveChanges());
       var expectedResult = new CommandAddNewTaskResult
       {
         HasValidationErrors = false,

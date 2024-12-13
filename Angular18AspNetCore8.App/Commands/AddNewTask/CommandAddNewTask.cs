@@ -25,6 +25,9 @@ namespace Angular18AspNetCore8.App.Commands.AddNewTask
         };
       }
       var repositoryResult = await todoTaskRepository.AddNew(command.Description, command.DueDate, TodoTaskStatusNames.Parse[command.Status]);
+
+      await todoTaskRepository.SaveChanges();
+
       return new CommandAddNewTaskResult
       {
         HasValidationErrors = false,
