@@ -4,6 +4,6 @@ namespace Angular18AspNetCore8.App.Queries.GetAllTasks
 {
   public interface ITodoTaskRepository
   {
-    Task<IEnumerable<TodoTask>> GetAll();
+    Task<List<TodoTask>> GetAll();
   }
 }

@@ -19,7 +19,7 @@ namespace Angular18AspNetCore8.App.Tests
     public async Task GetsAllTasksNoError()
     {
       //Arrange
-      IList<TodoTask> givenTaskEntities = [new TodoTask
+      List<TodoTask> givenTaskEntities = [new TodoTask
       { Id=1, Description="A", Duedate=DateTime.Now.ToDateTimeOffset(), Status=TodoTaskStatus.ToDo },
         new TodoTask
       { Id=2, Description="B", Duedate=DateTime.Now.ToDateTimeOffset(), Status=TodoTaskStatus.InProgress }, ];

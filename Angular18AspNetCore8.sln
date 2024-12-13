@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Angular18AspNetCore8.App.Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Angular18AspNetCore8.Core", "Angular18AspNetCore8.Core\Angular18AspNetCore8.Core.csproj", "{8471EF98-3BDE-4EEB-B229-1F3006D55C18}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Angular18AspNetCore8.Infra.Persistence", "Angular18AspNetCore8.Infra.Persistence\Angular18AspNetCore8.Infra.Persistence.csproj", "{C615E2C7-023E-4CDF-B3A6-C842FB74F28E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{8471EF98-3BDE-4EEB-B229-1F3006D55C18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8471EF98-3BDE-4EEB-B229-1F3006D55C18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8471EF98-3BDE-4EEB-B229-1F3006D55C18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C615E2C7-023E-4CDF-B3A6-C842FB74F28E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C615E2C7-023E-4CDF-B3A6-C842FB74F28E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C615E2C7-023E-4CDF-B3A6-C842FB74F28E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C615E2C7-023E-4CDF-B3A6-C842FB74F28E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
