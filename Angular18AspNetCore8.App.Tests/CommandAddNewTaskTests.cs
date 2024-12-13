@@ -40,5 +40,22 @@ namespace Angular18AspNetCore8.App.Tests
       mockTodoTaskRepository.VerifyAll();
       actualResult.Should().BeEquivalentTo(expectedResult);
     }
+    [Fact]
+    public async Task GetsAddNewTaskWithError()
+    {
+      //Arrange
+      var givenCommand = new CommandAddNewTask()
+      {
+        Status = TodoTaskStatusNames.Format[TodoTaskStatus.ToDo]
+      };
+      var expectedError = "Some error description";
+      mockTodoTaskRepository.Setup(x => x.AddNew(It.IsAny<string>(), It.IsAny<DateTimeOffset?>(), It.IsAny<TodoTaskStatus>())).ThrowsAsync(new Exception(expectedError));
+
+      //Act
+      var actualResult = () => testAddNewTaskHandler.Execute(givenCommand);
+
+      //Assert
+      await actualResult.Should().ThrowAsync<Exception>().WithMessage(expectedError);
+    }
   }
 }
