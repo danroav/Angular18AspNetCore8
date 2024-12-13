@@ -48,18 +48,12 @@ namespace Angular18AspNetCore8.App.Tests
       //Arrange
       var expectedError = "Some error description";
       mockTodoTaskRepository.Setup(x => x.GetAll()).ThrowsAsync(new Exception(expectedError));
-      var expectedResult = new QueryGetAllTasksResult
-      {
-        Count = 0,
-        Items = [],
-        ErrorsFound = true,
-        Message = $"There was an error on retrieval. {expectedError}"
-      };
+
       //Act
-      var actualResult = await testQueryGetAllTasks.Execute();
+      var actualResult = () => testQueryGetAllTasks.Execute();
+
       //Assert
-      mockTodoTaskRepository.VerifyAll();
-      actualResult.Should().BeEquivalentTo(expectedResult);
+      await actualResult.Should().ThrowAsync<Exception>().WithMessage(expectedError);
     }
   }
 }
