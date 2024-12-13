@@ -1,17 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { TodoItem, TodoListIndexResponse } from './models/todo-list-models';
 
-export interface TodoItem {
-  id: number;
-  description: string;
-  dueDate?: string;
-  status: string;
-}
-export interface TodoListIndexResponse {
-  count: number;
-  message: string;
-  items: TodoItem[];
-}
 @Component({
   selector: 'todo-list',
   templateUrl: './list.component.html',

@@ -3,12 +3,9 @@ import {
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  ListComponent,
-  TodoItem,
-  TodoListIndexResponse,
-} from './list.component';
+import { ListComponent } from './list.component';
 import { provideHttpClient } from '@angular/common/http';
+import { TodoItem, TodoListIndexResponse } from './models/todo-list-models';
 
 describe('List Component', () => {
   let component: ListComponent;
