@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Angular18AspNetCore8.Infra.Persistence;
 
-public class TodoTasksRepository(AppDbContext appDbContext) : ITodoTaskRepository
+public class TodoTasksRepository(AppDbContext appDbContext) : ITodoTasksRepository
 {
   public Task<List<TodoTask>> GetAll()
   {

@@ -8,12 +8,12 @@ namespace Angular18AspNetCore8.App.Tests
 {
   public class CommandAddNewTaskTests
   {
-    readonly Mock<ITodoTaskRepository> mockTodoTaskRepository;
+    readonly Mock<ITodoTasksRepository> mockTodoTaskRepository;
     readonly CommandAddNewTaskHandler testAddNewTaskHandler;
     readonly CommandAddNewTaskValidator validator = new();
     public CommandAddNewTaskTests()
     {
-      mockTodoTaskRepository = new Mock<ITodoTaskRepository>();
+      mockTodoTaskRepository = new Mock<ITodoTasksRepository>();
       testAddNewTaskHandler = new CommandAddNewTaskHandler(mockTodoTaskRepository.Object, validator);
     }
     [Fact]

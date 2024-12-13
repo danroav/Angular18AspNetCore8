@@ -14,14 +14,14 @@ namespace Angular18AspNetCore8.Server.Tests
   public class TodoListTests
   {
     readonly TodoListController todoListController;
-    readonly Mock<IHandler<QueryGetAllTasks, QueryGetAllTasksResult>> mockGetAllTasks;
-    readonly Mock<IHandler<CommandAddNewTask, CommandAddNewTaskResult>> mockAddNewTaskHandler;
-    readonly Mock<IHandler<CommandUpdateTask, CommandUpdateTaskResult>> mockUpdateTaskHandler;
+    readonly Mock<ITodoTasksHandler<QueryGetAllTasks, QueryGetAllTasksResult>> mockGetAllTasks;
+    readonly Mock<ITodoTasksHandler<CommandAddNewTask, CommandAddNewTaskResult>> mockAddNewTaskHandler;
+    readonly Mock<ITodoTasksHandler<CommandUpdateTask, CommandUpdateTaskResult>> mockUpdateTaskHandler;
     public TodoListTests()
     {
-      mockGetAllTasks = new Mock<IHandler<QueryGetAllTasks, QueryGetAllTasksResult>>();
-      mockAddNewTaskHandler = new Mock<IHandler<CommandAddNewTask, CommandAddNewTaskResult>>();
-      mockUpdateTaskHandler = new Mock<IHandler<CommandUpdateTask, CommandUpdateTaskResult>>();
+      mockGetAllTasks = new Mock<ITodoTasksHandler<QueryGetAllTasks, QueryGetAllTasksResult>>();
+      mockAddNewTaskHandler = new Mock<ITodoTasksHandler<CommandAddNewTask, CommandAddNewTaskResult>>();
+      mockUpdateTaskHandler = new Mock<ITodoTasksHandler<CommandUpdateTask, CommandUpdateTaskResult>>();
       todoListController = new TodoListController(mockGetAllTasks.Object, mockAddNewTaskHandler.Object, mockUpdateTaskHandler.Object);
     }
 

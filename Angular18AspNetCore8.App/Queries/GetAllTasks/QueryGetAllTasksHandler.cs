@@ -4,8 +4,8 @@ using Angular18AspNetCore8.Core.Entities;
 
 namespace Angular18AspNetCore8.App.Queries.GetAllTasks
 {
-  public class QueryGetAllTasks { }
-  public class QueryGetAllTasksHandler(ITodoTaskRepository todoTaskRepository) : IHandler<QueryGetAllTasks, QueryGetAllTasksResult>
+  public class QueryGetAllTasks : ITodoTasksHandlerInput { }
+  public class QueryGetAllTasksHandler(ITodoTasksRepository todoTaskRepository) : ITodoTasksHandler<QueryGetAllTasks, QueryGetAllTasksResult>
   {
     public async Task<QueryGetAllTasksResult> Execute(QueryGetAllTasks query)
     {

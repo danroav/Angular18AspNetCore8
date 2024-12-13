@@ -1,10 +1,11 @@
-﻿using Angular18AspNetCore8.App.Queries.GetAllTasks;
+﻿using Angular18AspNetCore8.App.Common;
+using Angular18AspNetCore8.App.Queries.GetAllTasks;
 
 namespace Angular18AspNetCore8.App.Commands.UpdateTask
 {
-  public class CommandUpdateTask
+  public class CommandUpdateTask : ITodoTasksHandlerInput
   {
-    public ItemResultModel Item { get; set; }
+    public required ItemResultModel Item { get; set; }
   }
 
 }

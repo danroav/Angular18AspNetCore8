@@ -9,7 +9,7 @@ namespace Angular18AspNetCore8.Server.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class TodoListController(IHandler<QueryGetAllTasks, QueryGetAllTasksResult> queryGetlAllTasks, IHandler<CommandAddNewTask, CommandAddNewTaskResult> addNewTaskHandler, IHandler<CommandUpdateTask, CommandUpdateTaskResult> updateTaskHandler) : ControllerBase
+public class TodoListController(ITodoTasksHandler<QueryGetAllTasks, QueryGetAllTasksResult> queryGetlAllTasks, ITodoTasksHandler<CommandAddNewTask, CommandAddNewTaskResult> addNewTaskHandler, ITodoTasksHandler<CommandUpdateTask, CommandUpdateTaskResult> updateTaskHandler) : ControllerBase
 {
   [HttpGet("get-all")]
   public async Task<ActionResult<QueryGetAllTasksResult>> GetAllTasks()

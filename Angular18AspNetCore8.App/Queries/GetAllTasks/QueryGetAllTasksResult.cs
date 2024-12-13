@@ -1,6 +1,8 @@
-﻿namespace Angular18AspNetCore8.App.Queries.GetAllTasks;
+﻿using Angular18AspNetCore8.App.Common;
 
-public class QueryGetAllTasksResult
+namespace Angular18AspNetCore8.App.Queries.GetAllTasks;
+
+public class QueryGetAllTasksResult : ITodoTasksHandlerOutput
 {
   public int Count { get; set; }
   public string Message { get; set; } = "";

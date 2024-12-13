@@ -4,13 +4,13 @@ using FluentValidation;
 
 namespace Angular18AspNetCore8.App.Commands.AddNewTask
 {
-  public class CommandAddNewTask
+  public class CommandAddNewTask : ITodoTasksHandlerInput
   {
     public string Description { get; set; } = "";
     public DateTimeOffset? DueDate { get; set; } = null;
     public string Status { get; set; } = "";
   }
-  public class CommandAddNewTaskHandler(ITodoTaskRepository todoTaskRepository, IValidator<CommandAddNewTask> validator) : IHandler<CommandAddNewTask, CommandAddNewTaskResult>
+  public class CommandAddNewTaskHandler(ITodoTasksRepository todoTaskRepository, IValidator<CommandAddNewTask> validator) : ITodoTasksHandler<CommandAddNewTask, CommandAddNewTaskResult>
   {
     public async Task<CommandAddNewTaskResult> Execute(CommandAddNewTask command)
     {

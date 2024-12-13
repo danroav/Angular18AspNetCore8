@@ -1,11 +1,12 @@
-﻿using Angular18AspNetCore8.App.Queries.GetAllTasks;
+﻿using Angular18AspNetCore8.App.Common;
+using Angular18AspNetCore8.App.Queries.GetAllTasks;
 
 namespace Angular18AspNetCore8.App.Commands.UpdateTask
 {
-  public class CommandUpdateTaskResult
+  public class CommandUpdateTaskResult : ITodoTasksHandlerOutput
   {
-    public ItemResultModel Item { get; set; }
+    public required ItemResultModel Item { get; set; }
     public bool HasValidationErrors { get; set; }
-    public IDictionary<string, string[]> ValidationErrors { get; set; }
+    public required IDictionary<string, string[]> ValidationErrors { get; set; }
   }
 }
