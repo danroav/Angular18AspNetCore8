@@ -131,7 +131,7 @@ namespace Angular18AspNetCore8.Server.Tests
       {
         TaskId = 0,
         HasValidationErrors = true,
-        ValidationErrors = new Dictionary<string, string>() { { "someProperty", "someValidationError" } }
+        ValidationErrors = new Dictionary<string, string[]>() { { "someProperty", ["someValidationError"] } }
       };
       var givenCommand = new CommandAddNewTask
       {

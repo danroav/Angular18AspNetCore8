@@ -10,4 +10,9 @@ public class TodoTasksRepository(AppDbContext appDbContext) : ITodoTaskRepositor
   {
     return appDbContext.TodoTasks.ToListAsync();
   }
+
+  public Task<TodoTask> AddNew(string description, DateTimeOffset? dueDate, TodoTaskStatus status)
+  {
+    throw new NotImplementedException();
+  }
 }
