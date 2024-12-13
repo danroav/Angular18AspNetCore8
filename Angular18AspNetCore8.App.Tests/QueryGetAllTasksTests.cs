@@ -1,3 +1,4 @@
+using Angular18AspNetCore8.App.Common;
 using Angular18AspNetCore8.App.Queries.GetAllTasks;
 using Angular18AspNetCore8.Core.Entities;
 using FluentAssertions;
@@ -9,11 +10,11 @@ namespace Angular18AspNetCore8.App.Tests
   public class QueryGetAllTasksTests
   {
     readonly Mock<ITodoTaskRepository> mockTodoTaskRepository;
-    readonly QueryGetAllTasks testQueryGetAllTasks;
+    readonly QueryGetAllTasksHandler testQueryGetAllTasks;
     public QueryGetAllTasksTests()
     {
       mockTodoTaskRepository = new Mock<ITodoTaskRepository>();
-      testQueryGetAllTasks = new QueryGetAllTasks(mockTodoTaskRepository.Object);
+      testQueryGetAllTasks = new QueryGetAllTasksHandler(mockTodoTaskRepository.Object);
     }
     [Fact]
     public async Task GetsAllTasksNoError()
@@ -37,7 +38,7 @@ namespace Angular18AspNetCore8.App.Tests
         Message = "2 tasks retrieved"
       };
       //Act
-      var actualResult = await testQueryGetAllTasks.Execute();
+      var actualResult = await testQueryGetAllTasks.Execute(new QueryGetAllTasks());
       //Assert
       mockTodoTaskRepository.VerifyAll();
       actualResult.Should().BeEquivalentTo(expectedResult);
@@ -50,7 +51,7 @@ namespace Angular18AspNetCore8.App.Tests
       mockTodoTaskRepository.Setup(x => x.GetAll()).ThrowsAsync(new Exception(expectedError));
 
       //Act
-      var actualResult = () => testQueryGetAllTasks.Execute();
+      var actualResult = () => testQueryGetAllTasks.Execute(new QueryGetAllTasks());
 
       //Assert
       await actualResult.Should().ThrowAsync<Exception>().WithMessage(expectedError);

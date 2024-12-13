@@ -1,6 +1,6 @@
 ﻿using Angular18AspNetCore8.Core.Entities;
 
-namespace Angular18AspNetCore8.App.Queries.GetAllTasks
+namespace Angular18AspNetCore8.App.Common
 {
   public interface ITodoTaskRepository
   {

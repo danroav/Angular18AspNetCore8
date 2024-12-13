@@ -1,11 +1,13 @@
 ﻿
+using Angular18AspNetCore8.App.Common;
 using Angular18AspNetCore8.Core.Entities;
 
 namespace Angular18AspNetCore8.App.Queries.GetAllTasks
 {
-  public class QueryGetAllTasks(ITodoTaskRepository todoTaskRepository) : IQueryGetAllTasks
+  public class QueryGetAllTasks { }
+  public class QueryGetAllTasksHandler(ITodoTaskRepository todoTaskRepository) : IHandler<QueryGetAllTasks, QueryGetAllTasksResult>
   {
-    public async Task<QueryGetAllTasksResult> Execute()
+    public async Task<QueryGetAllTasksResult> Execute(QueryGetAllTasks query)
     {
       var entities = await todoTaskRepository.GetAll();
 

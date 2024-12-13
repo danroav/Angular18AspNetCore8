@@ -1,4 +1,5 @@
 using Angular18AspNetCore8.App.Commands.AddNewTask;
+using Angular18AspNetCore8.App.Common;
 using Angular18AspNetCore8.App.Queries.GetAllTasks;
 using Angular18AspNetCore8.Server.Controllers;
 using FluentAssertions;
@@ -11,12 +12,12 @@ namespace Angular18AspNetCore8.Server.Tests
   public class TodoListTests
   {
     readonly TodoListController todoListController;
-    readonly Mock<IQueryGetAllTasks> mockGetAllTasks;
-    readonly Mock<ICommandHandler<CommandAddNewTask, CommandAddNewTaskResult>> mockAddNewTaskHandler;
+    readonly Mock<IHandler<QueryGetAllTasks, QueryGetAllTasksResult>> mockGetAllTasks;
+    readonly Mock<IHandler<CommandAddNewTask, CommandAddNewTaskResult>> mockAddNewTaskHandler;
     public TodoListTests()
     {
-      mockGetAllTasks = new Mock<IQueryGetAllTasks>();
-      mockAddNewTaskHandler = new Mock<ICommandHandler<CommandAddNewTask, CommandAddNewTaskResult>>();
+      mockGetAllTasks = new Mock<IHandler<QueryGetAllTasks, QueryGetAllTasksResult>>();
+      mockAddNewTaskHandler = new Mock<IHandler<CommandAddNewTask, CommandAddNewTaskResult>>();
       todoListController = new TodoListController(mockGetAllTasks.Object, mockAddNewTaskHandler.Object);
     }
 
@@ -31,7 +32,7 @@ namespace Angular18AspNetCore8.Server.Tests
         Items = [new ItemResultModel(), new ItemResultModel()]
       };
 
-      mockGetAllTasks.Setup(x => x.Execute()).ReturnsAsync(expectedResult);
+      mockGetAllTasks.Setup(x => x.Execute(It.IsAny<QueryGetAllTasks>())).ReturnsAsync(expectedResult);
 
       //Act
       var actualResult = await todoListController.GetAllTasks();
@@ -48,7 +49,7 @@ namespace Angular18AspNetCore8.Server.Tests
       //Arrange
       var expectedExceptionMessage = "Some error";
       var expectedStatus = (int)HttpStatusCode.InternalServerError;
-      mockGetAllTasks.Setup(x => x.Execute()).ThrowsAsync(new Exception(expectedExceptionMessage));
+      mockGetAllTasks.Setup(x => x.Execute(It.IsAny<QueryGetAllTasks>())).ThrowsAsync(new Exception(expectedExceptionMessage));
       var expectedProblem = new ProblemDetails
       {
         Detail = expectedExceptionMessage,

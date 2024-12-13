@@ -1,4 +1,5 @@
 ﻿using Angular18AspNetCore8.App.Commands.AddNewTask;
+using Angular18AspNetCore8.App.Common;
 using Angular18AspNetCore8.App.Queries.GetAllTasks;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -7,14 +8,14 @@ namespace Angular18AspNetCore8.Server.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class TodoListController(IQueryGetAllTasks queryGetlAllTasks, ICommandHandler<CommandAddNewTask, CommandAddNewTaskResult> addNewTaskHandler) : ControllerBase
+public class TodoListController(IHandler<QueryGetAllTasks, QueryGetAllTasksResult> queryGetlAllTasks, IHandler<CommandAddNewTask, CommandAddNewTaskResult> addNewTaskHandler) : ControllerBase
 {
   [HttpGet("get-all")]
   public async Task<ActionResult<QueryGetAllTasksResult>> GetAllTasks()
   {
     try
     {
-      return Ok(await queryGetlAllTasks.Execute());
+      return Ok(await queryGetlAllTasks.Execute(new QueryGetAllTasks()));
     }
     catch (Exception ex)
     {

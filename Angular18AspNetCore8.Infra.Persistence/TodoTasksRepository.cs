@@ -1,4 +1,4 @@
-﻿using Angular18AspNetCore8.App.Queries.GetAllTasks;
+﻿using Angular18AspNetCore8.App.Common;
 using Angular18AspNetCore8.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
