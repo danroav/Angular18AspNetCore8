@@ -63,4 +63,29 @@ public class CommandUpdateTasksTests
     mockTodoTaskRepository.VerifyAll();
     actualResult.Should().BeEquivalentTo(expectedResult);
   }
+  [Fact]
+  public async Task UpdateTaskWithError()
+  {
+    //Arrange
+    var givenTodoTaskStatus = TodoTaskStatus.ToDo;
+    var givenItemToUpdate = new ItemResultModel
+    {
+      Id = 1,
+      Description = "Some description",
+      DueDate = "",
+      Status = TodoTaskStatusNames.Format[givenTodoTaskStatus],
+    };
+    var givenCommand = new CommandUpdateTask
+    {
+      Item = givenItemToUpdate
+    };
+    var expectedError = "Some error description";
+    mockTodoTaskRepository.Setup(x => x.GetByIds(It.IsAny<IList<int>>())).ThrowsAsync(new Exception(expectedError));
+
+    //Act
+    var actualResult = () => testUpdateTaskHandler.Execute(givenCommand);
+
+    //Assert
+    await actualResult.Should().ThrowAsync<Exception>().WithMessage(expectedError);
+  }
 }
