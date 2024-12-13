@@ -20,5 +20,6 @@
     <ProjectReference Include="..\angular18aspnetcore8.client\angular18aspnetcore8.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\Angular18AspNetCore8.Infra.Persistence\Angular18AspNetCore8.Infra.Persistence.csproj" />
   </ItemGroup> 
 </Project>

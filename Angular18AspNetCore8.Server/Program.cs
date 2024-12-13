@@ -1,6 +1,23 @@
+using Angular18AspNetCore8.App.Commands.AddNewTask;
+using Angular18AspNetCore8.App.Commands.UpdateTask;
+using Angular18AspNetCore8.App.Common;
+using Angular18AspNetCore8.App.Queries.GetAllTasks;
+using Angular18AspNetCore8.Infra.Persistence;
+using FluentValidation;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSqlite<AppDbContext>(builder.Configuration.GetConnectionString("TodoListDb"));
+
+builder.Services.AddScoped<ITodoTasksRepository, TodoTasksRepository>();
+builder.Services.AddScoped<ITodoTasksHandler<QueryGetAllTasks, QueryGetAllTasksResult>, QueryGetAllTasksHandler>();
+
+builder.Services.AddTransient<IValidator<CommandAddNewTask>, CommandAddNewTaskValidator>();
+builder.Services.AddScoped<ITodoTasksHandler<CommandAddNewTask, CommandAddNewTaskResult>, CommandAddNewTaskHandler>();
+
+builder.Services.AddTransient<IValidator<CommandUpdateTask>, CommandUpdateTaskValidator>();
+builder.Services.AddScoped<ITodoTasksHandler<CommandUpdateTask, CommandUpdateTaskResult>, CommandUpdateTaskHandler>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -15,8 +32,8 @@ app.UseStaticFiles();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+  app.UseSwagger();
+  app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
