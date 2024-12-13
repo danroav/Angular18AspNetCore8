@@ -7,11 +7,11 @@ using System.Net;
 
 namespace Angular18AspNetCore8.Server.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/todo-list")]
 [ApiController]
 public class TodoListController(ITodoTasksHandler<QueryGetAllTasks, QueryGetAllTasksResult> queryGetlAllTasks, ITodoTasksHandler<CommandAddNewTask, CommandAddNewTaskResult> addNewTaskHandler, ITodoTasksHandler<CommandUpdateTask, CommandUpdateTaskResult> updateTaskHandler) : ControllerBase
 {
-  [HttpGet("get-all")]
+  [HttpGet("index")]
   public async Task<ActionResult<QueryGetAllTasksResult>> GetAllTasks()
   {
     try
@@ -23,7 +23,7 @@ public class TodoListController(ITodoTasksHandler<QueryGetAllTasks, QueryGetAllT
       return Problem(detail: ex.Message, statusCode: (int)HttpStatusCode.InternalServerError);
     }
   }
-  [HttpPost("add")]
+  [HttpPost("create")]
   public async Task<ActionResult<CommandAddNewTaskResult>> AddNewTask([FromBody] CommandAddNewTask input)
   {
     try
