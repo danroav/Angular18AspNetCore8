@@ -11,10 +11,11 @@ public class CommandUpdateTasksTests
 {
   readonly Mock<ITodoTasksRepository> mockTodoTaskRepository;
   readonly CommandUpdateTaskHandler testUpdateTaskHandler;
+  readonly CommandUpdateTaskValidator validator = new();
   public CommandUpdateTasksTests()
   {
     mockTodoTaskRepository = new Mock<ITodoTasksRepository>();
-    testUpdateTaskHandler = new CommandUpdateTaskHandler(mockTodoTaskRepository.Object);
+    testUpdateTaskHandler = new CommandUpdateTaskHandler(mockTodoTaskRepository.Object, validator);
   }
   [Theory]
   [InlineData(true)]
@@ -28,7 +29,7 @@ public class CommandUpdateTasksTests
     {
       Id = 1,
       Description = "Some description",
-      DueDate = givenUpdateDatetimeNull ? "" : $"{givenUpdateDatetime:D}",
+      DueDate = givenUpdateDatetimeNull ? "" : $"{givenUpdateDatetime:O}",
       Status = TodoTaskStatusNames.Format[givenTodoTaskStatus],
     };
     var givenCommandUpdateTask = new CommandUpdateTask
@@ -87,5 +88,40 @@ public class CommandUpdateTasksTests
 
     //Assert
     await actualResult.Should().ThrowAsync<Exception>().WithMessage(expectedError);
+  }
+  [Theory]
+  [InlineData("", "Description is required", -1, "Due Date should be in the future", "", "Status should be valid")]
+  [InlineData("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa123456", "Description should not exceed 255 chars", -1, "Due Date should be in the future", "", "Status should be valid")]
+  public async Task UpdateTaskWithValidationErrors(string givenDescription, string givenDescriptionError, int givenDueDateDaysAdd, string givenDueDateError, string givenStatus, string givenStatusError)
+  {
+    //Arrange
+    var givenItemToUpdate = new ItemResultModel
+    {
+      Id = 1,
+      Description = givenDescription,
+      DueDate = $"{DateTimeOffset.Now.AddDays(givenDueDateDaysAdd):O}",
+      Status = givenStatus,
+    };
+    var givenCommand = new CommandUpdateTask
+    {
+      Item = givenItemToUpdate
+    };
+    var expectedResult = new CommandUpdateTaskResult
+    {
+      HasValidationErrors = true,
+      Item = givenItemToUpdate,
+      ValidationErrors = new Dictionary<string, string[]>
+        {
+          {"Item.Description",[givenDescriptionError] },
+          {"Item.DueDate",[givenDueDateError] },
+          {"Item.Status",[givenStatusError] }
+        }
+    };
+
+    //Act
+    var actualResult = await testUpdateTaskHandler.Execute(givenCommand);
+
+    //Assert
+    actualResult.Should().BeEquivalentTo(expectedResult);
   }
 }

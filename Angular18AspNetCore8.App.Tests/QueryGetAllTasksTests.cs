@@ -31,7 +31,7 @@ namespace Angular18AspNetCore8.App.Tests
         Items = givenTaskEntities.Select(e => new ItemResultModel
         {
           Description = e.Description,
-          DueDate = $"{e.Duedate:D}",
+          DueDate = $"{e.Duedate:O}",
           Id = e.Id,
           Status = Enum.GetName<TodoTaskStatus>(e.Status) ?? ""
         }),

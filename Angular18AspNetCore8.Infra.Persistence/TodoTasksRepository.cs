@@ -16,4 +16,14 @@ public class TodoTasksRepository(AppDbContext appDbContext) : ITodoTasksReposito
     var result = await appDbContext.TodoTasks.AddAsync(new TodoTask { Description = description, Duedate = dueDate, Status = status });
     return result.Entity;
   }
+
+  public Task<List<TodoTask>> GetByIds(IList<int> ids)
+  {
+    return appDbContext.TodoTasks.Where(x => ids.Contains(x.Id)).ToListAsync();
+  }
+
+  public Task<int> SaveChanges()
+  {
+    return appDbContext.SaveChangesAsync();
+  }
 }
