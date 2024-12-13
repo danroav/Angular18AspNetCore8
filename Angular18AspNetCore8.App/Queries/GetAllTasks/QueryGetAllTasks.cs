@@ -21,7 +21,6 @@ namespace Angular18AspNetCore8.App.Queries.GetAllTasks
       {
         Count = items.Count,
         Items = items,
-        ErrorsFound = false,
         Message = $"{items.Count} tasks retrieved"
       };
     }
