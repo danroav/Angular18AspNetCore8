@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Angular18AspNetCore8.Server\Angular18AspNetCore8.Server.csproj" />
+    <ProjectReference Include="..\Angular18AspNetCore8.App\Angular18AspNetCore8.App.csproj" />
   </ItemGroup>
 
   <ItemGroup>

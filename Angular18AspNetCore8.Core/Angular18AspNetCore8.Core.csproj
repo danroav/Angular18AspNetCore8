@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Angular18AspNetCore8.Core\Angular18AspNetCore8.Core.csproj" />
-  </ItemGroup>
-
 </Project>
