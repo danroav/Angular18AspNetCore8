@@ -162,13 +162,13 @@ namespace Angular18AspNetCore8.Server.Tests
       //Arrange
       var expectedResult = new CommandUpdateTaskResult
       {
-        Item = new ItemResultModel { Description = "Some Description", DueDate = "", Id = 123, Status = TodoTaskStatusNames.Format[TodoTaskStatus.ToDo] },
+        Item = new ItemResultModel { Description = "Some Description", DueDate = null, Id = 123, Status = TodoTaskStatusNames.Format[TodoTaskStatus.ToDo] },
         HasValidationErrors = false,
         ValidationErrors = new Dictionary<string, string[]>()
       };
       var givenCommand = new CommandUpdateTask
       {
-        Item = new ItemResultModel { Description = "Some Description", DueDate = "", Id = 123, Status = TodoTaskStatusNames.Format[TodoTaskStatus.ToDo] }
+        Item = new ItemResultModel { Description = "Some Description", DueDate = null, Id = 123, Status = TodoTaskStatusNames.Format[TodoTaskStatus.ToDo] }
       };
 
       mockUpdateTaskHandler.Setup(x => x.Execute(It.IsAny<CommandUpdateTask>())).ReturnsAsync(expectedResult);
@@ -188,7 +188,7 @@ namespace Angular18AspNetCore8.Server.Tests
       //Arrange
       var givenCommand = new CommandUpdateTask
       {
-        Item = new ItemResultModel { Description = "Some Description", DueDate = "", Id = 123, Status = TodoTaskStatusNames.Format[TodoTaskStatus.ToDo] }
+        Item = new ItemResultModel { Description = "Some Description", DueDate = null, Id = 123, Status = TodoTaskStatusNames.Format[TodoTaskStatus.ToDo] }
       };
       var expectedErrorMessage = "Unexpected error";
       var expectedStatus = (int)HttpStatusCode.InternalServerError;
@@ -218,7 +218,7 @@ namespace Angular18AspNetCore8.Server.Tests
       var givenItem = new ItemResultModel
       {
         Description = "Some Description",
-        DueDate = "",
+        DueDate = null,
         Id = 123,
         Status = TodoTaskStatusNames.Format[TodoTaskStatus.ToDo]
       };

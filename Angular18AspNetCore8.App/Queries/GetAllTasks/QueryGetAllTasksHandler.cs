@@ -14,9 +14,9 @@ namespace Angular18AspNetCore8.App.Queries.GetAllTasks
       var items = entities.Select(e => new ItemResultModel
       {
         Description = e.Description,
-        DueDate = $"{e.Duedate:O}",
+        DueDate = e.Duedate,
         Id = e.Id,
-        Status = Enum.GetName<TodoTaskStatus>(e.Status) ?? ""
+        Status = (e.Duedate.HasValue && e.Duedate.Value < DateTimeOffset.Now) ? TodoTaskStatusNames.Format[TodoTaskStatus.Overdue] : TodoTaskStatusNames.Format[e.Status]
       }).ToList();
 
       return new QueryGetAllTasksResult

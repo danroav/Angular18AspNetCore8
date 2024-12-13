@@ -31,9 +31,9 @@ namespace Angular18AspNetCore8.App.Tests
         Items = givenTaskEntities.Select(e => new ItemResultModel
         {
           Description = e.Description,
-          DueDate = $"{e.Duedate:O}",
+          DueDate = e.Duedate,
           Id = e.Id,
-          Status = Enum.GetName<TodoTaskStatus>(e.Status) ?? ""
+          Status = (e.Duedate.HasValue && e.Duedate.Value < DateTimeOffset.Now) ? TodoTaskStatusNames.Format[TodoTaskStatus.Overdue] : TodoTaskStatusNames.Format[e.Status]
         }),
         Message = "2 tasks retrieved"
       };

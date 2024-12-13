@@ -29,7 +29,7 @@ public class CommandUpdateTasksTests
     {
       Id = 1,
       Description = "Some description",
-      DueDate = givenUpdateDatetimeNull ? "" : $"{givenUpdateDatetime:O}",
+      DueDate = givenUpdateDatetimeNull ? null : givenUpdateDatetime,
       Status = TodoTaskStatusNames.Format[givenTodoTaskStatus],
     };
     var givenCommandUpdateTask = new CommandUpdateTask
@@ -54,8 +54,8 @@ public class CommandUpdateTasksTests
       {
         Id = givenItemToUpdate.Id,
         Description = givenItemToUpdate.Description,
-        DueDate = string.IsNullOrEmpty(givenItemToUpdate.DueDate) ? "" : givenItemToUpdate.DueDate,
-        Status = givenItemToUpdate.Status
+        DueDate = givenItemToUpdate.DueDate,
+        Status = (givenItemToUpdate.DueDate.HasValue && givenItemToUpdate.DueDate.Value < DateTimeOffset.Now) ? TodoTaskStatusNames.Format[TodoTaskStatus.Overdue] : givenItemToUpdate.Status
       }
     };
     //Act
@@ -73,7 +73,7 @@ public class CommandUpdateTasksTests
     {
       Id = 1,
       Description = "Some description",
-      DueDate = "",
+      DueDate = null,
       Status = TodoTaskStatusNames.Format[givenTodoTaskStatus],
     };
     var givenCommand = new CommandUpdateTask
@@ -99,7 +99,7 @@ public class CommandUpdateTasksTests
     {
       Id = 1,
       Description = givenDescription,
-      DueDate = $"{DateTimeOffset.Now.AddDays(givenDueDateDaysAdd):O}",
+      DueDate = DateTimeOffset.Now.AddDays(givenDueDateDaysAdd),
       Status = givenStatus,
     };
     var givenCommand = new CommandUpdateTask
