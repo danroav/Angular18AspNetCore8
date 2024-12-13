@@ -26,7 +26,12 @@ public class TodoListController(IQueryGetAllTasks queryGetlAllTasks, ICommandHan
   {
     try
     {
-      return Ok(await addNewTaskHandler.Execute(input));
+      var result = await addNewTaskHandler.Execute(input);
+      if (result.HasValidationErrors)
+      {
+        return BadRequest(result);
+      }
+      return Ok(result);
     }
     catch (Exception ex)
     {
