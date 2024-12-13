@@ -11,7 +11,7 @@ interface WeatherForecast {
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
   public forecasts: WeatherForecast[] = [];
@@ -23,15 +23,15 @@ export class AppComponent implements OnInit {
   }
 
   getForecasts() {
-    this.http.get<WeatherForecast[]>('/weatherforecast').subscribe(
-      (result) => {
+    this.http.get<WeatherForecast[]>('/weatherforecast').subscribe({
+      next: (result) => {
         this.forecasts = result;
       },
-      (error) => {
+      error: (error) => {
         console.error(error);
-      }
-    );
+      },
+    });
   }
 
-  title = 'angular18aspnetcore8.client';
+  title = 'Todo List Main';
 }

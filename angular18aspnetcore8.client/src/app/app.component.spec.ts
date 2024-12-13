@@ -1,6 +1,11 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import {
+  HttpTestingController,
+  provideHttpClientTesting,
+} from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { ListComponent } from './todo-list/list.component';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -9,8 +14,8 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AppComponent],
-      imports: [HttpClientTestingModule]
+      declarations: [AppComponent, ListComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
   });
 
@@ -30,8 +35,18 @@ describe('AppComponent', () => {
 
   it('should retrieve weather forecasts from the server', () => {
     const mockForecasts = [
-      { date: '2021-10-01', temperatureC: 20, temperatureF: 68, summary: 'Mild' },
-      { date: '2021-10-02', temperatureC: 25, temperatureF: 77, summary: 'Warm' }
+      {
+        date: '2021-10-01',
+        temperatureC: 20,
+        temperatureF: 68,
+        summary: 'Mild',
+      },
+      {
+        date: '2021-10-02',
+        temperatureC: 25,
+        temperatureF: 77,
+        summary: 'Warm',
+      },
     ];
 
     component.ngOnInit();

@@ -1,0 +1,20 @@
+﻿<h1 id="tableLabel">Todo List</h1>
+<p>{{ message }}</p>
+<table *ngIf="items">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Description</th>
+      <th>Due Date</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of items">
+      <td>{{ item.id }}</td>
+      <td>{{ item.description }}</td>
+      <td>{{ item.dueDate }}</td>
+      <td>{{ item.status }}</td>
+    </tr>
+  </tbody>
+</table>
