@@ -1,5 +1,4 @@
 using Angular18AspNetCore8.App.Common;
-using Angular18AspNetCore8.App.Queries.GetAllTasks;
 using Angular18AspNetCore8.Infra.Persistence;
 using FluentValidation;
 
@@ -9,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSqlite<AppDbContext>(builder.Configuration.GetConnectionString("TodoListDb"));
 
 builder.Services.AddScoped<ITodoItemsRepository, TodoTasksRepository>();
-builder.Services.AddScoped<ITodoItemsHandler<QueryGetAllTasks, QueryGetAllTasksResult>, QueryGetAllTasksHandler>();
+builder.Services.AddScoped<ITodoItemsHandler<Angular18AspNetCore8.App.Queries.GetAllTodoItems.Query, Angular18AspNetCore8.App.Queries.GetAllTodoItems.Response>, Angular18AspNetCore8.App.Queries.GetAllTodoItems.Handler>();
 
 builder.Services.AddTransient<IValidator<Angular18AspNetCore8.App.Commands.AddNewTodoItem.Command>, Angular18AspNetCore8.App.Commands.AddNewTodoItem.Validator>();
 builder.Services.AddScoped<ITodoItemsHandler<Angular18AspNetCore8.App.Commands.AddNewTodoItem.Command, Angular18AspNetCore8.App.Commands.AddNewTodoItem.Response>, Angular18AspNetCore8.App.Commands.AddNewTodoItem.Handler>();

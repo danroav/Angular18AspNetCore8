@@ -1,6 +1,5 @@
 ﻿using Angular18AspNetCore8.App.Commands.AddNewTodoItem;
 using Angular18AspNetCore8.App.Common;
-using Angular18AspNetCore8.App.Queries.GetAllTasks;
 using Angular18AspNetCore8.Core.Entities;
 using FluentAssertions;
 using Moq;
@@ -34,7 +33,7 @@ namespace Angular18AspNetCore8.App.Tests
       var expectedResult = new Response
       {
         HasValidationErrors = false,
-        Item = new ItemResultModel
+        Item = new TodoItemModel
         {
           Description = newTodoTask.Description,
           DueDate = newTodoTask.Duedate,
@@ -83,7 +82,7 @@ namespace Angular18AspNetCore8.App.Tests
       var expectedResult = new Response
       {
         HasValidationErrors = true,
-        Item = new ItemResultModel
+        Item = new TodoItemModel
         {
           Description = givenDescription,
           DueDate = givenDueDate,

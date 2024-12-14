@@ -1,5 +1,4 @@
 ﻿using Angular18AspNetCore8.App.Common;
-using Angular18AspNetCore8.App.Queries.GetAllTasks;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -7,14 +6,14 @@ namespace Angular18AspNetCore8.Server.Controllers;
 
 [Route("api/todo-list")]
 [ApiController]
-public class TodoListController(ITodoItemsHandler<QueryGetAllTasks, QueryGetAllTasksResult> queryGetlAllTasks, ITodoItemsHandler<App.Commands.AddNewTodoItem.Command, App.Commands.AddNewTodoItem.Response> addNewTaskHandler, ITodoItemsHandler<App.Commands.UpdateTodoItem.Command, App.Commands.UpdateTodoItem.Response> updateTaskHandler) : ControllerBase
+public class TodoListController(ITodoItemsHandler<App.Queries.GetAllTodoItems.Query, App.Queries.GetAllTodoItems.Response> queryGetlAllTasks, ITodoItemsHandler<App.Commands.AddNewTodoItem.Command, App.Commands.AddNewTodoItem.Response> addNewTaskHandler, ITodoItemsHandler<App.Commands.UpdateTodoItem.Command, App.Commands.UpdateTodoItem.Response> updateTaskHandler) : ControllerBase
 {
   [HttpGet("index")]
-  public async Task<ActionResult<QueryGetAllTasksResult>> GetAllTasks()
+  public async Task<ActionResult<App.Queries.GetAllTodoItems.Response>> GetAllTasks()
   {
     try
     {
-      return Ok(await queryGetlAllTasks.Execute(new QueryGetAllTasks()));
+      return Ok(await queryGetlAllTasks.Execute(new App.Queries.GetAllTodoItems.Query()));
     }
     catch (Exception ex)
     {

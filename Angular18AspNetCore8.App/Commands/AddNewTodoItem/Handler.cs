@@ -1,5 +1,5 @@
 ﻿using Angular18AspNetCore8.App.Common;
-using Angular18AspNetCore8.App.Queries.GetAllTasks;
+using Angular18AspNetCore8.App.Queries.GetAllTodoItems;
 using Angular18AspNetCore8.Core.Entities;
 using FluentValidation;
 
@@ -15,7 +15,7 @@ namespace Angular18AspNetCore8.App.Commands.AddNewTodoItem
         return new Response
         {
           HasValidationErrors = true,
-          Item = new ItemResultModel
+          Item = new TodoItemModel
           {
             Description = command.Description,
             DueDate = command.DueDate,
@@ -31,7 +31,7 @@ namespace Angular18AspNetCore8.App.Commands.AddNewTodoItem
       return new Response
       {
         HasValidationErrors = false,
-        Item = new ItemResultModel
+        Item = new TodoItemModel
         {
           Description = repositoryResult.Description,
           DueDate = repositoryResult.Duedate,

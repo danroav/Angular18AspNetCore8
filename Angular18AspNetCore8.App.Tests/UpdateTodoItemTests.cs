@@ -1,6 +1,5 @@
 ﻿using Angular18AspNetCore8.App.Commands.UpdateTodoItem;
 using Angular18AspNetCore8.App.Common;
-using Angular18AspNetCore8.App.Queries.GetAllTasks;
 using Angular18AspNetCore8.Core.Entities;
 using FluentAssertions;
 using Moq;
@@ -10,7 +9,7 @@ namespace Angular18AspNetCore8.App.Tests;
 public class UpdateTodoItemTests
 {
   readonly Mock<ITodoItemsRepository> mockTodoTaskRepository;
-  readonly Handler testUpdateTaskHandler;
+  readonly Commands.UpdateTodoItem.Handler testUpdateTaskHandler;
   readonly Validator validator = new();
   public UpdateTodoItemTests()
   {
@@ -25,7 +24,7 @@ public class UpdateTodoItemTests
     var givenTodoTaskStatus = TodoTaskStatus.ToDo;
     var givenUpdateDatetime = DateTimeOffset.Now;
     var givenExistingDatetime = DateTimeOffset.Now.AddDays(-1);
-    var givenItemToUpdate = new ItemResultModel
+    var givenItemToUpdate = new TodoItemModel
     {
       Id = 1,
       Description = "Some description",
@@ -50,7 +49,7 @@ public class UpdateTodoItemTests
     var expectedResult = new Response
     {
       HasValidationErrors = false,
-      Item = new ItemResultModel
+      Item = new TodoItemModel
       {
         Id = givenItemToUpdate.Id,
         Description = givenItemToUpdate.Description,
@@ -69,7 +68,7 @@ public class UpdateTodoItemTests
   {
     //Arrange
     var givenTodoTaskStatus = TodoTaskStatus.ToDo;
-    var givenItemToUpdate = new ItemResultModel
+    var givenItemToUpdate = new TodoItemModel
     {
       Id = 1,
       Description = "Some description",
@@ -95,7 +94,7 @@ public class UpdateTodoItemTests
   public async Task UpdateTaskWithValidationErrors(string givenDescription, string givenDescriptionError, int givenDueDateDaysAdd, string givenDueDateError, string givenStatus, string givenStatusError)
   {
     //Arrange
-    var givenItemToUpdate = new ItemResultModel
+    var givenItemToUpdate = new TodoItemModel
     {
       Id = 1,
       Description = givenDescription,

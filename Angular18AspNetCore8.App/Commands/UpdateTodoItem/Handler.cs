@@ -1,5 +1,5 @@
 ﻿using Angular18AspNetCore8.App.Common;
-using Angular18AspNetCore8.App.Queries.GetAllTasks;
+using Angular18AspNetCore8.App.Queries.GetAllTodoItems;
 using Angular18AspNetCore8.Core.Entities;
 using FluentValidation;
 
@@ -34,7 +34,7 @@ public class Handler(ITodoItemsRepository todoTasksRepository, IValidator<Comman
     return new Response
     {
       HasValidationErrors = false,
-      Item = new ItemResultModel
+      Item = new TodoItemModel
       {
         Description = existingTask.Description,
         DueDate = existingTask.Duedate,

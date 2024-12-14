@@ -1,6 +1,6 @@
-﻿namespace Angular18AspNetCore8.App.Queries.GetAllTasks;
+﻿namespace Angular18AspNetCore8.App.Common;
 
-public class ItemResultModel
+public class TodoItemModel
 {
   public int Id { get; set; } = 0;
   public string Description { get; set; } = "";
