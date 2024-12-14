@@ -29,13 +29,7 @@ namespace Angular18AspNetCore8.App.Tests
       var expectedResult = new Response
       {
         Count = 2,
-        Items = givenTaskEntities.Select(e => new TodoItemModel
-        {
-          Description = e.Description,
-          DueDate = e.DueDate,
-          Id = e.Id,
-          Status = (e.DueDate.HasValue && e.DueDate.Value < DateTimeOffset.Now) ? TodoItemStatusNames.Format[TodoItemStatus.Overdue] : TodoItemStatusNames.Format[e.LastUserStatus]
-        }),
+        Items = givenTaskEntities.Select(e => mapper.Map(e)),
         Message = "2 tasks retrieved"
       };
       //Act

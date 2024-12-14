@@ -34,13 +34,7 @@ namespace Angular18AspNetCore8.App.Tests
       var expectedResult = new Response
       {
         HasValidationErrors = false,
-        Item = new TodoItemModel
-        {
-          Description = newTodoITem.Description,
-          DueDate = newTodoITem.DueDate,
-          Id = newTodoITem.Id,
-          Status = (newTodoITem.DueDate.HasValue && newTodoITem.DueDate.Value > DateTimeOffset.Now) ? TodoItemStatusNames.Format[TodoItemStatus.Overdue] : TodoItemStatusNames.Format[newTodoITem.LastUserStatus]
-        }
+        Item = mapper.Map(newTodoITem),
       };
       //Act
       var actualResult = await testHandler.Execute(givenCommand);
@@ -83,7 +77,7 @@ namespace Angular18AspNetCore8.App.Tests
       var expectedResult = new Response
       {
         HasValidationErrors = true,
-        Item = new Common.TodoItemModel
+        Item = new TodoItemModel
         {
           Description = givenDescription,
           DueDate = givenDueDate,
