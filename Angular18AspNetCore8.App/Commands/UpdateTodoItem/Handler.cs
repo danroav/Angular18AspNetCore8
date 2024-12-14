@@ -3,21 +3,16 @@ using Angular18AspNetCore8.App.Queries.GetAllTasks;
 using Angular18AspNetCore8.Core.Entities;
 using FluentValidation;
 
-namespace Angular18AspNetCore8.App.Commands.UpdateTask;
-
-public class CommandUpdateTask : ITodoTasksHandlerInput
+namespace Angular18AspNetCore8.App.Commands.UpdateTodoItem;
+public class Handler(ITodoTasksRepository todoTasksRepository, IValidator<Command> validator) : ITodoTasksHandler<Command, Response>
 {
-  public required ItemResultModel Item { get; set; }
-}
-public class CommandUpdateTaskHandler(ITodoTasksRepository todoTasksRepository, IValidator<CommandUpdateTask> validator) : ITodoTasksHandler<CommandUpdateTask, CommandUpdateTaskResult>
-{
-  public async Task<CommandUpdateTaskResult> Execute(CommandUpdateTask command)
+  public async Task<Response> Execute(Command command)
   {
     var validationResult = validator.Validate(command);
 
     if (!validationResult.IsValid)
     {
-      return new CommandUpdateTaskResult
+      return new Response
       {
         HasValidationErrors = true,
         Item = command.Item,
@@ -36,7 +31,7 @@ public class CommandUpdateTaskHandler(ITodoTasksRepository todoTasksRepository, 
 
     await todoTasksRepository.SaveChanges();
 
-    return new CommandUpdateTaskResult
+    return new Response
     {
       HasValidationErrors = false,
       Item = new ItemResultModel

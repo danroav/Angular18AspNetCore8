@@ -1,4 +1,3 @@
-using Angular18AspNetCore8.App.Commands.UpdateTask;
 using Angular18AspNetCore8.App.Common;
 using Angular18AspNetCore8.App.Queries.GetAllTasks;
 using Angular18AspNetCore8.Infra.Persistence;
@@ -15,8 +14,8 @@ builder.Services.AddScoped<ITodoTasksHandler<QueryGetAllTasks, QueryGetAllTasksR
 builder.Services.AddTransient<IValidator<Angular18AspNetCore8.App.Commands.AddNewTodoItem.Command>, Angular18AspNetCore8.App.Commands.AddNewTodoItem.CommandValidator>();
 builder.Services.AddScoped<ITodoTasksHandler<Angular18AspNetCore8.App.Commands.AddNewTodoItem.Command, Angular18AspNetCore8.App.Commands.AddNewTodoItem.Response>, Angular18AspNetCore8.App.Commands.AddNewTodoItem.CommandHandler>();
 
-builder.Services.AddTransient<IValidator<CommandUpdateTask>, CommandUpdateTaskValidator>();
-builder.Services.AddScoped<ITodoTasksHandler<CommandUpdateTask, CommandUpdateTaskResult>, CommandUpdateTaskHandler>();
+builder.Services.AddTransient<IValidator<Angular18AspNetCore8.App.Commands.UpdateTodoItem.Command>, Angular18AspNetCore8.App.Commands.UpdateTodoItem.Validator>();
+builder.Services.AddScoped<ITodoTasksHandler<Angular18AspNetCore8.App.Commands.UpdateTodoItem.Command, Angular18AspNetCore8.App.Commands.UpdateTodoItem.Response>, Angular18AspNetCore8.App.Commands.UpdateTodoItem.Handler>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

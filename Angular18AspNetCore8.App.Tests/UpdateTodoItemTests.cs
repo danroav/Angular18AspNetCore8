@@ -1,4 +1,4 @@
-﻿using Angular18AspNetCore8.App.Commands.UpdateTask;
+﻿using Angular18AspNetCore8.App.Commands.UpdateTodoItem;
 using Angular18AspNetCore8.App.Common;
 using Angular18AspNetCore8.App.Queries.GetAllTasks;
 using Angular18AspNetCore8.Core.Entities;
@@ -7,15 +7,15 @@ using Moq;
 
 namespace Angular18AspNetCore8.App.Tests;
 
-public class CommandUpdateTasksTests
+public class UpdateTodoItemTests
 {
   readonly Mock<ITodoTasksRepository> mockTodoTaskRepository;
-  readonly CommandUpdateTaskHandler testUpdateTaskHandler;
-  readonly CommandUpdateTaskValidator validator = new();
-  public CommandUpdateTasksTests()
+  readonly Handler testUpdateTaskHandler;
+  readonly Validator validator = new();
+  public UpdateTodoItemTests()
   {
     mockTodoTaskRepository = new Mock<ITodoTasksRepository>();
-    testUpdateTaskHandler = new CommandUpdateTaskHandler(mockTodoTaskRepository.Object, validator);
+    testUpdateTaskHandler = new Handler(mockTodoTaskRepository.Object, validator);
   }
   [Theory]
   [InlineData(true)]
@@ -32,7 +32,7 @@ public class CommandUpdateTasksTests
       DueDate = givenUpdateDatetimeNull ? null : givenUpdateDatetime,
       Status = TodoTaskStatusNames.Format[givenTodoTaskStatus],
     };
-    var givenCommandUpdateTask = new CommandUpdateTask
+    var givenCommandUpdateTask = new Command
     {
       Item = givenItemToUpdate
     };
@@ -47,7 +47,7 @@ public class CommandUpdateTasksTests
     mockTodoTaskRepository.Setup(x => x.GetByIds(It.IsAny<IList<int>>())).ReturnsAsync([existingTodoTask]);
     mockTodoTaskRepository.Setup(x => x.SaveChanges());
 
-    var expectedResult = new CommandUpdateTaskResult
+    var expectedResult = new Response
     {
       HasValidationErrors = false,
       Item = new ItemResultModel
@@ -76,7 +76,7 @@ public class CommandUpdateTasksTests
       DueDate = null,
       Status = TodoTaskStatusNames.Format[givenTodoTaskStatus],
     };
-    var givenCommand = new CommandUpdateTask
+    var givenCommand = new Command
     {
       Item = givenItemToUpdate
     };
@@ -102,11 +102,11 @@ public class CommandUpdateTasksTests
       DueDate = DateTimeOffset.Now.AddDays(givenDueDateDaysAdd),
       Status = givenStatus,
     };
-    var givenCommand = new CommandUpdateTask
+    var givenCommand = new Command
     {
       Item = givenItemToUpdate
     };
-    var expectedResult = new CommandUpdateTaskResult
+    var expectedResult = new Response
     {
       HasValidationErrors = true,
       Item = givenItemToUpdate,
