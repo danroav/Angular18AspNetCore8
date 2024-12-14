@@ -17,8 +17,8 @@ export class TodoListItemStore {
       dueDate?: string;
     }]: string[];
   } = {};
-  allowedStatus: string[] = [];
-  defaultStatus: string = '';
+  statusValidList: string[] = [];
+  statusDefault: string = '';
   constructor() {
     makeAutoObservable(this);
   }

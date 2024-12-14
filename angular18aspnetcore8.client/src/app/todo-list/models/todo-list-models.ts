@@ -9,3 +9,8 @@ export interface TodoListIndexResponse {
   message: string;
   items: TodoItem[];
 }
+export interface CommandAddNewTaskResult {
+  taskId: number;
+  validationErrors: Record<string, string[]>;
+  hasValidationErrors: boolean;
+}
