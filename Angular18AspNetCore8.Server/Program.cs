@@ -8,14 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddSqlite<AppDbContext>(builder.Configuration.GetConnectionString("TodoListDb"));
 
-builder.Services.AddScoped<ITodoTasksRepository, TodoTasksRepository>();
-builder.Services.AddScoped<ITodoTasksHandler<QueryGetAllTasks, QueryGetAllTasksResult>, QueryGetAllTasksHandler>();
+builder.Services.AddScoped<ITodoItemsRepository, TodoTasksRepository>();
+builder.Services.AddScoped<ITodoItemsHandler<QueryGetAllTasks, QueryGetAllTasksResult>, QueryGetAllTasksHandler>();
 
 builder.Services.AddTransient<IValidator<Angular18AspNetCore8.App.Commands.AddNewTodoItem.Command>, Angular18AspNetCore8.App.Commands.AddNewTodoItem.Validator>();
-builder.Services.AddScoped<ITodoTasksHandler<Angular18AspNetCore8.App.Commands.AddNewTodoItem.Command, Angular18AspNetCore8.App.Commands.AddNewTodoItem.Response>, Angular18AspNetCore8.App.Commands.AddNewTodoItem.Handler>();
+builder.Services.AddScoped<ITodoItemsHandler<Angular18AspNetCore8.App.Commands.AddNewTodoItem.Command, Angular18AspNetCore8.App.Commands.AddNewTodoItem.Response>, Angular18AspNetCore8.App.Commands.AddNewTodoItem.Handler>();
 
 builder.Services.AddTransient<IValidator<Angular18AspNetCore8.App.Commands.UpdateTodoItem.Command>, Angular18AspNetCore8.App.Commands.UpdateTodoItem.Validator>();
-builder.Services.AddScoped<ITodoTasksHandler<Angular18AspNetCore8.App.Commands.UpdateTodoItem.Command, Angular18AspNetCore8.App.Commands.UpdateTodoItem.Response>, Angular18AspNetCore8.App.Commands.UpdateTodoItem.Handler>();
+builder.Services.AddScoped<ITodoItemsHandler<Angular18AspNetCore8.App.Commands.UpdateTodoItem.Command, Angular18AspNetCore8.App.Commands.UpdateTodoItem.Response>, Angular18AspNetCore8.App.Commands.UpdateTodoItem.Handler>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

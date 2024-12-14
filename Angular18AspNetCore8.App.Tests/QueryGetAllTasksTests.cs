@@ -9,11 +9,11 @@ namespace Angular18AspNetCore8.App.Tests
 {
   public class QueryGetAllTasksTests
   {
-    readonly Mock<ITodoTasksRepository> mockTodoTaskRepository;
+    readonly Mock<ITodoItemsRepository> mockTodoTaskRepository;
     readonly QueryGetAllTasksHandler testQueryGetAllTasks;
     public QueryGetAllTasksTests()
     {
-      mockTodoTaskRepository = new Mock<ITodoTasksRepository>();
+      mockTodoTaskRepository = new Mock<ITodoItemsRepository>();
       testQueryGetAllTasks = new QueryGetAllTasksHandler(mockTodoTaskRepository.Object);
     }
     [Fact]

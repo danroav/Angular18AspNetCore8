@@ -7,7 +7,7 @@ namespace Angular18AspNetCore8.Server.Controllers;
 
 [Route("api/todo-list")]
 [ApiController]
-public class TodoListController(ITodoTasksHandler<QueryGetAllTasks, QueryGetAllTasksResult> queryGetlAllTasks, ITodoTasksHandler<App.Commands.AddNewTodoItem.Command, App.Commands.AddNewTodoItem.Response> addNewTaskHandler, ITodoTasksHandler<App.Commands.UpdateTodoItem.Command, App.Commands.UpdateTodoItem.Response> updateTaskHandler) : ControllerBase
+public class TodoListController(ITodoItemsHandler<QueryGetAllTasks, QueryGetAllTasksResult> queryGetlAllTasks, ITodoItemsHandler<App.Commands.AddNewTodoItem.Command, App.Commands.AddNewTodoItem.Response> addNewTaskHandler, ITodoItemsHandler<App.Commands.UpdateTodoItem.Command, App.Commands.UpdateTodoItem.Response> updateTaskHandler) : ControllerBase
 {
   [HttpGet("index")]
   public async Task<ActionResult<QueryGetAllTasksResult>> GetAllTasks()

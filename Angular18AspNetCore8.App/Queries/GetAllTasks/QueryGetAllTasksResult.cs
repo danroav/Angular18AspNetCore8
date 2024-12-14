@@ -2,7 +2,7 @@
 
 namespace Angular18AspNetCore8.App.Queries.GetAllTasks;
 
-public class QueryGetAllTasksResult : ITodoTasksHandlerOutput
+public class QueryGetAllTasksResult : ITodoItemsHandlerOutput
 {
   public int Count { get; set; }
   public string Message { get; set; } = "";

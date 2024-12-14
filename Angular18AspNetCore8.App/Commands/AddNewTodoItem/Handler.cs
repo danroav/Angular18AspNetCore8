@@ -5,7 +5,7 @@ using FluentValidation;
 
 namespace Angular18AspNetCore8.App.Commands.AddNewTodoItem
 {
-  public class Handler(ITodoTasksRepository todoTaskRepository, IValidator<Command> validator) : ITodoTasksHandler<Command, Response>
+  public class Handler(ITodoItemsRepository todoTaskRepository, IValidator<Command> validator) : ITodoItemsHandler<Command, Response>
   {
     public async Task<Response> Execute(Command command)
     {

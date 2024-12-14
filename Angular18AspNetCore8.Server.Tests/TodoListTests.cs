@@ -12,14 +12,14 @@ namespace Angular18AspNetCore8.Server.Tests
   public class TodoListTests
   {
     readonly TodoListController todoListController;
-    readonly Mock<ITodoTasksHandler<QueryGetAllTasks, QueryGetAllTasksResult>> mockGetAllTasks;
-    readonly Mock<ITodoTasksHandler<App.Commands.AddNewTodoItem.Command, App.Commands.AddNewTodoItem.Response>> mockAddNewTaskHandler;
-    readonly Mock<ITodoTasksHandler<App.Commands.UpdateTodoItem.Command, App.Commands.UpdateTodoItem.Response>> mockUpdateTaskHandler;
+    readonly Mock<ITodoItemsHandler<QueryGetAllTasks, QueryGetAllTasksResult>> mockGetAllTasks;
+    readonly Mock<ITodoItemsHandler<App.Commands.AddNewTodoItem.Command, App.Commands.AddNewTodoItem.Response>> mockAddNewTaskHandler;
+    readonly Mock<ITodoItemsHandler<App.Commands.UpdateTodoItem.Command, App.Commands.UpdateTodoItem.Response>> mockUpdateTaskHandler;
     public TodoListTests()
     {
-      mockGetAllTasks = new Mock<ITodoTasksHandler<QueryGetAllTasks, QueryGetAllTasksResult>>();
-      mockAddNewTaskHandler = new Mock<ITodoTasksHandler<App.Commands.AddNewTodoItem.Command, App.Commands.AddNewTodoItem.Response>>();
-      mockUpdateTaskHandler = new Mock<ITodoTasksHandler<App.Commands.UpdateTodoItem.Command, App.Commands.UpdateTodoItem.Response>>();
+      mockGetAllTasks = new Mock<ITodoItemsHandler<QueryGetAllTasks, QueryGetAllTasksResult>>();
+      mockAddNewTaskHandler = new Mock<ITodoItemsHandler<App.Commands.AddNewTodoItem.Command, App.Commands.AddNewTodoItem.Response>>();
+      mockUpdateTaskHandler = new Mock<ITodoItemsHandler<App.Commands.UpdateTodoItem.Command, App.Commands.UpdateTodoItem.Response>>();
       todoListController = new TodoListController(mockGetAllTasks.Object, mockAddNewTaskHandler.Object, mockUpdateTaskHandler.Object);
     }
 

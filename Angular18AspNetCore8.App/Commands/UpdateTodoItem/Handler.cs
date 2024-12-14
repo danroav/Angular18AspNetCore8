@@ -4,7 +4,7 @@ using Angular18AspNetCore8.Core.Entities;
 using FluentValidation;
 
 namespace Angular18AspNetCore8.App.Commands.UpdateTodoItem;
-public class Handler(ITodoTasksRepository todoTasksRepository, IValidator<Command> validator) : ITodoTasksHandler<Command, Response>
+public class Handler(ITodoItemsRepository todoTasksRepository, IValidator<Command> validator) : ITodoItemsHandler<Command, Response>
 {
   public async Task<Response> Execute(Command command)
   {
