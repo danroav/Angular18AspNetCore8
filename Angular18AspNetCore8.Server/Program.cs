@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddSqlite<AppDbContext>(builder.Configuration.GetConnectionString("TodoListDb"));
 
-builder.Services.AddScoped<ITodoItemsRepository, TodoTasksRepository>();
+builder.Services.AddScoped<ITodoItemsRepository, TodoItemsRepository>();
 builder.Services.AddScoped<ITodoItemsHandler<Angular18AspNetCore8.App.Queries.GetAllTodoItems.Query, Angular18AspNetCore8.App.Queries.GetAllTodoItems.Response>, Angular18AspNetCore8.App.Queries.GetAllTodoItems.Handler>();
 
 builder.Services.AddTransient<IValidator<Angular18AspNetCore8.App.Commands.AddNewTodoItem.Command>, Angular18AspNetCore8.App.Commands.AddNewTodoItem.Validator>();

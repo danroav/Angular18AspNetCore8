@@ -7,11 +7,11 @@ using Moq;
 
 namespace Angular18AspNetCore8.App.Tests
 {
-  public class QueryGetAllTasksTests
+  public class GetAllTodoItemsTests
   {
     readonly Mock<ITodoItemsRepository> mockTodoTaskRepository;
     readonly Handler testQueryGetAllTasks;
-    public QueryGetAllTasksTests()
+    public GetAllTodoItemsTests()
     {
       mockTodoTaskRepository = new Mock<ITodoItemsRepository>();
       testQueryGetAllTasks = new Handler(mockTodoTaskRepository.Object);
