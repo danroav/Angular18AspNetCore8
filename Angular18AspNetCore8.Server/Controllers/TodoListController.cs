@@ -1,5 +1,4 @@
-﻿using Angular18AspNetCore8.App.Commands.AddNewTask;
-using Angular18AspNetCore8.App.Commands.UpdateTask;
+﻿using Angular18AspNetCore8.App.Commands.UpdateTask;
 using Angular18AspNetCore8.App.Common;
 using Angular18AspNetCore8.App.Queries.GetAllTasks;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +8,7 @@ namespace Angular18AspNetCore8.Server.Controllers;
 
 [Route("api/todo-list")]
 [ApiController]
-public class TodoListController(ITodoTasksHandler<QueryGetAllTasks, QueryGetAllTasksResult> queryGetlAllTasks, ITodoTasksHandler<CommandAddNewTask, CommandAddNewTaskResult> addNewTaskHandler, ITodoTasksHandler<CommandUpdateTask, CommandUpdateTaskResult> updateTaskHandler) : ControllerBase
+public class TodoListController(ITodoTasksHandler<QueryGetAllTasks, QueryGetAllTasksResult> queryGetlAllTasks, ITodoTasksHandler<App.Commands.AddNewTodoItem.Command, App.Commands.AddNewTodoItem.Response> addNewTaskHandler, ITodoTasksHandler<CommandUpdateTask, CommandUpdateTaskResult> updateTaskHandler) : ControllerBase
 {
   [HttpGet("index")]
   public async Task<ActionResult<QueryGetAllTasksResult>> GetAllTasks()
@@ -24,7 +23,7 @@ public class TodoListController(ITodoTasksHandler<QueryGetAllTasks, QueryGetAllT
     }
   }
   [HttpPost("create")]
-  public async Task<ActionResult<CommandAddNewTaskResult>> AddNewTask([FromBody] CommandAddNewTask input)
+  public async Task<ActionResult<App.Commands.AddNewTodoItem.Response>> AddNewTask([FromBody] App.Commands.AddNewTodoItem.Command input)
   {
     try
     {

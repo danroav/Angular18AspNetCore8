@@ -1,4 +1,4 @@
-﻿using Angular18AspNetCore8.App.Commands.AddNewTask;
+﻿using Angular18AspNetCore8.App.Commands.AddNewTodoItem;
 using Angular18AspNetCore8.App.Common;
 using Angular18AspNetCore8.App.Queries.GetAllTasks;
 using Angular18AspNetCore8.Core.Entities;
@@ -7,22 +7,22 @@ using Moq;
 
 namespace Angular18AspNetCore8.App.Tests
 {
-  public class CommandAddNewTaskTests
+  public class CommandAddNewTodoItemTests
   {
     readonly Mock<ITodoTasksRepository> mockTodoTaskRepository;
-    readonly CommandAddNewTaskHandler testAddNewTaskHandler;
-    readonly CommandAddNewTaskValidator validator = new();
-    public CommandAddNewTaskTests()
+    readonly CommandHandler testAddNewTaskHandler;
+    readonly CommandValidator validator = new();
+    public CommandAddNewTodoItemTests()
     {
       mockTodoTaskRepository = new Mock<ITodoTasksRepository>();
-      testAddNewTaskHandler = new CommandAddNewTaskHandler(mockTodoTaskRepository.Object, validator);
+      testAddNewTaskHandler = new CommandHandler(mockTodoTaskRepository.Object, validator);
     }
     [Fact]
     public async Task AddTaskSuccess()
     {
       //Arrange
       var givenTodoTaskStatus = TodoTaskStatus.ToDo;
-      var givenCommandAddNewTask = new CommandAddNewTask
+      var givenCommandAddNewTask = new Command
       {
         Description = "Some description",
         DueDate = null,
@@ -31,7 +31,7 @@ namespace Angular18AspNetCore8.App.Tests
       var newTodoTask = new TodoTask { Id = 1000, Description = givenCommandAddNewTask.Description, Duedate = givenCommandAddNewTask.DueDate, Status = givenTodoTaskStatus };
       mockTodoTaskRepository.Setup(x => x.AddNew(It.IsAny<string>(), It.IsAny<DateTimeOffset?>(), It.IsAny<TodoTaskStatus>())).ReturnsAsync(newTodoTask);
       mockTodoTaskRepository.Setup(x => x.SaveChanges());
-      var expectedResult = new CommandAddNewTaskResult
+      var expectedResult = new Response
       {
         HasValidationErrors = false,
         Item = new ItemResultModel
@@ -52,7 +52,7 @@ namespace Angular18AspNetCore8.App.Tests
     public async Task AddsNewTaskWithError()
     {
       //Arrange
-      var givenCommand = new CommandAddNewTask()
+      var givenCommand = new Command()
       {
         Description = "Some description",
         DueDate = DateTimeOffset.Now.AddDays(1),
@@ -74,13 +74,13 @@ namespace Angular18AspNetCore8.App.Tests
     {
       //Arrange
       var givenDueDate = DateTimeOffset.Now.AddDays(givenDueDateDaysAdd);
-      var givenCommand = new CommandAddNewTask()
+      var givenCommand = new Command()
       {
         Description = givenDescription,
         DueDate = givenDueDate,
         Status = givenStatus
       };
-      var expectedResult = new CommandAddNewTaskResult
+      var expectedResult = new Response
       {
         HasValidationErrors = true,
         Item = new ItemResultModel
