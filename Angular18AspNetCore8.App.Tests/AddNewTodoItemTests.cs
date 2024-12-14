@@ -11,10 +11,11 @@ namespace Angular18AspNetCore8.App.Tests
     readonly Mock<ITodoItemsRepository> mockTodoItemsRepository;
     readonly Handler testHandler;
     readonly Validator validator = new();
+    readonly TodoItemMapper mapper = new();
     public AddNewTodoItemTests()
     {
       mockTodoItemsRepository = new Mock<ITodoItemsRepository>();
-      testHandler = new Handler(mockTodoItemsRepository.Object, validator);
+      testHandler = new Handler(mockTodoItemsRepository.Object, validator, mapper);
     }
     [Fact]
     public async Task AddNewTodoItemSuccess()
@@ -27,7 +28,7 @@ namespace Angular18AspNetCore8.App.Tests
         DueDate = null,
         Status = TodoItemStatusNames.Format[givenStatus],
       };
-      var newTodoITem = new TodoItem { Id = 1000, Description = givenCommand.Description, DueDate = givenCommand.DueDate, Status = givenStatus };
+      var newTodoITem = new TodoItem { Id = 1000, Description = givenCommand.Description, DueDate = givenCommand.DueDate, LastUserStatus = givenStatus };
       mockTodoItemsRepository.Setup(x => x.AddNew(It.IsAny<string>(), It.IsAny<DateTimeOffset?>(), It.IsAny<TodoItemStatus>())).ReturnsAsync(newTodoITem);
       mockTodoItemsRepository.Setup(x => x.SaveChanges());
       var expectedResult = new Response
@@ -38,7 +39,7 @@ namespace Angular18AspNetCore8.App.Tests
           Description = newTodoITem.Description,
           DueDate = newTodoITem.DueDate,
           Id = newTodoITem.Id,
-          Status = (newTodoITem.DueDate.HasValue && newTodoITem.DueDate.Value > DateTimeOffset.Now) ? TodoItemStatusNames.Format[TodoItemStatus.Overdue] : TodoItemStatusNames.Format[newTodoITem.Status]
+          Status = (newTodoITem.DueDate.HasValue && newTodoITem.DueDate.Value > DateTimeOffset.Now) ? TodoItemStatusNames.Format[TodoItemStatus.Overdue] : TodoItemStatusNames.Format[newTodoITem.LastUserStatus]
         }
       };
       //Act
@@ -82,7 +83,7 @@ namespace Angular18AspNetCore8.App.Tests
       var expectedResult = new Response
       {
         HasValidationErrors = true,
-        Item = new TodoItemModel
+        Item = new Common.TodoItemModel
         {
           Description = givenDescription,
           DueDate = givenDueDate,

@@ -11,19 +11,20 @@ namespace Angular18AspNetCore8.App.Tests
   {
     readonly Mock<ITodoItemsRepository> mockTodoItemsRepository;
     readonly Handler testHandler;
+    readonly TodoItemMapper mapper = new();
     public GetAllTodoItemsTests()
     {
       mockTodoItemsRepository = new Mock<ITodoItemsRepository>();
-      testHandler = new Handler(mockTodoItemsRepository.Object);
+      testHandler = new Handler(mockTodoItemsRepository.Object, mapper);
     }
     [Fact]
     public async Task GetsAllTodoItemsNoError()
     {
       //Arrange
       List<TodoItem> givenTaskEntities = [new TodoItem
-      { Id=1, Description="A", DueDate=DateTime.Now.ToDateTimeOffset(), Status=TodoItemStatus.ToDo },
+      { Id=1, Description="A", DueDate=DateTime.Now.ToDateTimeOffset(), LastUserStatus= TodoItemStatus.ToDo },
         new TodoItem
-      { Id=2, Description="B", DueDate=DateTime.Now.ToDateTimeOffset(), Status=TodoItemStatus.InProgress }, ];
+      { Id=2, Description="B", DueDate=DateTime.Now.ToDateTimeOffset(), LastUserStatus= TodoItemStatus.InProgress }, ];
       mockTodoItemsRepository.Setup(x => x.GetAll()).ReturnsAsync(givenTaskEntities);
       var expectedResult = new Response
       {
@@ -33,7 +34,7 @@ namespace Angular18AspNetCore8.App.Tests
           Description = e.Description,
           DueDate = e.DueDate,
           Id = e.Id,
-          Status = (e.DueDate.HasValue && e.DueDate.Value < DateTimeOffset.Now) ? TodoItemStatusNames.Format[TodoItemStatus.Overdue] : TodoItemStatusNames.Format[e.Status]
+          Status = (e.DueDate.HasValue && e.DueDate.Value < DateTimeOffset.Now) ? TodoItemStatusNames.Format[TodoItemStatus.Overdue] : TodoItemStatusNames.Format[e.LastUserStatus]
         }),
         Message = "2 tasks retrieved"
       };

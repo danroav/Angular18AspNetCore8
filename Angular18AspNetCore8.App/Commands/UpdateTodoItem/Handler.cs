@@ -3,7 +3,7 @@ using Angular18AspNetCore8.Core.Entities;
 using FluentValidation;
 
 namespace Angular18AspNetCore8.App.Commands.UpdateTodoItem;
-public class Handler(ITodoItemsRepository todoItemsRepository, IValidator<Command> validator) : ITodoItemsHandler<Command, Response>
+public class Handler(ITodoItemsRepository todoItemsRepository, IValidator<Command> validator, TodoItemMapper mapper) : ITodoItemsHandler<Command, Response>
 {
   public async Task<Response> Execute(Command command)
   {
@@ -26,20 +26,14 @@ public class Handler(ITodoItemsRepository todoItemsRepository, IValidator<Comman
 
     existingTodoItem.Description = infoToUpdate.Description;
     existingTodoItem.DueDate = infoToUpdate.DueDate;
-    existingTodoItem.Status = TodoItemStatusNames.Parse[infoToUpdate.Status];
+    existingTodoItem.LastUserStatus = TodoItemStatusNames.Parse[infoToUpdate.Status];
 
     await todoItemsRepository.SaveChanges();
 
     return new Response
     {
       HasValidationErrors = false,
-      Item = new TodoItemModel
-      {
-        Description = existingTodoItem.Description,
-        DueDate = existingTodoItem.DueDate,
-        Id = command.Item.Id,
-        Status = (existingTodoItem.DueDate.HasValue && existingTodoItem.DueDate.Value < DateTimeOffset.Now) ? TodoItemStatusNames.Format[TodoItemStatus.Overdue] : TodoItemStatusNames.Format[existingTodoItem.Status]
-      }
+      Item = mapper.Map(existingTodoItem),
     };
   }
 }

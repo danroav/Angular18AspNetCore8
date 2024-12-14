@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace Angular18AspNetCore8.App.Commands.AddNewTodoItem
 {
-  public class Handler(ITodoItemsRepository todoItemsRepository, IValidator<Command> validator) : ITodoItemsHandler<Command, Response>
+  public class Handler(ITodoItemsRepository todoItemsRepository, IValidator<Command> validator, TodoItemMapper mapper) : ITodoItemsHandler<Command, Response>
   {
     public async Task<Response> Execute(Command command)
     {
@@ -23,20 +23,14 @@ namespace Angular18AspNetCore8.App.Commands.AddNewTodoItem
           ValidationErrors = result.ToDictionary()
         };
       }
-      var repositoryResult = await todoItemsRepository.AddNew(command.Description, command.DueDate, TodoItemStatusNames.Parse[command.Status]);
+      var newTodoItem = await todoItemsRepository.AddNew(command.Description, command.DueDate, TodoItemStatusNames.Parse[command.Status]);
 
       await todoItemsRepository.SaveChanges();
 
       return new Response
       {
         HasValidationErrors = false,
-        Item = new TodoItemModel
-        {
-          Description = repositoryResult.Description,
-          DueDate = repositoryResult.DueDate,
-          Status = (repositoryResult.DueDate.HasValue && repositoryResult.DueDate.Value > DateTimeOffset.Now) ? TodoItemStatusNames.Format[TodoItemStatus.Overdue] : TodoItemStatusNames.Format[repositoryResult.Status],
-          Id = repositoryResult.Id
-        },
+        Item = mapper.Map(newTodoItem),
       };
     }
   }

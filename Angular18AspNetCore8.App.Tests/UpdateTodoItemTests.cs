@@ -11,10 +11,11 @@ public class UpdateTodoItemTests
   readonly Mock<ITodoItemsRepository> mockTodoItemsRepository;
   readonly Handler testHandler;
   readonly Validator validator = new();
+  readonly TodoItemMapper mapper = new();
   public UpdateTodoItemTests()
   {
     mockTodoItemsRepository = new Mock<ITodoItemsRepository>();
-    testHandler = new Handler(mockTodoItemsRepository.Object, validator);
+    testHandler = new Handler(mockTodoItemsRepository.Object, validator, mapper);
   }
   [Theory]
   [InlineData(true)]
@@ -40,7 +41,7 @@ public class UpdateTodoItemTests
       Id = givenCommand.Item.Id,
       Description = "Existing description",
       DueDate = givenExistingDatetime,
-      Status = TodoItemStatus.InProgress
+      LastUserStatus = TodoItemStatus.InProgress
     };
 
     mockTodoItemsRepository.Setup(x => x.GetByIds(It.IsAny<IList<int>>())).ReturnsAsync([existingTodoTask]);

@@ -16,6 +16,8 @@ builder.Services.AddScoped<ITodoItemsHandler<Angular18AspNetCore8.App.Commands.A
 builder.Services.AddTransient<IValidator<Angular18AspNetCore8.App.Commands.UpdateTodoItem.Command>, Angular18AspNetCore8.App.Commands.UpdateTodoItem.Validator>();
 builder.Services.AddScoped<ITodoItemsHandler<Angular18AspNetCore8.App.Commands.UpdateTodoItem.Command, Angular18AspNetCore8.App.Commands.UpdateTodoItem.Response>, Angular18AspNetCore8.App.Commands.UpdateTodoItem.Handler>();
 
+builder.Services.AddTransient<TodoItemMapper>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

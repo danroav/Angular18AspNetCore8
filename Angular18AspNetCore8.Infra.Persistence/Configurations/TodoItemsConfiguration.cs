@@ -12,6 +12,6 @@ internal class TodoItemsConfiguration : IEntityTypeConfiguration<TodoItem>
 
     builder.Property(x => x.Description).HasMaxLength(255).IsRequired();
     builder.Property(x => x.DueDate);
-    builder.Property(x => x.Status).HasConversion(c => TodoItemStatusNames.Format[c], f => TodoItemStatusNames.Parse[f]).IsRequired();
+    builder.Property(x => x.LastUserStatus).HasConversion(c => TodoItemStatusNames.Format[c], f => TodoItemStatusNames.Parse[f]).IsRequired();
   }
 }

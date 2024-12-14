@@ -13,7 +13,7 @@ public class TodoItemsRepository(AppDbContext appDbContext) : ITodoItemsReposito
 
   public async Task<TodoItem> AddNew(string description, DateTimeOffset? dueDate, TodoItemStatus status)
   {
-    var result = await appDbContext.TodoItems.AddAsync(new TodoItem { Description = description, DueDate = dueDate, Status = status });
+    var result = await appDbContext.TodoItems.AddAsync(new TodoItem { Description = description, DueDate = dueDate, LastUserStatus = status });
     return result.Entity;
   }
 
