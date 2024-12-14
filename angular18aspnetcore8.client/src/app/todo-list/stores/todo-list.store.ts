@@ -4,6 +4,10 @@ export enum StoreMode {
   edit = 1,
 }
 export class TodoListItemStore {
+  id: number = 0;
+  description: string = '';
+  status: string = '';
+  dueDate?: Date;
   mode: StoreMode = StoreMode.view;
   validations: {
     [property in keyof {
@@ -13,13 +17,9 @@ export class TodoListItemStore {
       dueDate?: string;
     }]: string[];
   } = {};
-
-  constructor(
-    public id: number,
-    public description: string,
-    public status: string,
-    public dueDate?: Date
-  ) {
+  allowedStatus: string[] = [];
+  defaultStatus: string = '';
+  constructor() {
     makeAutoObservable(this);
   }
 }
