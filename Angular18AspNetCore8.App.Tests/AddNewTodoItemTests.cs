@@ -7,15 +7,15 @@ using Moq;
 
 namespace Angular18AspNetCore8.App.Tests
 {
-  public class CommandAddNewTodoItemTests
+  public class AddNewTodoItemTests
   {
     readonly Mock<ITodoTasksRepository> mockTodoTaskRepository;
-    readonly CommandHandler testAddNewTaskHandler;
-    readonly CommandValidator validator = new();
-    public CommandAddNewTodoItemTests()
+    readonly Handler testAddNewTaskHandler;
+    readonly Validator validator = new();
+    public AddNewTodoItemTests()
     {
       mockTodoTaskRepository = new Mock<ITodoTasksRepository>();
-      testAddNewTaskHandler = new CommandHandler(mockTodoTaskRepository.Object, validator);
+      testAddNewTaskHandler = new Handler(mockTodoTaskRepository.Object, validator);
     }
     [Fact]
     public async Task AddTaskSuccess()

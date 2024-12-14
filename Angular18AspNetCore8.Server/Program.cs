@@ -11,8 +11,8 @@ builder.Services.AddSqlite<AppDbContext>(builder.Configuration.GetConnectionStri
 builder.Services.AddScoped<ITodoTasksRepository, TodoTasksRepository>();
 builder.Services.AddScoped<ITodoTasksHandler<QueryGetAllTasks, QueryGetAllTasksResult>, QueryGetAllTasksHandler>();
 
-builder.Services.AddTransient<IValidator<Angular18AspNetCore8.App.Commands.AddNewTodoItem.Command>, Angular18AspNetCore8.App.Commands.AddNewTodoItem.CommandValidator>();
-builder.Services.AddScoped<ITodoTasksHandler<Angular18AspNetCore8.App.Commands.AddNewTodoItem.Command, Angular18AspNetCore8.App.Commands.AddNewTodoItem.Response>, Angular18AspNetCore8.App.Commands.AddNewTodoItem.CommandHandler>();
+builder.Services.AddTransient<IValidator<Angular18AspNetCore8.App.Commands.AddNewTodoItem.Command>, Angular18AspNetCore8.App.Commands.AddNewTodoItem.Validator>();
+builder.Services.AddScoped<ITodoTasksHandler<Angular18AspNetCore8.App.Commands.AddNewTodoItem.Command, Angular18AspNetCore8.App.Commands.AddNewTodoItem.Response>, Angular18AspNetCore8.App.Commands.AddNewTodoItem.Handler>();
 
 builder.Services.AddTransient<IValidator<Angular18AspNetCore8.App.Commands.UpdateTodoItem.Command>, Angular18AspNetCore8.App.Commands.UpdateTodoItem.Validator>();
 builder.Services.AddScoped<ITodoTasksHandler<Angular18AspNetCore8.App.Commands.UpdateTodoItem.Command, Angular18AspNetCore8.App.Commands.UpdateTodoItem.Response>, Angular18AspNetCore8.App.Commands.UpdateTodoItem.Handler>();
