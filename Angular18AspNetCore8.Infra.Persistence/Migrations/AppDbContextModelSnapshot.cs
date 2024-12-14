@@ -17,7 +17,7 @@ namespace Angular18AspNetCore8.Infra.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
 
-            modelBuilder.Entity("Angular18AspNetCore8.Core.Entities.TodoTask", b =>
+            modelBuilder.Entity("Angular18AspNetCore8.Core.Entities.TodoItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -28,7 +28,7 @@ namespace Angular18AspNetCore8.Infra.Persistence.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset?>("Duedate")
+                    b.Property<DateTimeOffset?>("DueDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Status")

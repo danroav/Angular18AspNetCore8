@@ -20,10 +20,10 @@ namespace Angular18AspNetCore8.App.Tests
     public async Task GetsAllTasksNoError()
     {
       //Arrange
-      List<TodoTask> givenTaskEntities = [new TodoTask
-      { Id=1, Description="A", Duedate=DateTime.Now.ToDateTimeOffset(), Status=TodoTaskStatus.ToDo },
-        new TodoTask
-      { Id=2, Description="B", Duedate=DateTime.Now.ToDateTimeOffset(), Status=TodoTaskStatus.InProgress }, ];
+      List<TodoItem> givenTaskEntities = [new TodoItem
+      { Id=1, Description="A", DueDate=DateTime.Now.ToDateTimeOffset(), Status=TodoItemStatus.ToDo },
+        new TodoItem
+      { Id=2, Description="B", DueDate=DateTime.Now.ToDateTimeOffset(), Status=TodoItemStatus.InProgress }, ];
       mockTodoTaskRepository.Setup(x => x.GetAll()).ReturnsAsync(givenTaskEntities);
       var expectedResult = new Response
       {
@@ -31,9 +31,9 @@ namespace Angular18AspNetCore8.App.Tests
         Items = givenTaskEntities.Select(e => new TodoItemModel
         {
           Description = e.Description,
-          DueDate = e.Duedate,
+          DueDate = e.DueDate,
           Id = e.Id,
-          Status = (e.Duedate.HasValue && e.Duedate.Value < DateTimeOffset.Now) ? TodoTaskStatusNames.Format[TodoTaskStatus.Overdue] : TodoTaskStatusNames.Format[e.Status]
+          Status = (e.DueDate.HasValue && e.DueDate.Value < DateTimeOffset.Now) ? TodoItemStatusNames.Format[TodoItemStatus.Overdue] : TodoItemStatusNames.Format[e.Status]
         }),
         Message = "2 tasks retrieved"
       };

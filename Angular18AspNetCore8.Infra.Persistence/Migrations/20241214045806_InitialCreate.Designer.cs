@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Angular18AspNetCore8.Infra.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241213050844_InitialCreate")]
+    [Migration("20241214045806_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace Angular18AspNetCore8.Infra.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
 
-            modelBuilder.Entity("Angular18AspNetCore8.Core.Entities.TodoTask", b =>
+            modelBuilder.Entity("Angular18AspNetCore8.Core.Entities.TodoItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -31,7 +31,7 @@ namespace Angular18AspNetCore8.Infra.Persistence.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset?>("Duedate")
+                    b.Property<DateTimeOffset?>("DueDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Status")

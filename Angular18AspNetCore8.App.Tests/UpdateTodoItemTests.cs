@@ -21,7 +21,7 @@ public class UpdateTodoItemTests
   public async Task UpdateTaskSuccess(bool givenUpdateDatetimeNull)
   {
     //Arrange
-    var givenTodoTaskStatus = TodoTaskStatus.ToDo;
+    var givenTodoTaskStatus = TodoItemStatus.ToDo;
     var givenUpdateDatetime = DateTimeOffset.Now;
     var givenExistingDatetime = DateTimeOffset.Now.AddDays(-1);
     var givenItemToUpdate = new TodoItemModel
@@ -29,18 +29,18 @@ public class UpdateTodoItemTests
       Id = 1,
       Description = "Some description",
       DueDate = givenUpdateDatetimeNull ? null : givenUpdateDatetime,
-      Status = TodoTaskStatusNames.Format[givenTodoTaskStatus],
+      Status = TodoItemStatusNames.Format[givenTodoTaskStatus],
     };
     var givenCommandUpdateTask = new Command
     {
       Item = givenItemToUpdate
     };
-    var existingTodoTask = new TodoTask
+    var existingTodoTask = new TodoItem
     {
       Id = givenCommandUpdateTask.Item.Id,
       Description = "Existing description",
-      Duedate = givenExistingDatetime,
-      Status = TodoTaskStatus.InProgress
+      DueDate = givenExistingDatetime,
+      Status = TodoItemStatus.InProgress
     };
 
     mockTodoTaskRepository.Setup(x => x.GetByIds(It.IsAny<IList<int>>())).ReturnsAsync([existingTodoTask]);
@@ -54,7 +54,7 @@ public class UpdateTodoItemTests
         Id = givenItemToUpdate.Id,
         Description = givenItemToUpdate.Description,
         DueDate = givenItemToUpdate.DueDate,
-        Status = (givenItemToUpdate.DueDate.HasValue && givenItemToUpdate.DueDate.Value < DateTimeOffset.Now) ? TodoTaskStatusNames.Format[TodoTaskStatus.Overdue] : givenItemToUpdate.Status
+        Status = (givenItemToUpdate.DueDate.HasValue && givenItemToUpdate.DueDate.Value < DateTimeOffset.Now) ? TodoItemStatusNames.Format[TodoItemStatus.Overdue] : givenItemToUpdate.Status
       }
     };
     //Act
@@ -67,13 +67,13 @@ public class UpdateTodoItemTests
   public async Task UpdateTaskWithError()
   {
     //Arrange
-    var givenTodoTaskStatus = TodoTaskStatus.ToDo;
+    var givenTodoTaskStatus = TodoItemStatus.ToDo;
     var givenItemToUpdate = new TodoItemModel
     {
       Id = 1,
       Description = "Some description",
       DueDate = null,
-      Status = TodoTaskStatusNames.Format[givenTodoTaskStatus],
+      Status = TodoItemStatusNames.Format[givenTodoTaskStatus],
     };
     var givenCommand = new Command
     {

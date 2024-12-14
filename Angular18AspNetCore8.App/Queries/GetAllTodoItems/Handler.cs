@@ -13,9 +13,9 @@ public class Handler(ITodoItemsRepository todoTaskRepository) : ITodoItemsHandle
     var items = entities.Select(e => new TodoItemModel
     {
       Description = e.Description,
-      DueDate = e.Duedate,
+      DueDate = e.DueDate,
       Id = e.Id,
-      Status = (e.Duedate.HasValue && e.Duedate.Value < DateTimeOffset.Now) ? TodoTaskStatusNames.Format[TodoTaskStatus.Overdue] : TodoTaskStatusNames.Format[e.Status]
+      Status = (e.DueDate.HasValue && e.DueDate.Value < DateTimeOffset.Now) ? TodoItemStatusNames.Format[TodoItemStatus.Overdue] : TodoItemStatusNames.Format[e.Status]
     }).ToList();
 
     return new Response

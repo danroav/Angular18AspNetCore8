@@ -4,9 +4,9 @@ namespace Angular18AspNetCore8.App.Common
 {
   public interface ITodoItemsRepository
   {
-    Task<TodoTask> AddNew(string description, DateTimeOffset? dueDate, TodoTaskStatus status);
-    Task<List<TodoTask>> GetAll();
-    Task<List<TodoTask>> GetByIds(IList<int> ids);
+    Task<TodoItem> AddNew(string description, DateTimeOffset? dueDate, TodoItemStatus status);
+    Task<List<TodoItem>> GetAll();
+    Task<List<TodoItem>> GetByIds(IList<int> ids);
     Task<int> SaveChanges();
   }
 }

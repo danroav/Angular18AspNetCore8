@@ -9,7 +9,7 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
   {
     var folder = Environment.SpecialFolder.LocalApplicationData;
     var path = Environment.GetFolderPath(folder);
-    var dbPath = Path.Join(path, "todolistdb.db");
+    var dbPath = Path.Join(path, "todoitems.db");
     var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
     optionsBuilder.UseSqlite($"Data Source={dbPath}");
     return new AppDbContext(optionsBuilder.Options);

@@ -26,8 +26,8 @@ public class Handler(ITodoItemsRepository todoTasksRepository, IValidator<Comman
     var existingTask = existingTasks.Single();
 
     existingTask.Description = infoToUpdate.Description;
-    existingTask.Duedate = infoToUpdate.DueDate;
-    existingTask.Status = TodoTaskStatusNames.Parse[infoToUpdate.Status];
+    existingTask.DueDate = infoToUpdate.DueDate;
+    existingTask.Status = TodoItemStatusNames.Parse[infoToUpdate.Status];
 
     await todoTasksRepository.SaveChanges();
 
@@ -37,9 +37,9 @@ public class Handler(ITodoItemsRepository todoTasksRepository, IValidator<Comman
       Item = new TodoItemModel
       {
         Description = existingTask.Description,
-        DueDate = existingTask.Duedate,
+        DueDate = existingTask.DueDate,
         Id = command.Item.Id,
-        Status = (existingTask.Duedate.HasValue && existingTask.Duedate.Value < DateTimeOffset.Now) ? TodoTaskStatusNames.Format[TodoTaskStatus.Overdue] : TodoTaskStatusNames.Format[existingTask.Status]
+        Status = (existingTask.DueDate.HasValue && existingTask.DueDate.Value < DateTimeOffset.Now) ? TodoItemStatusNames.Format[TodoItemStatus.Overdue] : TodoItemStatusNames.Format[existingTask.Status]
       }
     };
   }

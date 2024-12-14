@@ -18,7 +18,7 @@ namespace Angular18AspNetCore8.Infra.Persistence.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Description = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
-                    Duedate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
+                    DueDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
                     Status = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>

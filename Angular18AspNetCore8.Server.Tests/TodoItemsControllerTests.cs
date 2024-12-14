@@ -173,13 +173,13 @@ namespace Angular18AspNetCore8.Server.Tests
       //Arrange
       var expectedResult = new App.Commands.UpdateTodoItem.Response
       {
-        Item = new TodoItemModel { Description = "Some Description", DueDate = null, Id = 123, Status = TodoTaskStatusNames.Format[TodoTaskStatus.ToDo] },
+        Item = new TodoItemModel { Description = "Some Description", DueDate = null, Id = 123, Status = TodoItemStatusNames.Format[TodoItemStatus.ToDo] },
         HasValidationErrors = false,
         ValidationErrors = new Dictionary<string, string[]>()
       };
       var givenCommand = new App.Commands.UpdateTodoItem.Command
       {
-        Item = new TodoItemModel { Description = "Some Description", DueDate = null, Id = 123, Status = TodoTaskStatusNames.Format[TodoTaskStatus.ToDo] }
+        Item = new TodoItemModel { Description = "Some Description", DueDate = null, Id = 123, Status = TodoItemStatusNames.Format[TodoItemStatus.ToDo] }
       };
 
       mockUpdateTaskHandler.Setup(x => x.Execute(It.IsAny<App.Commands.UpdateTodoItem.Command>())).ReturnsAsync(expectedResult);
@@ -199,7 +199,7 @@ namespace Angular18AspNetCore8.Server.Tests
       //Arrange
       var givenCommand = new App.Commands.UpdateTodoItem.Command
       {
-        Item = new TodoItemModel { Description = "Some Description", DueDate = null, Id = 123, Status = TodoTaskStatusNames.Format[TodoTaskStatus.ToDo] }
+        Item = new TodoItemModel { Description = "Some Description", DueDate = null, Id = 123, Status = TodoItemStatusNames.Format[TodoItemStatus.ToDo] }
       };
       var expectedErrorMessage = "Unexpected error";
       var expectedStatus = (int)HttpStatusCode.InternalServerError;
@@ -231,7 +231,7 @@ namespace Angular18AspNetCore8.Server.Tests
         Description = "Some Description",
         DueDate = null,
         Id = 123,
-        Status = TodoTaskStatusNames.Format[TodoTaskStatus.ToDo]
+        Status = TodoItemStatusNames.Format[TodoItemStatus.ToDo]
       };
       var expectedResult = new App.Commands.UpdateTodoItem.Response
       {

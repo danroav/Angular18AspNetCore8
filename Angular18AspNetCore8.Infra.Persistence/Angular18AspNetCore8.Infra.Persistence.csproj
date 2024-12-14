@@ -23,4 +23,8 @@
     <ProjectReference Include="..\Angular18AspNetCore8.App\Angular18AspNetCore8.App.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

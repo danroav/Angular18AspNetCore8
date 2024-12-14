@@ -13,6 +13,6 @@ public class Validator : AbstractValidator<Command>
     {
       RuleFor(x => x.DueDate).GreaterThan(DateTimeOffset.Now).WithMessage("Due Date should be in the future");
     });
-    RuleFor(x => x.Status).Must(status => TodoTaskStatusNames.Parse.ContainsKey(status) && TodoTaskStatusNames.Parse[status] != TodoTaskStatus.Overdue).WithMessage("Status should be valid");
+    RuleFor(x => x.Status).Must(status => TodoItemStatusNames.Parse.ContainsKey(status) && TodoItemStatusNames.Parse[status] != TodoItemStatus.Overdue).WithMessage("Status should be valid");
   }
 }

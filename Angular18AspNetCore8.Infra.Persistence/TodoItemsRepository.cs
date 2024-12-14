@@ -6,18 +6,18 @@ namespace Angular18AspNetCore8.Infra.Persistence;
 
 public class TodoItemsRepository(AppDbContext appDbContext) : ITodoItemsRepository
 {
-  public Task<List<TodoTask>> GetAll()
+  public Task<List<TodoItem>> GetAll()
   {
     return appDbContext.TodoTasks.ToListAsync();
   }
 
-  public async Task<TodoTask> AddNew(string description, DateTimeOffset? dueDate, TodoTaskStatus status)
+  public async Task<TodoItem> AddNew(string description, DateTimeOffset? dueDate, TodoItemStatus status)
   {
-    var result = await appDbContext.TodoTasks.AddAsync(new TodoTask { Description = description, Duedate = dueDate, Status = status });
+    var result = await appDbContext.TodoTasks.AddAsync(new TodoItem { Description = description, DueDate = dueDate, Status = status });
     return result.Entity;
   }
 
-  public Task<List<TodoTask>> GetByIds(IList<int> ids)
+  public Task<List<TodoItem>> GetByIds(IList<int> ids)
   {
     return appDbContext.TodoTasks.Where(x => ids.Contains(x.Id)).ToListAsync();
   }

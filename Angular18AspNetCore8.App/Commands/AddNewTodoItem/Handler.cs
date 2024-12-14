@@ -24,7 +24,7 @@ namespace Angular18AspNetCore8.App.Commands.AddNewTodoItem
           ValidationErrors = result.ToDictionary()
         };
       }
-      var repositoryResult = await todoTaskRepository.AddNew(command.Description, command.DueDate, TodoTaskStatusNames.Parse[command.Status]);
+      var repositoryResult = await todoTaskRepository.AddNew(command.Description, command.DueDate, TodoItemStatusNames.Parse[command.Status]);
 
       await todoTaskRepository.SaveChanges();
 
@@ -34,8 +34,8 @@ namespace Angular18AspNetCore8.App.Commands.AddNewTodoItem
         Item = new TodoItemModel
         {
           Description = repositoryResult.Description,
-          DueDate = repositoryResult.Duedate,
-          Status = (repositoryResult.Duedate.HasValue && repositoryResult.Duedate.Value > DateTimeOffset.Now) ? TodoTaskStatusNames.Format[TodoTaskStatus.Overdue] : TodoTaskStatusNames.Format[repositoryResult.Status],
+          DueDate = repositoryResult.DueDate,
+          Status = (repositoryResult.DueDate.HasValue && repositoryResult.DueDate.Value > DateTimeOffset.Now) ? TodoItemStatusNames.Format[TodoItemStatus.Overdue] : TodoItemStatusNames.Format[repositoryResult.Status],
           Id = repositoryResult.Id
         },
       };

@@ -5,7 +5,7 @@ using FluentValidation;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddSqlite<AppDbContext>(builder.Configuration.GetConnectionString("TodoListDb"));
+builder.Services.AddSqlite<AppDbContext>(builder.Configuration.GetConnectionString("TodoItemsDb"));
 
 builder.Services.AddScoped<ITodoItemsRepository, TodoItemsRepository>();
 builder.Services.AddScoped<ITodoItemsHandler<Angular18AspNetCore8.App.Queries.GetAllTodoItems.Query, Angular18AspNetCore8.App.Queries.GetAllTodoItems.Response>, Angular18AspNetCore8.App.Queries.GetAllTodoItems.Handler>();
