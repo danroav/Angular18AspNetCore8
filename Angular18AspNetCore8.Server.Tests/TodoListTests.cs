@@ -75,16 +75,23 @@ namespace Angular18AspNetCore8.Server.Tests
     public async Task AddNewTaskSuccess()
     {
       //Arrange
-      var expectedResult = new CommandAddNewTaskResult
-      {
-        TaskId = 3
-      };
       var givenCommand = new CommandAddNewTask
       {
         Description = "some description",
         DueDate = null,
         Status = "",
       };
+      var expectedResult = new CommandAddNewTaskResult
+      {
+        Item = new ItemResultModel
+        {
+          Id = 0,
+          Description = givenCommand.Description,
+          DueDate = givenCommand.DueDate,
+          Status = givenCommand.Status,
+        }
+      };
+
 
       mockAddNewTaskHandler.Setup(x => x.Execute(It.IsAny<CommandAddNewTask>())).ReturnsAsync(expectedResult);
 
@@ -132,18 +139,25 @@ namespace Angular18AspNetCore8.Server.Tests
     public async Task AddNewTaskRequestError()
     {
       //Arrange
-      var expectedResult = new CommandAddNewTaskResult
-      {
-        TaskId = 0,
-        HasValidationErrors = true,
-        ValidationErrors = new Dictionary<string, string[]>() { { "someProperty", ["someValidationError"] } }
-      };
       var givenCommand = new CommandAddNewTask
       {
         Description = "some description",
         DueDate = null,
         Status = "",
       };
+      var expectedResult = new CommandAddNewTaskResult
+      {
+        Item = new ItemResultModel
+        {
+          Description = givenCommand.Description,
+          DueDate = givenCommand.DueDate,
+          Id = 0,
+          Status = givenCommand.Status,
+        },
+        HasValidationErrors = true,
+        ValidationErrors = new Dictionary<string, string[]>() { { "someProperty", ["someValidationError"] } }
+      };
+
 
       mockAddNewTaskHandler.Setup(x => x.Execute(It.IsAny<CommandAddNewTask>())).ReturnsAsync(expectedResult);
 

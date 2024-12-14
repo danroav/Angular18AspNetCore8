@@ -1,4 +1,5 @@
 ﻿using Angular18AspNetCore8.App.Common;
+using Angular18AspNetCore8.App.Queries.GetAllTasks;
 using Angular18AspNetCore8.Core.Entities;
 using FluentValidation;
 
@@ -20,7 +21,12 @@ namespace Angular18AspNetCore8.App.Commands.AddNewTask
         return new CommandAddNewTaskResult
         {
           HasValidationErrors = true,
-          TaskId = 0,
+          Item = new ItemResultModel
+          {
+            Description = command.Description,
+            DueDate = command.DueDate,
+            Status = command.Status
+          },
           ValidationErrors = result.ToDictionary()
         };
       }
@@ -31,7 +37,13 @@ namespace Angular18AspNetCore8.App.Commands.AddNewTask
       return new CommandAddNewTaskResult
       {
         HasValidationErrors = false,
-        TaskId = repositoryResult.Id
+        Item = new ItemResultModel
+        {
+          Description = repositoryResult.Description,
+          DueDate = repositoryResult.Duedate,
+          Status = (repositoryResult.Duedate.HasValue && repositoryResult.Duedate.Value > DateTimeOffset.Now) ? TodoTaskStatusNames.Format[TodoTaskStatus.Overdue] : TodoTaskStatusNames.Format[repositoryResult.Status],
+          Id = repositoryResult.Id
+        },
       };
     }
   }

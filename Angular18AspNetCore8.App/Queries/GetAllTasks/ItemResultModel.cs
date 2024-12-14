@@ -2,7 +2,7 @@
 
 public class ItemResultModel
 {
-  public int Id { get; set; }
+  public int Id { get; set; } = 0;
   public string Description { get; set; } = "";
   public DateTimeOffset? DueDate { get; set; } = null;
   public string Status { get; set; } = "";

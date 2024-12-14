@@ -1,5 +1,6 @@
 ﻿using Angular18AspNetCore8.App.Commands.AddNewTask;
 using Angular18AspNetCore8.App.Common;
+using Angular18AspNetCore8.App.Queries.GetAllTasks;
 using Angular18AspNetCore8.Core.Entities;
 using FluentAssertions;
 using Moq;
@@ -33,7 +34,13 @@ namespace Angular18AspNetCore8.App.Tests
       var expectedResult = new CommandAddNewTaskResult
       {
         HasValidationErrors = false,
-        TaskId = newTodoTask.Id
+        Item = new ItemResultModel
+        {
+          Description = newTodoTask.Description,
+          DueDate = newTodoTask.Duedate,
+          Id = newTodoTask.Id,
+          Status = (newTodoTask.Duedate.HasValue && newTodoTask.Duedate.Value > DateTimeOffset.Now) ? TodoTaskStatusNames.Format[TodoTaskStatus.Overdue] : TodoTaskStatusNames.Format[newTodoTask.Status]
+        }
       };
       //Act
       var actualResult = await testAddNewTaskHandler.Execute(givenCommandAddNewTask);
@@ -66,16 +73,23 @@ namespace Angular18AspNetCore8.App.Tests
     public async Task AddsNewTaskWithValidationErrors(string givenDescription, string givenDescriptionError, int givenDueDateDaysAdd, string givenDueDateError, string givenStatus, string givenStatusError)
     {
       //Arrange
+      var givenDueDate = DateTimeOffset.Now.AddDays(givenDueDateDaysAdd);
       var givenCommand = new CommandAddNewTask()
       {
         Description = givenDescription,
-        DueDate = DateTimeOffset.Now.AddDays(givenDueDateDaysAdd),
+        DueDate = givenDueDate,
         Status = givenStatus
       };
       var expectedResult = new CommandAddNewTaskResult
       {
         HasValidationErrors = true,
-        TaskId = 0,
+        Item = new ItemResultModel
+        {
+          Description = givenDescription,
+          DueDate = givenDueDate,
+          Id = 0,
+          Status = givenStatus
+        },
         ValidationErrors = new Dictionary<string, string[]>
         {
           {"Description",[givenDescriptionError] },
