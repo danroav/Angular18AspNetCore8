@@ -4,7 +4,7 @@ using System.Net;
 
 namespace Angular18AspNetCore8.Server.Controllers;
 
-[Route("api/todo-list")]
+[Route("api/todo-items")]
 [ApiController]
 public class TodoItemsController(ITodoItemsHandler<App.Queries.GetAllTodoItems.Query, App.Queries.GetAllTodoItems.Response> getlAllTodoItems, ITodoItemsHandler<App.Commands.AddNewTodoItem.Command, App.Commands.AddNewTodoItem.Response> addNewTodoItemHandler, ITodoItemsHandler<App.Commands.UpdateTodoItem.Command, App.Commands.UpdateTodoItem.Response> updateTodoItemHandler) : ControllerBase
 {

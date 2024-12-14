@@ -1,24 +1,24 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { TodoItem, TodoListIndexResponse } from './models/todo-list-models';
+import { TodoItem, TodoItemsIndexResponse } from './models/todo-items-models';
 
 @Component({
-  selector: 'todo-list',
-  templateUrl: './list.component.html',
-  styleUrl: './list.component.css',
+  selector: 'todo-items',
+  templateUrl: './todo-items.component.html',
+  styleUrl: './todo-items.component.css',
 })
-export class ListComponent implements OnInit {
+export class TodoItemsComponent implements OnInit {
   public items: TodoItem[] = [];
   public message: string = '';
 
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    this.getItems();
+    this.getTodoItems();
   }
 
-  getItems() {
-    this.http.get<TodoListIndexResponse>('/api/todo-list/index').subscribe({
+  getTodoItems() {
+    this.http.get<TodoItemsIndexResponse>('/api/todo-items/index').subscribe({
       next: (result) => {
         this.items = result.items;
         this.message = result.message;
@@ -29,5 +29,5 @@ export class ListComponent implements OnInit {
     });
   }
 
-  title = 'Todo List';
+  title = 'Todo Items';
 }

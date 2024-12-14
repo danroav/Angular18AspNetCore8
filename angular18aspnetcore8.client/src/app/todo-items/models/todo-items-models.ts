@@ -4,13 +4,13 @@ export interface TodoItem {
   dueDate?: string;
   status: string;
 }
-export interface TodoListIndexResponse {
+export interface TodoItemsIndexResponse {
   count: number;
   message: string;
   items: TodoItem[];
 }
-export interface CommandAddNewTaskResult {
-  taskId: number;
+export interface CommandAddNewTodoItemResponse {
+  item: TodoItem;
   validationErrors: Record<string, string[]>;
   hasValidationErrors: boolean;
 }

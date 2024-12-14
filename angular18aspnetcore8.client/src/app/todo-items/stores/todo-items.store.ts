@@ -3,7 +3,7 @@ export enum StoreMode {
   view = 0,
   edit = 1,
 }
-export class TodoListItemStore {
+export class TodoItemsStore {
   id: number = 0;
   description: string = '';
   status: string = '';

@@ -1,21 +1,21 @@
-import { StoreMode, TodoListItemStore } from './todo-list.store';
+import { StoreMode, TodoItemsStore } from './todo-items.store';
 
-describe('Todo List Item Store', () => {
-  let testTodoListItemStore: TodoListItemStore;
+describe('Todo Items Store', () => {
+  let testStore: TodoItemsStore;
 
   it('When creating new instance', () => {
     //Arrange
     //Act
-    testTodoListItemStore = new TodoListItemStore();
+    testStore = new TodoItemsStore();
     //Assert
-    expect(testTodoListItemStore.description).toEqual('');
-    expect(testTodoListItemStore.dueDate).not.toBeDefined();
-    expect(testTodoListItemStore.id).toEqual(0);
-    expect(testTodoListItemStore.mode).toEqual(StoreMode.view);
-    expect(testTodoListItemStore.status).toEqual('');
-    expect(testTodoListItemStore.validations).toEqual({});
-    expect(testTodoListItemStore.statusValidList).toEqual([]);
-    expect(testTodoListItemStore.statusDefault).toEqual('');
+    expect(testStore.description).toEqual('');
+    expect(testStore.dueDate).not.toBeDefined();
+    expect(testStore.id).toEqual(0);
+    expect(testStore.mode).toEqual(StoreMode.view);
+    expect(testStore.status).toEqual('');
+    expect(testStore.validations).toEqual({});
+    expect(testStore.statusValidList).toEqual([]);
+    expect(testStore.statusDefault).toEqual('');
   });
   /*
   it('When adding new item success', () => {

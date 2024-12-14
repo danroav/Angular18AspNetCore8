@@ -4,7 +4,7 @@ import {
 } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { ListComponent } from './todo-list/list.component';
+import { TodoItemsComponent } from './todo-items/todo-items.component';
 import { provideHttpClient } from '@angular/common/http';
 
 describe('AppComponent', () => {
@@ -14,7 +14,7 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AppComponent, ListComponent],
+      declarations: [AppComponent, TodoItemsComponent],
       providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
   });

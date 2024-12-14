@@ -3,24 +3,24 @@ import {
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ListComponent } from './list.component';
+import { TodoItemsComponent } from './todo-items.component';
 import { provideHttpClient } from '@angular/common/http';
-import { TodoItem, TodoListIndexResponse } from './models/todo-list-models';
+import { TodoItem, TodoItemsIndexResponse } from './models/todo-items-models';
 
-describe('List Component', () => {
-  let component: ListComponent;
-  let fixture: ComponentFixture<ListComponent>;
+describe('Todo Items Component', () => {
+  let component: TodoItemsComponent;
+  let fixture: ComponentFixture<TodoItemsComponent>;
   let httpMock: HttpTestingController;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ListComponent],
+      declarations: [TodoItemsComponent],
       providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ListComponent);
+    fixture = TestBed.createComponent(TodoItemsComponent);
     component = fixture.componentInstance;
     httpMock = TestBed.inject(HttpTestingController);
   });
@@ -29,11 +29,11 @@ describe('List Component', () => {
     httpMock.verify();
   });
 
-  it('should create the list component', () => {
+  it('should create the todo items component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should retrieve todo list from the server', () => {
+  it('should retrieve todo items from the server', () => {
     const givenTodoItems: TodoItem[] = [
       {
         id: 1,
@@ -49,7 +49,7 @@ describe('List Component', () => {
       },
     ];
     const givenResponseMessage = `2 items retrieved`;
-    const givenResponse: TodoListIndexResponse = {
+    const givenResponse: TodoItemsIndexResponse = {
       count: 2,
       message: givenResponseMessage,
       items: givenTodoItems,
@@ -57,7 +57,7 @@ describe('List Component', () => {
 
     component.ngOnInit();
 
-    const req = httpMock.expectOne('/api/todo-list/index');
+    const req = httpMock.expectOne('/api/todo-items/index');
     expect(req.request.method).toEqual('GET');
     req.flush(givenResponse);
 
