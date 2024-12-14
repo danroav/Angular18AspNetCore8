@@ -8,82 +8,82 @@ namespace Angular18AspNetCore8.App.Tests;
 
 public class UpdateTodoItemTests
 {
-  readonly Mock<ITodoItemsRepository> mockTodoTaskRepository;
-  readonly Commands.UpdateTodoItem.Handler testUpdateTaskHandler;
+  readonly Mock<ITodoItemsRepository> mockTodoItemsRepository;
+  readonly Handler testHandler;
   readonly Validator validator = new();
   public UpdateTodoItemTests()
   {
-    mockTodoTaskRepository = new Mock<ITodoItemsRepository>();
-    testUpdateTaskHandler = new Handler(mockTodoTaskRepository.Object, validator);
+    mockTodoItemsRepository = new Mock<ITodoItemsRepository>();
+    testHandler = new Handler(mockTodoItemsRepository.Object, validator);
   }
   [Theory]
   [InlineData(true)]
-  public async Task UpdateTaskSuccess(bool givenUpdateDatetimeNull)
+  public async Task UpdateTodoItemSuccess(bool givenUpdateDatetimeNull)
   {
     //Arrange
-    var givenTodoTaskStatus = TodoItemStatus.ToDo;
+    var givenStatus = TodoItemStatus.ToDo;
     var givenUpdateDatetime = DateTimeOffset.Now;
     var givenExistingDatetime = DateTimeOffset.Now.AddDays(-1);
-    var givenItemToUpdate = new TodoItemModel
+    var givenTodoItemToUpdate = new TodoItemModel
     {
       Id = 1,
       Description = "Some description",
       DueDate = givenUpdateDatetimeNull ? null : givenUpdateDatetime,
-      Status = TodoItemStatusNames.Format[givenTodoTaskStatus],
+      Status = TodoItemStatusNames.Format[givenStatus],
     };
-    var givenCommandUpdateTask = new Command
+    var givenCommand = new Command
     {
-      Item = givenItemToUpdate
+      Item = givenTodoItemToUpdate
     };
     var existingTodoTask = new TodoItem
     {
-      Id = givenCommandUpdateTask.Item.Id,
+      Id = givenCommand.Item.Id,
       Description = "Existing description",
       DueDate = givenExistingDatetime,
       Status = TodoItemStatus.InProgress
     };
 
-    mockTodoTaskRepository.Setup(x => x.GetByIds(It.IsAny<IList<int>>())).ReturnsAsync([existingTodoTask]);
-    mockTodoTaskRepository.Setup(x => x.SaveChanges());
+    mockTodoItemsRepository.Setup(x => x.GetByIds(It.IsAny<IList<int>>())).ReturnsAsync([existingTodoTask]);
+    mockTodoItemsRepository.Setup(x => x.SaveChanges());
 
     var expectedResult = new Response
     {
       HasValidationErrors = false,
       Item = new TodoItemModel
       {
-        Id = givenItemToUpdate.Id,
-        Description = givenItemToUpdate.Description,
-        DueDate = givenItemToUpdate.DueDate,
-        Status = (givenItemToUpdate.DueDate.HasValue && givenItemToUpdate.DueDate.Value < DateTimeOffset.Now) ? TodoItemStatusNames.Format[TodoItemStatus.Overdue] : givenItemToUpdate.Status
+        Id = givenTodoItemToUpdate.Id,
+        Description = givenTodoItemToUpdate.Description,
+        DueDate = givenTodoItemToUpdate.DueDate,
+        Status = (givenTodoItemToUpdate.DueDate.HasValue && givenTodoItemToUpdate.DueDate.Value < DateTimeOffset.Now) ? TodoItemStatusNames.Format[TodoItemStatus.Overdue] : givenTodoItemToUpdate.Status
       }
     };
     //Act
-    var actualResult = await testUpdateTaskHandler.Execute(givenCommandUpdateTask);
+    var actualResult = await testHandler.Execute(givenCommand);
     //Assert
-    mockTodoTaskRepository.VerifyAll();
+    mockTodoItemsRepository.VerifyAll();
     actualResult.Should().BeEquivalentTo(expectedResult);
   }
   [Fact]
-  public async Task UpdateTaskWithError()
+  public async Task UpdateTodoItemWithError()
   {
     //Arrange
-    var givenTodoTaskStatus = TodoItemStatus.ToDo;
-    var givenItemToUpdate = new TodoItemModel
+    var givenStatus = TodoItemStatus.ToDo;
+    var givenTodoItemToUpdate = new TodoItemModel
     {
       Id = 1,
       Description = "Some description",
       DueDate = null,
-      Status = TodoItemStatusNames.Format[givenTodoTaskStatus],
+      Status = TodoItemStatusNames.Format[givenStatus],
     };
     var givenCommand = new Command
     {
-      Item = givenItemToUpdate
+      Item = givenTodoItemToUpdate
     };
     var expectedError = "Some error description";
-    mockTodoTaskRepository.Setup(x => x.GetByIds(It.IsAny<IList<int>>())).ThrowsAsync(new Exception(expectedError));
+    mockTodoItemsRepository.Setup(x => x.GetByIds(It.IsAny<IList<int>>())).ThrowsAsync(new Exception(expectedError));
 
     //Act
-    var actualResult = () => testUpdateTaskHandler.Execute(givenCommand);
+    var actualResult = () => testHandler.Execute(givenCommand);
 
     //Assert
     await actualResult.Should().ThrowAsync<Exception>().WithMessage(expectedError);
@@ -91,10 +91,10 @@ public class UpdateTodoItemTests
   [Theory]
   [InlineData("", "Description is required", -1, "Due Date should be in the future", "", "Status should be valid")]
   [InlineData("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa123456", "Description should not exceed 255 chars", -1, "Due Date should be in the future", "", "Status should be valid")]
-  public async Task UpdateTaskWithValidationErrors(string givenDescription, string givenDescriptionError, int givenDueDateDaysAdd, string givenDueDateError, string givenStatus, string givenStatusError)
+  public async Task UpdateTodoItemWithValidationErrors(string givenDescription, string givenDescriptionError, int givenDueDateDaysAdd, string givenDueDateError, string givenStatus, string givenStatusError)
   {
     //Arrange
-    var givenItemToUpdate = new TodoItemModel
+    var givenTodoItemToUpdate = new TodoItemModel
     {
       Id = 1,
       Description = givenDescription,
@@ -103,12 +103,12 @@ public class UpdateTodoItemTests
     };
     var givenCommand = new Command
     {
-      Item = givenItemToUpdate
+      Item = givenTodoItemToUpdate
     };
     var expectedResult = new Response
     {
       HasValidationErrors = true,
-      Item = givenItemToUpdate,
+      Item = givenTodoItemToUpdate,
       ValidationErrors = new Dictionary<string, string[]>
         {
           {"Item.Description",[givenDescriptionError] },
@@ -118,7 +118,7 @@ public class UpdateTodoItemTests
     };
 
     //Act
-    var actualResult = await testUpdateTaskHandler.Execute(givenCommand);
+    var actualResult = await testHandler.Execute(givenCommand);
 
     //Assert
     actualResult.Should().BeEquivalentTo(expectedResult);

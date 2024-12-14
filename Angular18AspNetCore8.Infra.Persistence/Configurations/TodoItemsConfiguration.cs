@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Angular18AspNetCore8.Infra.Persistence.Configurations;
 
-internal class TodoTasksConfiguration : IEntityTypeConfiguration<TodoItem>
+internal class TodoItemsConfiguration : IEntityTypeConfiguration<TodoItem>
 {
   public void Configure(EntityTypeBuilder<TodoItem> builder)
   {

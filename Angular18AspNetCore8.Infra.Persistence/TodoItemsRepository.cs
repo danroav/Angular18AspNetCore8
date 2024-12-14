@@ -8,18 +8,18 @@ public class TodoItemsRepository(AppDbContext appDbContext) : ITodoItemsReposito
 {
   public Task<List<TodoItem>> GetAll()
   {
-    return appDbContext.TodoTasks.ToListAsync();
+    return appDbContext.TodoItems.ToListAsync();
   }
 
   public async Task<TodoItem> AddNew(string description, DateTimeOffset? dueDate, TodoItemStatus status)
   {
-    var result = await appDbContext.TodoTasks.AddAsync(new TodoItem { Description = description, DueDate = dueDate, Status = status });
+    var result = await appDbContext.TodoItems.AddAsync(new TodoItem { Description = description, DueDate = dueDate, Status = status });
     return result.Entity;
   }
 
   public Task<List<TodoItem>> GetByIds(IList<int> ids)
   {
-    return appDbContext.TodoTasks.Where(x => ids.Contains(x.Id)).ToListAsync();
+    return appDbContext.TodoItems.Where(x => ids.Contains(x.Id)).ToListAsync();
   }
 
   public Task<int> SaveChanges()

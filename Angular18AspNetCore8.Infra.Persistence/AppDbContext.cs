@@ -6,7 +6,7 @@ namespace Angular18AspNetCore8.Infra.Persistence;
 
 public class AppDbContext(DbContextOptions options) : DbContext(options)
 {
-  public DbSet<TodoItem> TodoTasks { get; set; }
+  public DbSet<TodoItem> TodoItems { get; set; }
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {

@@ -9,22 +9,22 @@ namespace Angular18AspNetCore8.App.Tests
 {
   public class GetAllTodoItemsTests
   {
-    readonly Mock<ITodoItemsRepository> mockTodoTaskRepository;
-    readonly Handler testQueryGetAllTasks;
+    readonly Mock<ITodoItemsRepository> mockTodoItemsRepository;
+    readonly Handler testHandler;
     public GetAllTodoItemsTests()
     {
-      mockTodoTaskRepository = new Mock<ITodoItemsRepository>();
-      testQueryGetAllTasks = new Handler(mockTodoTaskRepository.Object);
+      mockTodoItemsRepository = new Mock<ITodoItemsRepository>();
+      testHandler = new Handler(mockTodoItemsRepository.Object);
     }
     [Fact]
-    public async Task GetsAllTasksNoError()
+    public async Task GetsAllTodoItemsNoError()
     {
       //Arrange
       List<TodoItem> givenTaskEntities = [new TodoItem
       { Id=1, Description="A", DueDate=DateTime.Now.ToDateTimeOffset(), Status=TodoItemStatus.ToDo },
         new TodoItem
       { Id=2, Description="B", DueDate=DateTime.Now.ToDateTimeOffset(), Status=TodoItemStatus.InProgress }, ];
-      mockTodoTaskRepository.Setup(x => x.GetAll()).ReturnsAsync(givenTaskEntities);
+      mockTodoItemsRepository.Setup(x => x.GetAll()).ReturnsAsync(givenTaskEntities);
       var expectedResult = new Response
       {
         Count = 2,
@@ -38,9 +38,9 @@ namespace Angular18AspNetCore8.App.Tests
         Message = "2 tasks retrieved"
       };
       //Act
-      var actualResult = await testQueryGetAllTasks.Execute(new Query());
+      var actualResult = await testHandler.Execute(new Query());
       //Assert
-      mockTodoTaskRepository.VerifyAll();
+      mockTodoItemsRepository.VerifyAll();
       actualResult.Should().BeEquivalentTo(expectedResult);
     }
     [Fact]
@@ -48,10 +48,10 @@ namespace Angular18AspNetCore8.App.Tests
     {
       //Arrange
       var expectedError = "Some error description";
-      mockTodoTaskRepository.Setup(x => x.GetAll()).ThrowsAsync(new Exception(expectedError));
+      mockTodoItemsRepository.Setup(x => x.GetAll()).ThrowsAsync(new Exception(expectedError));
 
       //Act
-      var actualResult = () => testQueryGetAllTasks.Execute(new Query());
+      var actualResult = () => testHandler.Execute(new Query());
 
       //Assert
       await actualResult.Should().ThrowAsync<Exception>().WithMessage(expectedError);

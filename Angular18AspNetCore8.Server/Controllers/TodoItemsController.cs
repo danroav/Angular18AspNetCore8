@@ -6,14 +6,14 @@ namespace Angular18AspNetCore8.Server.Controllers;
 
 [Route("api/todo-list")]
 [ApiController]
-public class TodoItemsController(ITodoItemsHandler<App.Queries.GetAllTodoItems.Query, App.Queries.GetAllTodoItems.Response> queryGetlAllTasks, ITodoItemsHandler<App.Commands.AddNewTodoItem.Command, App.Commands.AddNewTodoItem.Response> addNewTaskHandler, ITodoItemsHandler<App.Commands.UpdateTodoItem.Command, App.Commands.UpdateTodoItem.Response> updateTaskHandler) : ControllerBase
+public class TodoItemsController(ITodoItemsHandler<App.Queries.GetAllTodoItems.Query, App.Queries.GetAllTodoItems.Response> getlAllTodoItems, ITodoItemsHandler<App.Commands.AddNewTodoItem.Command, App.Commands.AddNewTodoItem.Response> addNewTodoItemHandler, ITodoItemsHandler<App.Commands.UpdateTodoItem.Command, App.Commands.UpdateTodoItem.Response> updateTodoItemHandler) : ControllerBase
 {
   [HttpGet("index")]
-  public async Task<ActionResult<App.Queries.GetAllTodoItems.Response>> GetAllTasks()
+  public async Task<ActionResult<App.Queries.GetAllTodoItems.Response>> GetAllTodoItems()
   {
     try
     {
-      return Ok(await queryGetlAllTasks.Execute(new App.Queries.GetAllTodoItems.Query()));
+      return Ok(await getlAllTodoItems.Execute(new App.Queries.GetAllTodoItems.Query()));
     }
     catch (Exception ex)
     {
@@ -21,11 +21,11 @@ public class TodoItemsController(ITodoItemsHandler<App.Queries.GetAllTodoItems.Q
     }
   }
   [HttpPost("create")]
-  public async Task<ActionResult<App.Commands.AddNewTodoItem.Response>> AddNewTask([FromBody] App.Commands.AddNewTodoItem.Command input)
+  public async Task<ActionResult<App.Commands.AddNewTodoItem.Response>> AddNewTodoItem([FromBody] App.Commands.AddNewTodoItem.Command input)
   {
     try
     {
-      var result = await addNewTaskHandler.Execute(input);
+      var result = await addNewTodoItemHandler.Execute(input);
       if (result.HasValidationErrors)
       {
         return BadRequest(result);
@@ -38,11 +38,11 @@ public class TodoItemsController(ITodoItemsHandler<App.Queries.GetAllTodoItems.Q
     }
   }
   [HttpPost("update")]
-  public async Task<ActionResult<App.Commands.UpdateTodoItem.Response>> UpdateTask([FromBody] App.Commands.UpdateTodoItem.Command input)
+  public async Task<ActionResult<App.Commands.UpdateTodoItem.Response>> UpdateTodoItem([FromBody] App.Commands.UpdateTodoItem.Command input)
   {
     try
     {
-      var result = await updateTaskHandler.Execute(input);
+      var result = await updateTodoItemHandler.Execute(input);
       if (result.HasValidationErrors)
       {
         return BadRequest(result);

@@ -8,47 +8,47 @@ namespace Angular18AspNetCore8.App.Tests
 {
   public class AddNewTodoItemTests
   {
-    readonly Mock<ITodoItemsRepository> mockTodoTaskRepository;
-    readonly Handler testAddNewTaskHandler;
+    readonly Mock<ITodoItemsRepository> mockTodoItemsRepository;
+    readonly Handler testHandler;
     readonly Validator validator = new();
     public AddNewTodoItemTests()
     {
-      mockTodoTaskRepository = new Mock<ITodoItemsRepository>();
-      testAddNewTaskHandler = new Handler(mockTodoTaskRepository.Object, validator);
+      mockTodoItemsRepository = new Mock<ITodoItemsRepository>();
+      testHandler = new Handler(mockTodoItemsRepository.Object, validator);
     }
     [Fact]
-    public async Task AddTaskSuccess()
+    public async Task AddNewTodoItemSuccess()
     {
       //Arrange
-      var givenTodoTaskStatus = TodoItemStatus.ToDo;
-      var givenCommandAddNewTask = new Command
+      var givenStatus = TodoItemStatus.ToDo;
+      var givenCommand = new Command
       {
         Description = "Some description",
         DueDate = null,
-        Status = TodoItemStatusNames.Format[givenTodoTaskStatus],
+        Status = TodoItemStatusNames.Format[givenStatus],
       };
-      var newTodoTask = new TodoItem { Id = 1000, Description = givenCommandAddNewTask.Description, DueDate = givenCommandAddNewTask.DueDate, Status = givenTodoTaskStatus };
-      mockTodoTaskRepository.Setup(x => x.AddNew(It.IsAny<string>(), It.IsAny<DateTimeOffset?>(), It.IsAny<TodoItemStatus>())).ReturnsAsync(newTodoTask);
-      mockTodoTaskRepository.Setup(x => x.SaveChanges());
+      var newTodoITem = new TodoItem { Id = 1000, Description = givenCommand.Description, DueDate = givenCommand.DueDate, Status = givenStatus };
+      mockTodoItemsRepository.Setup(x => x.AddNew(It.IsAny<string>(), It.IsAny<DateTimeOffset?>(), It.IsAny<TodoItemStatus>())).ReturnsAsync(newTodoITem);
+      mockTodoItemsRepository.Setup(x => x.SaveChanges());
       var expectedResult = new Response
       {
         HasValidationErrors = false,
         Item = new TodoItemModel
         {
-          Description = newTodoTask.Description,
-          DueDate = newTodoTask.DueDate,
-          Id = newTodoTask.Id,
-          Status = (newTodoTask.DueDate.HasValue && newTodoTask.DueDate.Value > DateTimeOffset.Now) ? TodoItemStatusNames.Format[TodoItemStatus.Overdue] : TodoItemStatusNames.Format[newTodoTask.Status]
+          Description = newTodoITem.Description,
+          DueDate = newTodoITem.DueDate,
+          Id = newTodoITem.Id,
+          Status = (newTodoITem.DueDate.HasValue && newTodoITem.DueDate.Value > DateTimeOffset.Now) ? TodoItemStatusNames.Format[TodoItemStatus.Overdue] : TodoItemStatusNames.Format[newTodoITem.Status]
         }
       };
       //Act
-      var actualResult = await testAddNewTaskHandler.Execute(givenCommandAddNewTask);
+      var actualResult = await testHandler.Execute(givenCommand);
       //Assert
-      mockTodoTaskRepository.VerifyAll();
+      mockTodoItemsRepository.VerifyAll();
       actualResult.Should().BeEquivalentTo(expectedResult);
     }
     [Fact]
-    public async Task AddsNewTaskWithError()
+    public async Task AddNewTodoItemWithError()
     {
       //Arrange
       var givenCommand = new Command()
@@ -58,10 +58,10 @@ namespace Angular18AspNetCore8.App.Tests
         Status = TodoItemStatusNames.Format[TodoItemStatus.ToDo]
       };
       var expectedError = "Some error description";
-      mockTodoTaskRepository.Setup(x => x.AddNew(It.IsAny<string>(), It.IsAny<DateTimeOffset?>(), It.IsAny<TodoItemStatus>())).ThrowsAsync(new Exception(expectedError));
+      mockTodoItemsRepository.Setup(x => x.AddNew(It.IsAny<string>(), It.IsAny<DateTimeOffset?>(), It.IsAny<TodoItemStatus>())).ThrowsAsync(new Exception(expectedError));
 
       //Act
-      var actualResult = () => testAddNewTaskHandler.Execute(givenCommand);
+      var actualResult = () => testHandler.Execute(givenCommand);
 
       //Assert
       await actualResult.Should().ThrowAsync<Exception>().WithMessage(expectedError);
@@ -69,7 +69,7 @@ namespace Angular18AspNetCore8.App.Tests
     [Theory]
     [InlineData("", "Description is required", -1, "Due Date should be in the future", "", "Status should be valid")]
     [InlineData("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa123456", "Description should not exceed 255 chars", -1, "Due Date should be in the future", "", "Status should be valid")]
-    public async Task AddsNewTaskWithValidationErrors(string givenDescription, string givenDescriptionError, int givenDueDateDaysAdd, string givenDueDateError, string givenStatus, string givenStatusError)
+    public async Task AddNewTodoItemWithValidationErrors(string givenDescription, string givenDescriptionError, int givenDueDateDaysAdd, string givenDueDateError, string givenStatus, string givenStatusError)
     {
       //Arrange
       var givenDueDate = DateTimeOffset.Now.AddDays(givenDueDateDaysAdd);
@@ -98,7 +98,7 @@ namespace Angular18AspNetCore8.App.Tests
       };
 
       //Act
-      var actualResult = await testAddNewTaskHandler.Execute(givenCommand);
+      var actualResult = await testHandler.Execute(givenCommand);
 
       //Assert
       actualResult.Should().BeEquivalentTo(expectedResult);

@@ -4,11 +4,11 @@ using Angular18AspNetCore8.Core.Entities;
 
 namespace Angular18AspNetCore8.App.Queries.GetAllTodoItems;
 
-public class Handler(ITodoItemsRepository todoTaskRepository) : ITodoItemsHandler<Query, Response>
+public class Handler(ITodoItemsRepository todoItemsRepository) : ITodoItemsHandler<Query, Response>
 {
   public async Task<Response> Execute(Query query)
   {
-    var entities = await todoTaskRepository.GetAll();
+    var entities = await todoItemsRepository.GetAll();
 
     var items = entities.Select(e => new TodoItemModel
     {

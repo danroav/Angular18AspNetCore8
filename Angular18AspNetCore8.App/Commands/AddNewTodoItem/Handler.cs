@@ -1,11 +1,10 @@
 ﻿using Angular18AspNetCore8.App.Common;
-using Angular18AspNetCore8.App.Queries.GetAllTodoItems;
 using Angular18AspNetCore8.Core.Entities;
 using FluentValidation;
 
 namespace Angular18AspNetCore8.App.Commands.AddNewTodoItem
 {
-  public class Handler(ITodoItemsRepository todoTaskRepository, IValidator<Command> validator) : ITodoItemsHandler<Command, Response>
+  public class Handler(ITodoItemsRepository todoItemsRepository, IValidator<Command> validator) : ITodoItemsHandler<Command, Response>
   {
     public async Task<Response> Execute(Command command)
     {
@@ -24,9 +23,9 @@ namespace Angular18AspNetCore8.App.Commands.AddNewTodoItem
           ValidationErrors = result.ToDictionary()
         };
       }
-      var repositoryResult = await todoTaskRepository.AddNew(command.Description, command.DueDate, TodoItemStatusNames.Parse[command.Status]);
+      var repositoryResult = await todoItemsRepository.AddNew(command.Description, command.DueDate, TodoItemStatusNames.Parse[command.Status]);
 
-      await todoTaskRepository.SaveChanges();
+      await todoItemsRepository.SaveChanges();
 
       return new Response
       {
