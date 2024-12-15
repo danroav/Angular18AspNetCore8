@@ -5,7 +5,7 @@ import {
   TodoItem,
   ValidationErrors,
 } from '../models/todo-items-models';
-import { TodoItemStore } from './todo-items.store';
+import { TodoItemStore } from './todo-item.store';
 import { Observable, of } from 'rxjs';
 import { reaction } from 'mobx';
 
