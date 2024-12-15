@@ -33,7 +33,7 @@ namespace Angular18AspNetCore8.App.Tests
       mockTodoItemsRepository.Setup(x => x.SaveChanges());
       var expectedResult = new AddNewTodoItemResult
       {
-        HasValidationErrors = false,
+        Message = "Todo item created successfully",
         Item = mapper.Map(newTodoITem),
       };
       //Act
@@ -76,7 +76,7 @@ namespace Angular18AspNetCore8.App.Tests
       };
       var expectedResult = new AddNewTodoItemResult
       {
-        HasValidationErrors = true,
+        Message = "Todo item should be valid",
         Item = new TodoItemModel
         {
           Description = givenDescription,

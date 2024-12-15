@@ -4,7 +4,7 @@ import {
   AddNewTodoItemResult,
 } from '../models/todo-items-models';
 import { StoreMode, TodoItemStore } from './todo-items.store';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { autorun, reaction } from 'mobx';
 
 describe('Todo Items Store', () => {
@@ -94,6 +94,41 @@ describe('Todo Items Store', () => {
       givenAddNewTodoItem
     );
 
+    return changePromise;
+  });
+
+  it('When adding new item unexpected error', async () => {
+    //Arrange
+    const givenExpectionMessage = 'unexpected exception';
+    const responseObservable = new Observable((subscriber) => {
+      subscriber.error({ status: 500, detail: givenExpectionMessage });
+      subscriber.complete();
+    });
+    httpClientPostSpy.and.returnValue(responseObservable);
+
+    //Act
+    const testTodoItemStore = new TodoItemStore(mockHttpClient);
+
+    const changePromise = new Promise<void>((resolve, reject) => {
+      reaction(
+        () => testTodoItemStore.message,
+        (arg, _prev, r) => {
+          try {
+            expect(arg).toEqual(givenExpectionMessage);
+            expect(testTodoItemStore.validationErrors).toEqual({});
+            resolve();
+          } catch (error) {
+            reject();
+          } finally {
+            r.dispose();
+          }
+        }
+      );
+    });
+
+    testTodoItemStore.create('create description', 'create status', undefined);
+
+    //Assert
     return changePromise;
   });
 });

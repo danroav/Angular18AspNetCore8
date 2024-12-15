@@ -29,11 +29,7 @@ public class TodoItemsController(ITodoItemsHandler<GetAllTodoITems, GetAllTodoIt
         try
         {
             var result = await addNewTodoItemHandler.Execute(input);
-            if (result.HasValidationErrors)
-            {
-                return BadRequest(result);
-            }
-            return Ok(result);
+            return result.ValidationErrors.Count>0 ? (ActionResult<AddNewTodoItemResult>)BadRequest(result) : (ActionResult<AddNewTodoItemResult>)Ok(result);
         }
         catch (Exception ex)
         {

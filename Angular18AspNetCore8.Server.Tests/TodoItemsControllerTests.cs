@@ -154,7 +154,7 @@ namespace Angular18AspNetCore8.Server.Tests
                     Id = 0,
                     Status = givenCommand.Status,
                 },
-                HasValidationErrors = true,
+                Message = "Todo item should be valid",
                 ValidationErrors = new Dictionary<string, string[]>() { { "someProperty", ["someValidationError"] } }
             };
 

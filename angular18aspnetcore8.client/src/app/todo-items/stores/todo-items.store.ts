@@ -22,6 +22,7 @@ export class TodoItemStore {
       dueDate?: string;
     }]: string[];
   } = {};
+  message: string = '';
 
   constructor(private httpClient: HttpClient) {
     makeAutoObservable(this);
@@ -43,6 +44,12 @@ export class TodoItemStore {
           self.status = result.item.status;
           self.dueDate = result.item.dueDate;
           self.validationErrors = result.validationErrors;
+        });
+      },
+      error: (error) => {
+        runInAction(() => {
+          self.message = error.detail;
+          self.validationErrors = {};
         });
       },
     });

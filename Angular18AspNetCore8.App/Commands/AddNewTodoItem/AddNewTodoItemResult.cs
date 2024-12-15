@@ -6,5 +6,5 @@ public class AddNewTodoItemResult : ITodoItemsHandlerOutput
 {
   public required TodoItemModel Item { get; set; }
   public IDictionary<string, string[]> ValidationErrors { get; set; } = new Dictionary<string, string[]>();
-  public bool HasValidationErrors { get; set; }
+    public string Message { get; set; } = "";
 }

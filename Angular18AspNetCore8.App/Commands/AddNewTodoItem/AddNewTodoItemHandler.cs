@@ -13,7 +13,7 @@ namespace Angular18AspNetCore8.App.Commands.AddNewTodoItem
       {
         return new AddNewTodoItemResult
         {
-          HasValidationErrors = true,
+          Message = "Todo item should be valid",
           Item = new TodoItemModel
           {
             Description = command.Description,
@@ -29,7 +29,7 @@ namespace Angular18AspNetCore8.App.Commands.AddNewTodoItem
 
       return new AddNewTodoItemResult
       {
-        HasValidationErrors = false,
+        Message = "Todo item created successfully",
         Item = mapper.Map(newTodoItem),
       };
     }
