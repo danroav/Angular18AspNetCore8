@@ -31,7 +31,6 @@ namespace Angular18AspNetCore8.Server.Tests
             //Arrange
             var expectedResult = new GetAllTodoItemsResult
             {
-                Count = 2,
                 Message = "",
                 Items = [new TodoItemModel(), new TodoItemModel()]
             };

@@ -13,7 +13,6 @@ public class GetAllTodoITemsHandler(ITodoItemsRepository todoItemsRepository, To
 
     return new GetAllTodoItemsResult
     {
-      Count = items.Count,
       Items = items,
       Message = $"{items.Count} tasks retrieved"
     };
