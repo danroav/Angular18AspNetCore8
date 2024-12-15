@@ -6,23 +6,23 @@ using Moq;
 
 namespace Angular18AspNetCore8.App.Tests
 {
-  public class AddNewTodoItemTests
+  public class CreateTodoItemTests
   {
     readonly Mock<ITodoItemsRepository> mockTodoItemsRepository;
-    readonly AddNewTodoItemHandler testHandler;
-    readonly AddNewTodoItemValidator validator = new();
+    readonly CreateTodoItemHandler testHandler;
+    readonly CreateTodoItemValidator validator = new();
     readonly TodoItemMapper mapper = new();
-    public AddNewTodoItemTests()
+    public CreateTodoItemTests()
     {
       mockTodoItemsRepository = new Mock<ITodoItemsRepository>();
-      testHandler = new AddNewTodoItemHandler(mockTodoItemsRepository.Object, validator, mapper);
+      testHandler = new CreateTodoItemHandler(mockTodoItemsRepository.Object, validator, mapper);
     }
     [Fact]
     public async Task AddNewTodoItemSuccess()
     {
       //Arrange
       var givenStatus = TodoItemStatus.ToDo;
-      var givenCommand = new AddNewTodoItem
+      var givenCommand = new CreateTodoItem
       {
         Description = "Some description",
         DueDate = null,
@@ -31,7 +31,7 @@ namespace Angular18AspNetCore8.App.Tests
       var newTodoITem = new TodoItem { Id = 1000, Description = givenCommand.Description, DueDate = givenCommand.DueDate, LastUserStatus = givenStatus };
       mockTodoItemsRepository.Setup(x => x.AddNew(It.IsAny<string>(), It.IsAny<DateTimeOffset?>(), It.IsAny<TodoItemStatus>())).ReturnsAsync(newTodoITem);
       mockTodoItemsRepository.Setup(x => x.SaveChanges());
-      var expectedResult = new AddNewTodoItemResult
+      var expectedResult = new CreateTodoItemResult
       {
         Message = "Todo item created successfully",
         Item = mapper.Map(newTodoITem),
@@ -46,7 +46,7 @@ namespace Angular18AspNetCore8.App.Tests
     public async Task AddNewTodoItemWithError()
     {
       //Arrange
-      var givenCommand = new AddNewTodoItem()
+      var givenCommand = new CreateTodoItem()
       {
         Description = "Some description",
         DueDate = DateTimeOffset.Now.AddDays(1),
@@ -68,13 +68,13 @@ namespace Angular18AspNetCore8.App.Tests
     {
       //Arrange
       var givenDueDate = DateTimeOffset.Now.AddDays(givenDueDateDaysAdd);
-      var givenCommand = new AddNewTodoItem()
+      var givenCommand = new CreateTodoItem()
       {
         Description = givenDescription,
         DueDate = givenDueDate,
         Status = givenStatus
       };
-      var expectedResult = new AddNewTodoItemResult
+      var expectedResult = new CreateTodoItemResult
       {
         Message = "Todo item should be valid",
         Item = new TodoItemModel

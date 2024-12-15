@@ -9,7 +9,7 @@ export interface TodoItemsIndexResponse {
   message: string;
   items: TodoItem[];
 }
-export interface AddnewTodoItem {
+export interface CreateTodoItem {
   description: string;
   dueDate?: Date;
   status: string;
@@ -17,5 +17,5 @@ export interface AddnewTodoItem {
 export interface AddNewTodoItemResult {
   item: TodoItem;
   validationErrors: Record<string, string[]>;
-  hasValidationErrors: boolean;
+  message: string;
 }

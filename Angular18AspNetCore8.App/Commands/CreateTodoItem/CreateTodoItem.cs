@@ -2,7 +2,7 @@
 
 namespace Angular18AspNetCore8.App.Commands.AddNewTodoItem;
 
-public class AddNewTodoItem : ITodoItemsHandlerInput
+public class CreateTodoItem : ITodoItemsHandlerInput
 {
   public string Description { get; set; } = "";
   public DateTimeOffset? DueDate { get; set; } = null;

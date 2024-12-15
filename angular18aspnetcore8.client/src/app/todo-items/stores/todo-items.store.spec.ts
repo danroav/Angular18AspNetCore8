@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import {
-  AddnewTodoItem,
+  CreateTodoItem,
   AddNewTodoItemResult,
 } from '../models/todo-items-models';
 import { StoreMode, TodoItemStore } from './todo-items.store';
@@ -37,13 +37,13 @@ describe('Todo Items Store', () => {
     const givenResultDueDate = undefined;
     const givenResultValidationErrors = {};
 
-    const givenAddNewTodoItem: AddnewTodoItem = {
+    const givenCreateTodoItem: CreateTodoItem = {
       description: 'create description',
       dueDate: undefined,
       status: 'create status',
     };
-    const givenAddNewTodoItemResult: AddNewTodoItemResult = {
-      hasValidationErrors: false,
+    const givenCreateTodoItemResult: AddNewTodoItemResult = {
+      message: 'some creation message',
       item: {
         description: givenResultDescription,
         status: givenResultStatus,
@@ -53,7 +53,7 @@ describe('Todo Items Store', () => {
       validationErrors: givenResultValidationErrors,
     };
 
-    httpClientPostSpy.and.returnValue(of(givenAddNewTodoItemResult));
+    httpClientPostSpy.and.returnValue(of(givenCreateTodoItemResult));
 
     //Act
     const testTodoItemStore = new TodoItemStore(mockHttpClient);
@@ -83,15 +83,15 @@ describe('Todo Items Store', () => {
     });
 
     testTodoItemStore.create(
-      givenAddNewTodoItem.description,
-      givenAddNewTodoItem.status,
-      givenAddNewTodoItem.dueDate
+      givenCreateTodoItem.description,
+      givenCreateTodoItem.status,
+      givenCreateTodoItem.dueDate
     );
 
     //Assert
     expect(mockHttpClient.post).toHaveBeenCalledWith(
       '/api/todo-items/create',
-      givenAddNewTodoItem
+      givenCreateTodoItem
     );
 
     return changePromise;

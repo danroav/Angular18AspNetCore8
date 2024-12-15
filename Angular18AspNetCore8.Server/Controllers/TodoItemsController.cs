@@ -9,7 +9,7 @@ namespace Angular18AspNetCore8.Server.Controllers;
 
 [Route("api/todo-items")]
 [ApiController]
-public class TodoItemsController(ITodoItemsHandler<GetAllTodoITems, GetAllTodoItemsResult> getlAllTodoItems, ITodoItemsHandler<App.Commands.AddNewTodoItem.AddNewTodoItem, App.Commands.AddNewTodoItem.AddNewTodoItemResult> addNewTodoItemHandler, ITodoItemsHandler<App.Commands.UpdateTodoItem.UpdateTodoItem, App.Commands.UpdateTodoItem.UpdateTodoItemResult> updateTodoItemHandler) : ControllerBase
+public class TodoItemsController(ITodoItemsHandler<GetAllTodoITems, GetAllTodoItemsResult> getlAllTodoItems, ITodoItemsHandler<App.Commands.AddNewTodoItem.CreateTodoItem, App.Commands.AddNewTodoItem.CreateTodoItemResult> createTodoItemHandler, ITodoItemsHandler<App.Commands.UpdateTodoItem.UpdateTodoItem, App.Commands.UpdateTodoItem.UpdateTodoItemResult> updateTodoItemHandler) : ControllerBase
 {
     [HttpGet("index")]
     public async Task<ActionResult<GetAllTodoItemsResult>> GetAllTodoItems()
@@ -24,12 +24,12 @@ public class TodoItemsController(ITodoItemsHandler<GetAllTodoITems, GetAllTodoIt
         }
     }
     [HttpPost("create")]
-    public async Task<ActionResult<AddNewTodoItemResult>> AddNewTodoItem([FromBody] AddNewTodoItem input)
+    public async Task<ActionResult<CreateTodoItemResult>> CreateTodoItem([FromBody] CreateTodoItem input)
     {
         try
         {
-            var result = await addNewTodoItemHandler.Execute(input);
-            return result.ValidationErrors.Count>0 ? (ActionResult<AddNewTodoItemResult>)BadRequest(result) : (ActionResult<AddNewTodoItemResult>)Ok(result);
+            var result = await createTodoItemHandler.Execute(input);
+            return result.ValidationErrors.Count>0 ? (ActionResult<CreateTodoItemResult>)BadRequest(result) : (ActionResult<CreateTodoItemResult>)Ok(result);
         }
         catch (Exception ex)
         {

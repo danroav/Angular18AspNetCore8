@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { makeAutoObservable, runInAction } from 'mobx';
 import {
-  AddnewTodoItem as AddNewTodoItem,
+  CreateTodoItem as AddNewTodoItem,
   AddNewTodoItemResult,
 } from '../models/todo-items-models';
 export enum StoreMode {

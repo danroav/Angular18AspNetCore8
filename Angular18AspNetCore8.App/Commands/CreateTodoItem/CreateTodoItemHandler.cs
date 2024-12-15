@@ -4,14 +4,14 @@ using FluentValidation;
 
 namespace Angular18AspNetCore8.App.Commands.AddNewTodoItem
 {
-  public class AddNewTodoItemHandler(ITodoItemsRepository todoItemsRepository, IValidator<AddNewTodoItem> validator, TodoItemMapper mapper) : ITodoItemsHandler<AddNewTodoItem, AddNewTodoItemResult>
+  public class CreateTodoItemHandler(ITodoItemsRepository todoItemsRepository, IValidator<CreateTodoItem> validator, TodoItemMapper mapper) : ITodoItemsHandler<CreateTodoItem, CreateTodoItemResult>
   {
-    public async Task<AddNewTodoItemResult> Execute(AddNewTodoItem command)
+    public async Task<CreateTodoItemResult> Execute(CreateTodoItem command)
     {
       var result = validator.Validate(command);
       if (!result.IsValid)
       {
-        return new AddNewTodoItemResult
+        return new CreateTodoItemResult
         {
           Message = "Todo item should be valid",
           Item = new TodoItemModel
@@ -27,7 +27,7 @@ namespace Angular18AspNetCore8.App.Commands.AddNewTodoItem
 
       await todoItemsRepository.SaveChanges();
 
-      return new AddNewTodoItemResult
+      return new CreateTodoItemResult
       {
         Message = "Todo item created successfully",
         Item = mapper.Map(newTodoItem),
