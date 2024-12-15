@@ -4,6 +4,10 @@ export interface TodoItem {
   dueDate?: Date;
   status: string;
 }
+export type ValidationErrors<T> = {
+  [property in keyof T]?: string[];
+};
+
 export interface TodoItemsIndexResponse {
   count: number;
   message: string;
@@ -16,6 +20,6 @@ export interface CreateTodoItem {
 }
 export interface CreateTodoItemResult {
   item: TodoItem;
-  validationErrors: Record<string, string[]>;
+  validationErrors: ValidationErrors<TodoItem>;
   message: string;
 }

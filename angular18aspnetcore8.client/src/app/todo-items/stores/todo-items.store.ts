@@ -3,6 +3,8 @@ import { makeAutoObservable, runInAction } from 'mobx';
 import {
   CreateTodoItem as AddNewTodoItem,
   CreateTodoItemResult,
+  TodoItem,
+  ValidationErrors,
 } from '../models/todo-items-models';
 export enum StoreMode {
   view = 0,
@@ -14,14 +16,7 @@ export class TodoItemStore {
   status: string = '';
   dueDate?: Date;
   mode: StoreMode = StoreMode.view;
-  validationErrors: {
-    [property in keyof {
-      id?: string;
-      description?: string;
-      status?: string;
-      dueDate?: string;
-    }]: string[];
-  } = {};
+  validationErrors: ValidationErrors<TodoItem> = {};
   message: string = '';
 
   constructor(private httpClient: HttpClient) {

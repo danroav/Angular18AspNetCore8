@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import {
   CreateTodoItem,
   CreateTodoItemResult,
+  TodoItem,
+  ValidationErrors,
 } from '../models/todo-items-models';
 import { StoreMode, TodoItemStore } from './todo-items.store';
 import { Observable, of } from 'rxjs';
@@ -29,13 +31,15 @@ describe('Todo Items Store', () => {
     expect(testStore.validationErrors).toEqual({});
   });
 
-  it('When adding new item success', async () => {
+  it('When adding new item with response', async () => {
     //Arrange
-    const givenResultId = 14;
-    const givenResultDescription = 'some description';
-    const givenResultStatus = 'some status';
-    const givenResultDueDate = undefined;
-    const givenResultValidationErrors = {};
+    const expectedId = 14;
+    const expectedDescription = 'some description';
+    const expectedStatus = 'some status';
+    const expectedDueDate = undefined;
+    const expectedValidationErrors: ValidationErrors<TodoItem> = {
+      description: ['Some description error'],
+    };
 
     const givenCreateTodoItem: CreateTodoItem = {
       description: 'create description',
@@ -45,12 +49,12 @@ describe('Todo Items Store', () => {
     const givenCreateTodoItemResult: CreateTodoItemResult = {
       message: 'some creation message',
       item: {
-        description: givenResultDescription,
-        status: givenResultStatus,
-        id: givenResultId,
-        dueDate: givenResultDueDate,
+        description: expectedDescription,
+        status: expectedStatus,
+        id: expectedId,
+        dueDate: expectedDueDate,
       },
-      validationErrors: givenResultValidationErrors,
+      validationErrors: expectedValidationErrors,
     };
 
     httpClientPostSpy.and.returnValue(of(givenCreateTodoItemResult));
@@ -63,14 +67,12 @@ describe('Todo Items Store', () => {
         () => testTodoItemStore.id,
         (_arg, _prev, r) => {
           try {
-            expect(testTodoItemStore.description).toEqual(
-              givenResultDescription
-            );
-            expect(testTodoItemStore.dueDate).toEqual(givenResultDueDate);
-            expect(testTodoItemStore.id).toEqual(givenResultId);
-            expect(testTodoItemStore.status).toEqual(givenResultStatus);
+            expect(testTodoItemStore.description).toEqual(expectedDescription);
+            expect(testTodoItemStore.dueDate).toEqual(expectedDueDate);
+            expect(testTodoItemStore.id).toEqual(expectedId);
+            expect(testTodoItemStore.status).toEqual(expectedStatus);
             expect(testTodoItemStore.validationErrors).toEqual(
-              givenResultValidationErrors
+              expectedValidationErrors
             );
             resolve();
           } catch (error) {
