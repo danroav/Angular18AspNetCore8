@@ -7,6 +7,10 @@ export interface TodoItem {
 export type ValidationErrors<T> = {
   [property in keyof T]?: string[];
 };
+export interface GetAllTodoItemsResult {
+  message: string;
+  todoItems: TodoItem[];
+}
 
 export interface TodoItemsIndexResponse {
   count: number;
