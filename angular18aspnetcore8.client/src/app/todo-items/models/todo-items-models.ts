@@ -14,7 +14,7 @@ export interface CreateTodoItem {
   dueDate?: Date;
   status: string;
 }
-export interface AddNewTodoItemResult {
+export interface CreateTodoItemResult {
   item: TodoItem;
   validationErrors: Record<string, string[]>;
   message: string;

@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import {
   CreateTodoItem,
-  AddNewTodoItemResult,
+  CreateTodoItemResult,
 } from '../models/todo-items-models';
 import { StoreMode, TodoItemStore } from './todo-items.store';
 import { Observable, of } from 'rxjs';
-import { autorun, reaction } from 'mobx';
+import { reaction } from 'mobx';
 
 describe('Todo Items Store', () => {
   let testStore: TodoItemStore;
@@ -42,7 +42,7 @@ describe('Todo Items Store', () => {
       dueDate: undefined,
       status: 'create status',
     };
-    const givenCreateTodoItemResult: AddNewTodoItemResult = {
+    const givenCreateTodoItemResult: CreateTodoItemResult = {
       message: 'some creation message',
       item: {
         description: givenResultDescription,

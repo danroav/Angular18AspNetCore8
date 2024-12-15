@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { makeAutoObservable, runInAction } from 'mobx';
 import {
   CreateTodoItem as AddNewTodoItem,
-  AddNewTodoItemResult,
+  CreateTodoItemResult,
 } from '../models/todo-items-models';
 export enum StoreMode {
   view = 0,
@@ -38,7 +38,7 @@ export class TodoItemStore {
     this.httpClient.post('/api/todo-items/create', requestBody).subscribe({
       next: (value) => {
         runInAction(() => {
-          const result = value as AddNewTodoItemResult;
+          const result = value as CreateTodoItemResult;
           self.id = result.item.id;
           self.description = result.item.description;
           self.status = result.item.status;
