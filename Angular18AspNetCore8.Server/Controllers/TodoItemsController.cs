@@ -6,14 +6,14 @@ namespace Angular18AspNetCore8.Server.Controllers;
 
 [Route("api/todo-items")]
 [ApiController]
-public class TodoItemsController(ITodoItemsHandler<App.Queries.GetAllTodoItems.Query, App.Queries.GetAllTodoItems.Response> getlAllTodoItems, ITodoItemsHandler<App.Commands.AddNewTodoItem.Command, App.Commands.AddNewTodoItem.Response> addNewTodoItemHandler, ITodoItemsHandler<App.Commands.UpdateTodoItem.Command, App.Commands.UpdateTodoItem.Response> updateTodoItemHandler) : ControllerBase
+public class TodoItemsController(ITodoItemsHandler<App.Queries.GetAllTodoItems.GetAllTodoITems, App.Queries.GetAllTodoItems.GetAllTodoItemsResult> getlAllTodoItems, ITodoItemsHandler<App.Commands.AddNewTodoItem.AddNewTodoItem, App.Commands.AddNewTodoItem.AddNewTodoItemResult> addNewTodoItemHandler, ITodoItemsHandler<App.Commands.UpdateTodoItem.UpdateTodoItem, App.Commands.UpdateTodoItem.UpdateTodoItemResult> updateTodoItemHandler) : ControllerBase
 {
   [HttpGet("index")]
-  public async Task<ActionResult<App.Queries.GetAllTodoItems.Response>> GetAllTodoItems()
+  public async Task<ActionResult<App.Queries.GetAllTodoItems.GetAllTodoItemsResult>> GetAllTodoItems()
   {
     try
     {
-      return Ok(await getlAllTodoItems.Execute(new App.Queries.GetAllTodoItems.Query()));
+      return Ok(await getlAllTodoItems.Execute(new App.Queries.GetAllTodoItems.GetAllTodoITems()));
     }
     catch (Exception ex)
     {
@@ -21,7 +21,7 @@ public class TodoItemsController(ITodoItemsHandler<App.Queries.GetAllTodoItems.Q
     }
   }
   [HttpPost("create")]
-  public async Task<ActionResult<App.Commands.AddNewTodoItem.Response>> AddNewTodoItem([FromBody] App.Commands.AddNewTodoItem.Command input)
+  public async Task<ActionResult<App.Commands.AddNewTodoItem.AddNewTodoItemResult>> AddNewTodoItem([FromBody] App.Commands.AddNewTodoItem.AddNewTodoItem input)
   {
     try
     {
@@ -38,7 +38,7 @@ public class TodoItemsController(ITodoItemsHandler<App.Queries.GetAllTodoItems.Q
     }
   }
   [HttpPost("update")]
-  public async Task<ActionResult<App.Commands.UpdateTodoItem.Response>> UpdateTodoItem([FromBody] App.Commands.UpdateTodoItem.Command input)
+  public async Task<ActionResult<App.Commands.UpdateTodoItem.UpdateTodoItemResult>> UpdateTodoItem([FromBody] App.Commands.UpdateTodoItem.UpdateTodoItem input)
   {
     try
     {

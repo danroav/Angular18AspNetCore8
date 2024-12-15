@@ -9,13 +9,13 @@ namespace Angular18AspNetCore8.App.Tests;
 public class UpdateTodoItemTests
 {
   readonly Mock<ITodoItemsRepository> mockTodoItemsRepository;
-  readonly Handler testHandler;
-  readonly Validator validator = new();
+  readonly UpdateTodoItemHandler testHandler;
+  readonly UpdateTodoItemValidator validator = new();
   readonly TodoItemMapper mapper = new();
   public UpdateTodoItemTests()
   {
     mockTodoItemsRepository = new Mock<ITodoItemsRepository>();
-    testHandler = new Handler(mockTodoItemsRepository.Object, validator, mapper);
+    testHandler = new UpdateTodoItemHandler(mockTodoItemsRepository.Object, validator, mapper);
   }
   [Theory]
   [InlineData(true)]
@@ -32,7 +32,7 @@ public class UpdateTodoItemTests
       DueDate = givenUpdateDatetimeNull ? null : givenUpdateDatetime,
       Status = TodoItemStatusNames.Format[givenStatus],
     };
-    var givenCommand = new Command
+    var givenCommand = new UpdateTodoItem
     {
       Item = givenTodoItemToUpdate
     };
@@ -47,7 +47,7 @@ public class UpdateTodoItemTests
     mockTodoItemsRepository.Setup(x => x.GetByIds(It.IsAny<IList<int>>())).ReturnsAsync([existingTodoTask]);
     mockTodoItemsRepository.Setup(x => x.SaveChanges());
 
-    var expectedResult = new Response
+    var expectedResult = new UpdateTodoItemResult
     {
       HasValidationErrors = false,
       Item = new TodoItemModel
@@ -76,7 +76,7 @@ public class UpdateTodoItemTests
       DueDate = null,
       Status = TodoItemStatusNames.Format[givenStatus],
     };
-    var givenCommand = new Command
+    var givenCommand = new UpdateTodoItem
     {
       Item = givenTodoItemToUpdate
     };
@@ -102,11 +102,11 @@ public class UpdateTodoItemTests
       DueDate = DateTimeOffset.Now.AddDays(givenDueDateDaysAdd),
       Status = givenStatus,
     };
-    var givenCommand = new Command
+    var givenCommand = new UpdateTodoItem
     {
       Item = givenTodoItemToUpdate
     };
-    var expectedResult = new Response
+    var expectedResult = new UpdateTodoItemResult
     {
       HasValidationErrors = true,
       Item = givenTodoItemToUpdate,

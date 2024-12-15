@@ -1,7 +1,7 @@
 ﻿using Angular18AspNetCore8.App.Common;
 
 namespace Angular18AspNetCore8.App.Commands.UpdateTodoItem;
-public class Response : ITodoItemsHandlerOutput
+public class UpdateTodoItemResult : ITodoItemsHandlerOutput
 {
   public required TodoItemModel Item { get; set; }
   public bool HasValidationErrors { get; set; } = false;

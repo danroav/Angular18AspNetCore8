@@ -8,13 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSqlite<AppDbContext>(builder.Configuration.GetConnectionString("TodoItemsDb"));
 
 builder.Services.AddScoped<ITodoItemsRepository, TodoItemsRepository>();
-builder.Services.AddScoped<ITodoItemsHandler<Angular18AspNetCore8.App.Queries.GetAllTodoItems.Query, Angular18AspNetCore8.App.Queries.GetAllTodoItems.Response>, Angular18AspNetCore8.App.Queries.GetAllTodoItems.Handler>();
+builder.Services.AddScoped<ITodoItemsHandler<Angular18AspNetCore8.App.Queries.GetAllTodoItems.GetAllTodoITems, Angular18AspNetCore8.App.Queries.GetAllTodoItems.GetAllTodoItemsResult>, Angular18AspNetCore8.App.Queries.GetAllTodoItems.GetAllTodoITemsHandler>();
 
-builder.Services.AddTransient<IValidator<Angular18AspNetCore8.App.Commands.AddNewTodoItem.Command>, Angular18AspNetCore8.App.Commands.AddNewTodoItem.Validator>();
-builder.Services.AddScoped<ITodoItemsHandler<Angular18AspNetCore8.App.Commands.AddNewTodoItem.Command, Angular18AspNetCore8.App.Commands.AddNewTodoItem.Response>, Angular18AspNetCore8.App.Commands.AddNewTodoItem.Handler>();
+builder.Services.AddTransient<IValidator<Angular18AspNetCore8.App.Commands.AddNewTodoItem.AddNewTodoItem>, Angular18AspNetCore8.App.Commands.AddNewTodoItem.AddNewTodoItemValidator>();
+builder.Services.AddScoped<ITodoItemsHandler<Angular18AspNetCore8.App.Commands.AddNewTodoItem.AddNewTodoItem, Angular18AspNetCore8.App.Commands.AddNewTodoItem.AddNewTodoItemResult>, Angular18AspNetCore8.App.Commands.AddNewTodoItem.AddNewTodoItemHandler>();
 
-builder.Services.AddTransient<IValidator<Angular18AspNetCore8.App.Commands.UpdateTodoItem.Command>, Angular18AspNetCore8.App.Commands.UpdateTodoItem.Validator>();
-builder.Services.AddScoped<ITodoItemsHandler<Angular18AspNetCore8.App.Commands.UpdateTodoItem.Command, Angular18AspNetCore8.App.Commands.UpdateTodoItem.Response>, Angular18AspNetCore8.App.Commands.UpdateTodoItem.Handler>();
+builder.Services.AddTransient<IValidator<Angular18AspNetCore8.App.Commands.UpdateTodoItem.UpdateTodoItem>, Angular18AspNetCore8.App.Commands.UpdateTodoItem.UpdateTodoItemValidator>();
+builder.Services.AddScoped<ITodoItemsHandler<Angular18AspNetCore8.App.Commands.UpdateTodoItem.UpdateTodoItem, Angular18AspNetCore8.App.Commands.UpdateTodoItem.UpdateTodoItemResult>, Angular18AspNetCore8.App.Commands.UpdateTodoItem.UpdateTodoItemHandler>();
 
 builder.Services.AddTransient<TodoItemMapper>();
 

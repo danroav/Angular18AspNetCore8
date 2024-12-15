@@ -10,12 +10,12 @@ namespace Angular18AspNetCore8.App.Tests
   public class GetAllTodoItemsTests
   {
     readonly Mock<ITodoItemsRepository> mockTodoItemsRepository;
-    readonly Handler testHandler;
+    readonly GetAllTodoITemsHandler testHandler;
     readonly TodoItemMapper mapper = new();
     public GetAllTodoItemsTests()
     {
       mockTodoItemsRepository = new Mock<ITodoItemsRepository>();
-      testHandler = new Handler(mockTodoItemsRepository.Object, mapper);
+      testHandler = new GetAllTodoITemsHandler(mockTodoItemsRepository.Object, mapper);
     }
     [Fact]
     public async Task GetsAllTodoItemsNoError()
@@ -26,14 +26,14 @@ namespace Angular18AspNetCore8.App.Tests
         new TodoItem
       { Id=2, Description="B", DueDate=DateTime.Now.ToDateTimeOffset(), LastUserStatus= TodoItemStatus.InProgress }, ];
       mockTodoItemsRepository.Setup(x => x.GetAll()).ReturnsAsync(givenTaskEntities);
-      var expectedResult = new Response
+      var expectedResult = new GetAllTodoItemsResult
       {
         Count = 2,
         Items = givenTaskEntities.Select(e => mapper.Map(e)),
         Message = "2 tasks retrieved"
       };
       //Act
-      var actualResult = await testHandler.Execute(new Query());
+      var actualResult = await testHandler.Execute(new GetAllTodoITems());
       //Assert
       mockTodoItemsRepository.VerifyAll();
       actualResult.Should().BeEquivalentTo(expectedResult);
@@ -46,7 +46,7 @@ namespace Angular18AspNetCore8.App.Tests
       mockTodoItemsRepository.Setup(x => x.GetAll()).ThrowsAsync(new Exception(expectedError));
 
       //Act
-      var actualResult = () => testHandler.Execute(new Query());
+      var actualResult = () => testHandler.Execute(new GetAllTodoITems());
 
       //Assert
       await actualResult.Should().ThrowAsync<Exception>().WithMessage(expectedError);

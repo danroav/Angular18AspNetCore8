@@ -3,15 +3,15 @@ using Angular18AspNetCore8.Core.Entities;
 using FluentValidation;
 
 namespace Angular18AspNetCore8.App.Commands.UpdateTodoItem;
-public class Handler(ITodoItemsRepository todoItemsRepository, IValidator<Command> validator, TodoItemMapper mapper) : ITodoItemsHandler<Command, Response>
+public class UpdateTodoItemHandler(ITodoItemsRepository todoItemsRepository, IValidator<UpdateTodoItem> validator, TodoItemMapper mapper) : ITodoItemsHandler<UpdateTodoItem, UpdateTodoItemResult>
 {
-  public async Task<Response> Execute(Command command)
+  public async Task<UpdateTodoItemResult> Execute(UpdateTodoItem command)
   {
     var validationResult = validator.Validate(command);
 
     if (!validationResult.IsValid)
     {
-      return new Response
+      return new UpdateTodoItemResult
       {
         HasValidationErrors = true,
         Item = command.Item,
@@ -30,7 +30,7 @@ public class Handler(ITodoItemsRepository todoItemsRepository, IValidator<Comman
 
     await todoItemsRepository.SaveChanges();
 
-    return new Response
+    return new UpdateTodoItemResult
     {
       HasValidationErrors = false,
       Item = mapper.Map(existingTodoItem),

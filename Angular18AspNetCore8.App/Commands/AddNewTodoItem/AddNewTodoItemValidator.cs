@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Angular18AspNetCore8.App.Commands.AddNewTodoItem;
 
-public class Validator : AbstractValidator<Command>
+public class AddNewTodoItemValidator : AbstractValidator<AddNewTodoItem>
 {
-  public Validator()
+  public AddNewTodoItemValidator()
   {
     RuleFor(x => x.Description).NotEmpty().WithMessage("Description is required");
     RuleFor(x => x.Description).MaximumLength(255).WithMessage("Description should not exceed 255 chars");

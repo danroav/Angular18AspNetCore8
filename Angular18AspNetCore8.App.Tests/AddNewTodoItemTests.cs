@@ -9,20 +9,20 @@ namespace Angular18AspNetCore8.App.Tests
   public class AddNewTodoItemTests
   {
     readonly Mock<ITodoItemsRepository> mockTodoItemsRepository;
-    readonly Handler testHandler;
-    readonly Validator validator = new();
+    readonly AddNewTodoItemHandler testHandler;
+    readonly AddNewTodoItemValidator validator = new();
     readonly TodoItemMapper mapper = new();
     public AddNewTodoItemTests()
     {
       mockTodoItemsRepository = new Mock<ITodoItemsRepository>();
-      testHandler = new Handler(mockTodoItemsRepository.Object, validator, mapper);
+      testHandler = new AddNewTodoItemHandler(mockTodoItemsRepository.Object, validator, mapper);
     }
     [Fact]
     public async Task AddNewTodoItemSuccess()
     {
       //Arrange
       var givenStatus = TodoItemStatus.ToDo;
-      var givenCommand = new Command
+      var givenCommand = new AddNewTodoItem
       {
         Description = "Some description",
         DueDate = null,
@@ -31,7 +31,7 @@ namespace Angular18AspNetCore8.App.Tests
       var newTodoITem = new TodoItem { Id = 1000, Description = givenCommand.Description, DueDate = givenCommand.DueDate, LastUserStatus = givenStatus };
       mockTodoItemsRepository.Setup(x => x.AddNew(It.IsAny<string>(), It.IsAny<DateTimeOffset?>(), It.IsAny<TodoItemStatus>())).ReturnsAsync(newTodoITem);
       mockTodoItemsRepository.Setup(x => x.SaveChanges());
-      var expectedResult = new Response
+      var expectedResult = new AddNewTodoItemResult
       {
         HasValidationErrors = false,
         Item = mapper.Map(newTodoITem),
@@ -46,7 +46,7 @@ namespace Angular18AspNetCore8.App.Tests
     public async Task AddNewTodoItemWithError()
     {
       //Arrange
-      var givenCommand = new Command()
+      var givenCommand = new AddNewTodoItem()
       {
         Description = "Some description",
         DueDate = DateTimeOffset.Now.AddDays(1),
@@ -68,13 +68,13 @@ namespace Angular18AspNetCore8.App.Tests
     {
       //Arrange
       var givenDueDate = DateTimeOffset.Now.AddDays(givenDueDateDaysAdd);
-      var givenCommand = new Command()
+      var givenCommand = new AddNewTodoItem()
       {
         Description = givenDescription,
         DueDate = givenDueDate,
         Status = givenStatus
       };
-      var expectedResult = new Response
+      var expectedResult = new AddNewTodoItemResult
       {
         HasValidationErrors = true,
         Item = new TodoItemModel

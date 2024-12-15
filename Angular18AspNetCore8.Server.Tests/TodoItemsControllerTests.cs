@@ -11,14 +11,14 @@ namespace Angular18AspNetCore8.Server.Tests
   public class TodoItemsControllerTests
   {
     readonly TodoItemsController todoItemsController;
-    readonly Mock<ITodoItemsHandler<App.Queries.GetAllTodoItems.Query, App.Queries.GetAllTodoItems.Response>> mockGetAllTodoITems;
-    readonly Mock<ITodoItemsHandler<App.Commands.AddNewTodoItem.Command, App.Commands.AddNewTodoItem.Response>> mockAddNewTodoItemHandler;
-    readonly Mock<ITodoItemsHandler<App.Commands.UpdateTodoItem.Command, App.Commands.UpdateTodoItem.Response>> mockUpdateTodoItemHandler;
+    readonly Mock<ITodoItemsHandler<App.Queries.GetAllTodoItems.GetAllTodoITems, App.Queries.GetAllTodoItems.GetAllTodoItemsResult>> mockGetAllTodoITems;
+    readonly Mock<ITodoItemsHandler<App.Commands.AddNewTodoItem.AddNewTodoItem, App.Commands.AddNewTodoItem.AddNewTodoItemResult>> mockAddNewTodoItemHandler;
+    readonly Mock<ITodoItemsHandler<App.Commands.UpdateTodoItem.UpdateTodoItem, App.Commands.UpdateTodoItem.UpdateTodoItemResult>> mockUpdateTodoItemHandler;
     public TodoItemsControllerTests()
     {
-      mockGetAllTodoITems = new Mock<ITodoItemsHandler<App.Queries.GetAllTodoItems.Query, App.Queries.GetAllTodoItems.Response>>();
-      mockAddNewTodoItemHandler = new Mock<ITodoItemsHandler<App.Commands.AddNewTodoItem.Command, App.Commands.AddNewTodoItem.Response>>();
-      mockUpdateTodoItemHandler = new Mock<ITodoItemsHandler<App.Commands.UpdateTodoItem.Command, App.Commands.UpdateTodoItem.Response>>();
+      mockGetAllTodoITems = new Mock<ITodoItemsHandler<App.Queries.GetAllTodoItems.GetAllTodoITems, App.Queries.GetAllTodoItems.GetAllTodoItemsResult>>();
+      mockAddNewTodoItemHandler = new Mock<ITodoItemsHandler<App.Commands.AddNewTodoItem.AddNewTodoItem, App.Commands.AddNewTodoItem.AddNewTodoItemResult>>();
+      mockUpdateTodoItemHandler = new Mock<ITodoItemsHandler<App.Commands.UpdateTodoItem.UpdateTodoItem, App.Commands.UpdateTodoItem.UpdateTodoItemResult>>();
       todoItemsController = new TodoItemsController(mockGetAllTodoITems.Object, mockAddNewTodoItemHandler.Object, mockUpdateTodoItemHandler.Object);
     }
 
@@ -26,20 +26,20 @@ namespace Angular18AspNetCore8.Server.Tests
     public async Task GetAllTodoItemsSuccess()
     {
       //Arrange
-      var expectedResult = new App.Queries.GetAllTodoItems.Response
+      var expectedResult = new App.Queries.GetAllTodoItems.GetAllTodoItemsResult
       {
         Count = 2,
         Message = "",
         Items = [new TodoItemModel(), new TodoItemModel()]
       };
 
-      mockGetAllTodoITems.Setup(x => x.Execute(It.IsAny<App.Queries.GetAllTodoItems.Query>())).ReturnsAsync(expectedResult);
+      mockGetAllTodoITems.Setup(x => x.Execute(It.IsAny<App.Queries.GetAllTodoItems.GetAllTodoITems>())).ReturnsAsync(expectedResult);
 
       //Act
       var actualResult = await todoItemsController.GetAllTodoItems();
 
       //Assert
-      actualResult.Should().BeOfType<ActionResult<App.Queries.GetAllTodoItems.Response>>();
+      actualResult.Should().BeOfType<ActionResult<App.Queries.GetAllTodoItems.GetAllTodoItemsResult>>();
       actualResult.Result.Should().NotBeNull();
       actualResult.Result.Should().BeOfType<OkObjectResult>();
       ((OkObjectResult)actualResult.Result!).Value.Should().BeEquivalentTo(expectedResult);
@@ -50,7 +50,7 @@ namespace Angular18AspNetCore8.Server.Tests
       //Arrange
       var expectedExceptionMessage = "Some error";
       var expectedStatus = (int)HttpStatusCode.InternalServerError;
-      mockGetAllTodoITems.Setup(x => x.Execute(It.IsAny<App.Queries.GetAllTodoItems.Query>())).ThrowsAsync(new Exception(expectedExceptionMessage));
+      mockGetAllTodoITems.Setup(x => x.Execute(It.IsAny<App.Queries.GetAllTodoItems.GetAllTodoITems>())).ThrowsAsync(new Exception(expectedExceptionMessage));
       var expectedProblem = new ProblemDetails
       {
         Detail = expectedExceptionMessage,
@@ -61,7 +61,7 @@ namespace Angular18AspNetCore8.Server.Tests
       var actualResult = await todoItemsController.GetAllTodoItems();
 
       //Assert
-      actualResult.Should().BeOfType<ActionResult<App.Queries.GetAllTodoItems.Response>>();
+      actualResult.Should().BeOfType<ActionResult<App.Queries.GetAllTodoItems.GetAllTodoItemsResult>>();
       actualResult.Result.Should().NotBeNull();
       actualResult.Result.Should().BeOfType<ObjectResult>();
       var problem = ((ObjectResult)actualResult.Result!);
@@ -72,13 +72,13 @@ namespace Angular18AspNetCore8.Server.Tests
     public async Task AddNewTodoItemSuccess()
     {
       //Arrange
-      var givenCommand = new App.Commands.AddNewTodoItem.Command
+      var givenCommand = new App.Commands.AddNewTodoItem.AddNewTodoItem
       {
         Description = "some description",
         DueDate = null,
         Status = "",
       };
-      var expectedResult = new App.Commands.AddNewTodoItem.Response
+      var expectedResult = new App.Commands.AddNewTodoItem.AddNewTodoItemResult
       {
         Item = new TodoItemModel
         {
@@ -90,13 +90,13 @@ namespace Angular18AspNetCore8.Server.Tests
       };
 
 
-      mockAddNewTodoItemHandler.Setup(x => x.Execute(It.IsAny<App.Commands.AddNewTodoItem.Command>())).ReturnsAsync(expectedResult);
+      mockAddNewTodoItemHandler.Setup(x => x.Execute(It.IsAny<App.Commands.AddNewTodoItem.AddNewTodoItem>())).ReturnsAsync(expectedResult);
 
       //Act
       var actualResult = await todoItemsController.AddNewTodoItem(givenCommand);
 
       //Assert
-      actualResult.Should().BeOfType<ActionResult<App.Commands.AddNewTodoItem.Response>>();
+      actualResult.Should().BeOfType<ActionResult<App.Commands.AddNewTodoItem.AddNewTodoItemResult>>();
       actualResult.Result.Should().NotBeNull();
       actualResult.Result.Should().BeOfType<OkObjectResult>();
       ((OkObjectResult)actualResult.Result!).Value.Should().BeEquivalentTo(expectedResult);
@@ -105,7 +105,7 @@ namespace Angular18AspNetCore8.Server.Tests
     public async Task AddNewTodoItemUnexpectedError()
     {
       //Arrange
-      var givenCommand = new App.Commands.AddNewTodoItem.Command
+      var givenCommand = new App.Commands.AddNewTodoItem.AddNewTodoItem
       {
         Description = "some description",
         DueDate = null,
@@ -119,13 +119,13 @@ namespace Angular18AspNetCore8.Server.Tests
         Status = expectedStatus
       };
 
-      mockAddNewTodoItemHandler.Setup(x => x.Execute(It.IsAny<App.Commands.AddNewTodoItem.Command>())).ThrowsAsync(new Exception(expectedErrorMessage));
+      mockAddNewTodoItemHandler.Setup(x => x.Execute(It.IsAny<App.Commands.AddNewTodoItem.AddNewTodoItem>())).ThrowsAsync(new Exception(expectedErrorMessage));
 
       //Act
       var actualResult = await todoItemsController.AddNewTodoItem(givenCommand);
 
       //Assert
-      actualResult.Should().BeOfType<ActionResult<App.Commands.AddNewTodoItem.Response>>();
+      actualResult.Should().BeOfType<ActionResult<App.Commands.AddNewTodoItem.AddNewTodoItemResult>>();
       actualResult.Result.Should().NotBeNull();
       actualResult.Result.Should().BeOfType<ObjectResult>();
       var problem = ((ObjectResult)actualResult.Result!);
@@ -136,13 +136,13 @@ namespace Angular18AspNetCore8.Server.Tests
     public async Task AddNewTodoItemRequestError()
     {
       //Arrange
-      var givenCommand = new App.Commands.AddNewTodoItem.Command
+      var givenCommand = new App.Commands.AddNewTodoItem.AddNewTodoItem
       {
         Description = "some description",
         DueDate = null,
         Status = "",
       };
-      var expectedResult = new App.Commands.AddNewTodoItem.Response
+      var expectedResult = new App.Commands.AddNewTodoItem.AddNewTodoItemResult
       {
         Item = new TodoItemModel
         {
@@ -156,13 +156,13 @@ namespace Angular18AspNetCore8.Server.Tests
       };
 
 
-      mockAddNewTodoItemHandler.Setup(x => x.Execute(It.IsAny<App.Commands.AddNewTodoItem.Command>())).ReturnsAsync(expectedResult);
+      mockAddNewTodoItemHandler.Setup(x => x.Execute(It.IsAny<App.Commands.AddNewTodoItem.AddNewTodoItem>())).ReturnsAsync(expectedResult);
 
       //Act
       var actualResult = await todoItemsController.AddNewTodoItem(givenCommand);
 
       //Assert
-      actualResult.Should().BeOfType<ActionResult<App.Commands.AddNewTodoItem.Response>>();
+      actualResult.Should().BeOfType<ActionResult<App.Commands.AddNewTodoItem.AddNewTodoItemResult>>();
       actualResult.Result.Should().NotBeNull();
       actualResult.Result.Should().BeOfType<BadRequestObjectResult>();
       ((BadRequestObjectResult)actualResult.Result!).Value.Should().BeEquivalentTo(expectedResult);
@@ -171,24 +171,24 @@ namespace Angular18AspNetCore8.Server.Tests
     public async Task UpdateTodoItemSuccess()
     {
       //Arrange
-      var expectedResult = new App.Commands.UpdateTodoItem.Response
+      var expectedResult = new App.Commands.UpdateTodoItem.UpdateTodoItemResult
       {
         Item = new TodoItemModel { Description = "Some Description", DueDate = null, Id = 123, Status = TodoItemStatusNames.Format[TodoItemStatus.ToDo] },
         HasValidationErrors = false,
         ValidationErrors = new Dictionary<string, string[]>()
       };
-      var givenCommand = new App.Commands.UpdateTodoItem.Command
+      var givenCommand = new App.Commands.UpdateTodoItem.UpdateTodoItem
       {
         Item = new TodoItemModel { Description = "Some Description", DueDate = null, Id = 123, Status = TodoItemStatusNames.Format[TodoItemStatus.ToDo] }
       };
 
-      mockUpdateTodoItemHandler.Setup(x => x.Execute(It.IsAny<App.Commands.UpdateTodoItem.Command>())).ReturnsAsync(expectedResult);
+      mockUpdateTodoItemHandler.Setup(x => x.Execute(It.IsAny<App.Commands.UpdateTodoItem.UpdateTodoItem>())).ReturnsAsync(expectedResult);
 
       //Act
       var actualResult = await todoItemsController.UpdateTodoItem(givenCommand);
 
       //Assert
-      actualResult.Should().BeOfType<ActionResult<App.Commands.UpdateTodoItem.Response>>();
+      actualResult.Should().BeOfType<ActionResult<App.Commands.UpdateTodoItem.UpdateTodoItemResult>>();
       actualResult.Result.Should().NotBeNull();
       actualResult.Result.Should().BeOfType<OkObjectResult>();
       ((OkObjectResult)actualResult.Result!).Value.Should().BeEquivalentTo(expectedResult);
@@ -197,7 +197,7 @@ namespace Angular18AspNetCore8.Server.Tests
     public async Task UpdateTodoItemUnexpectedError()
     {
       //Arrange
-      var givenCommand = new App.Commands.UpdateTodoItem.Command
+      var givenCommand = new App.Commands.UpdateTodoItem.UpdateTodoItem
       {
         Item = new TodoItemModel { Description = "Some Description", DueDate = null, Id = 123, Status = TodoItemStatusNames.Format[TodoItemStatus.ToDo] }
       };
@@ -209,13 +209,13 @@ namespace Angular18AspNetCore8.Server.Tests
         Status = expectedStatus
       };
 
-      mockUpdateTodoItemHandler.Setup(x => x.Execute(It.IsAny<App.Commands.UpdateTodoItem.Command>())).ThrowsAsync(new Exception(expectedErrorMessage));
+      mockUpdateTodoItemHandler.Setup(x => x.Execute(It.IsAny<App.Commands.UpdateTodoItem.UpdateTodoItem>())).ThrowsAsync(new Exception(expectedErrorMessage));
 
       //Act
       var actualResult = await todoItemsController.UpdateTodoItem(givenCommand);
 
       //Assert
-      actualResult.Should().BeOfType<ActionResult<App.Commands.UpdateTodoItem.Response>>();
+      actualResult.Should().BeOfType<ActionResult<App.Commands.UpdateTodoItem.UpdateTodoItemResult>>();
       actualResult.Result.Should().NotBeNull();
       actualResult.Result.Should().BeOfType<ObjectResult>();
       var problem = ((ObjectResult)actualResult.Result!);
@@ -233,7 +233,7 @@ namespace Angular18AspNetCore8.Server.Tests
         Id = 123,
         Status = TodoItemStatusNames.Format[TodoItemStatus.ToDo]
       };
-      var expectedResult = new App.Commands.UpdateTodoItem.Response
+      var expectedResult = new App.Commands.UpdateTodoItem.UpdateTodoItemResult
       {
         Item = givenItem,
         HasValidationErrors = true,
@@ -241,18 +241,18 @@ namespace Angular18AspNetCore8.Server.Tests
           { "someProperty",["Some validation Error"] }
         }
       };
-      var givenCommand = new App.Commands.UpdateTodoItem.Command
+      var givenCommand = new App.Commands.UpdateTodoItem.UpdateTodoItem
       {
         Item = givenItem
       };
 
-      mockUpdateTodoItemHandler.Setup(x => x.Execute(It.IsAny<App.Commands.UpdateTodoItem.Command>())).ReturnsAsync(expectedResult);
+      mockUpdateTodoItemHandler.Setup(x => x.Execute(It.IsAny<App.Commands.UpdateTodoItem.UpdateTodoItem>())).ReturnsAsync(expectedResult);
 
       //Act
       var actualResult = await todoItemsController.UpdateTodoItem(givenCommand);
 
       //Assert
-      actualResult.Should().BeOfType<ActionResult<App.Commands.UpdateTodoItem.Response>>();
+      actualResult.Should().BeOfType<ActionResult<App.Commands.UpdateTodoItem.UpdateTodoItemResult>>();
       actualResult.Result.Should().NotBeNull();
       actualResult.Result.Should().BeOfType<BadRequestObjectResult>();
       ((BadRequestObjectResult)actualResult.Result!).Value.Should().BeEquivalentTo(expectedResult);
