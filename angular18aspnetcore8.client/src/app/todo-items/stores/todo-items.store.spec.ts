@@ -36,9 +36,7 @@ describe('Todo Items Store', () => {
     const expectedDescription = 'some description';
     const expectedStatus = 'some status';
     const expectedDueDate = undefined;
-    const expectedValidationErrors: ValidationErrors<TodoItem> = {
-      description: ['Some description error'],
-    };
+    const expectedValidationErrors: ValidationErrors<TodoItem> = {};
     const expectedMessage = 'some creation message';
 
     const givenCreateTodoItem: CreateTodoItem = {
@@ -130,6 +128,70 @@ describe('Todo Items Store', () => {
     });
 
     testTodoItemStore.create('create description', 'create status', undefined);
+
+    //Assert
+    return changePromise;
+  });
+  it('When creating todo item validation errors', async () => {
+    //Arrange
+    const givenId = 1;
+    const givenDescription = 'some description';
+    const givenStatus = 'some status';
+    const givenDueDate = undefined;
+    const givenValidationErrors: ValidationErrors<TodoItem> = {
+      description: ['Some description error'],
+    };
+    const givenMessage = 'some creation message';
+
+    const givenCreateTodoItem: CreateTodoItem = {
+      description: 'create description',
+      dueDate: undefined,
+      status: 'create status',
+    };
+    const givenCreateTodoItemResult: CreateTodoItemResult = {
+      message: givenMessage,
+      item: {
+        description: givenDescription,
+        status: givenStatus,
+        id: givenId,
+        dueDate: givenDueDate,
+      },
+      validationErrors: givenValidationErrors,
+    };
+
+    httpClientPostSpy.and.returnValue(of(givenCreateTodoItemResult));
+
+    //Act
+    const testTodoItemStore = new TodoItemStore(mockHttpClient);
+
+    const changePromise = new Promise<void>((resolve, reject) => {
+      reaction(
+        () => testTodoItemStore.validationErrors,
+        (_arg, _prev, r) => {
+          try {
+            expect(testTodoItemStore.description).toEqual('');
+            expect(testTodoItemStore.dueDate).toEqual(undefined);
+            expect(testTodoItemStore.id).toEqual(0);
+            expect(testTodoItemStore.status).toEqual('');
+            expect(testTodoItemStore.validationErrors).toEqual(
+              givenValidationErrors
+            );
+            expect(testTodoItemStore.message).toEqual(givenMessage);
+            resolve();
+          } catch (error) {
+            reject();
+          } finally {
+            r.dispose();
+          }
+        }
+      );
+    });
+
+    testTodoItemStore.create(
+      givenCreateTodoItem.description,
+      givenCreateTodoItem.status,
+      givenCreateTodoItem.dueDate
+    );
 
     //Assert
     return changePromise;

@@ -30,10 +30,12 @@ export class TodoItemStore {
       next: (value) => {
         runInAction(() => {
           const result = value as CreateTodoItemResult;
-          self.id = result.item.id;
-          self.description = result.item.description;
-          self.status = result.item.status;
-          self.dueDate = result.item.dueDate;
+          if (Object.keys(result.validationErrors).length === 0) {
+            self.id = result.item.id;
+            self.description = result.item.description;
+            self.status = result.item.status;
+            self.dueDate = result.item.dueDate;
+          }
           self.validationErrors = result.validationErrors;
           self.message = result.message;
         });
