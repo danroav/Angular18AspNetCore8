@@ -39,6 +39,7 @@ describe('Todo Items Store', () => {
     const expectedValidationErrors: ValidationErrors<TodoItem> = {
       description: ['Some description error'],
     };
+    const expectedMessage = 'some creation message';
 
     const givenCreateTodoItem: CreateTodoItem = {
       description: 'create description',
@@ -46,7 +47,7 @@ describe('Todo Items Store', () => {
       status: 'create status',
     };
     const givenCreateTodoItemResult: CreateTodoItemResult = {
-      message: 'some creation message',
+      message: expectedMessage,
       item: {
         description: expectedDescription,
         status: expectedStatus,
@@ -73,6 +74,7 @@ describe('Todo Items Store', () => {
             expect(testTodoItemStore.validationErrors).toEqual(
               expectedValidationErrors
             );
+            expect(testTodoItemStore.message).toEqual(expectedMessage);
             resolve();
           } catch (error) {
             reject();

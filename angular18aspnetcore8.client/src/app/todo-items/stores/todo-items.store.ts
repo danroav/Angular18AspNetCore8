@@ -35,6 +35,7 @@ export class TodoItemStore {
           self.status = result.item.status;
           self.dueDate = result.item.dueDate;
           self.validationErrors = result.validationErrors;
+          self.message = result.message;
         });
       },
       error: (error) => {
