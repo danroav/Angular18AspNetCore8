@@ -35,7 +35,7 @@ describe('List Item Component', () => {
       description: 'expected item description',
       id: 4862,
       status: 'expected item status',
-      dueDate: 'expected item due date',
+      dueDate: new Date(),
     };
     fixture.componentRef.setInput('item', expectedTodoItem);
     fixture.detectChanges();

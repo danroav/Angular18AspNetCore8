@@ -39,13 +39,13 @@ describe('Todo Items Component', () => {
         id: 1,
         description: 'item 1',
         status: 'To do',
-        dueDate: 'date 1',
+        dueDate: new Date(),
       },
       {
         id: 2,
         description: 'item 2',
         status: 'To do',
-        dueDate: 'date 2',
+        dueDate: new Date(),
       },
     ];
     const givenResponseMessage = `2 items retrieved`;

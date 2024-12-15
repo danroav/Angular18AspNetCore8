@@ -1,7 +1,7 @@
 export interface TodoItem {
   id: number;
   description: string;
-  dueDate?: string;
+  dueDate?: Date;
   status: string;
 }
 export interface TodoItemsIndexResponse {
@@ -9,7 +9,12 @@ export interface TodoItemsIndexResponse {
   message: string;
   items: TodoItem[];
 }
-export interface CommandAddNewTodoItemResponse {
+export interface AddnewTodoItem {
+  description: string;
+  dueDate?: Date;
+  status: string;
+}
+export interface AddNewTodoItemResult {
   item: TodoItem;
   validationErrors: Record<string, string[]>;
   hasValidationErrors: boolean;
