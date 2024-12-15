@@ -6,16 +6,12 @@ import {
   TodoItem,
   ValidationErrors,
 } from '../models/todo-items-models';
-export enum StoreMode {
-  view = 0,
-  edit = 1,
-}
+
 export class TodoItemStore {
   id: number = 0;
   description: string = '';
   status: string = '';
   dueDate?: Date;
-  mode: StoreMode = StoreMode.view;
   validationErrors: ValidationErrors<TodoItem> = {};
   message: string = '';
 

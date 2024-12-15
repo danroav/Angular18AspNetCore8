@@ -5,7 +5,7 @@ import {
   TodoItem,
   ValidationErrors,
 } from '../models/todo-items-models';
-import { StoreMode, TodoItemStore } from './todo-items.store';
+import { TodoItemStore } from './todo-items.store';
 import { Observable, of } from 'rxjs';
 import { reaction } from 'mobx';
 
@@ -26,12 +26,11 @@ describe('Todo Items Store', () => {
     expect(testStore.description).toEqual('');
     expect(testStore.dueDate).not.toBeDefined();
     expect(testStore.id).toEqual(0);
-    expect(testStore.mode).toEqual(StoreMode.view);
     expect(testStore.status).toEqual('');
     expect(testStore.validationErrors).toEqual({});
   });
 
-  it('When adding new item with response', async () => {
+  it('When creating todo item success', async () => {
     //Arrange
     const expectedId = 14;
     const expectedDescription = 'some description';
