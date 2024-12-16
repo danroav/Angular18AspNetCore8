@@ -1,6 +1,6 @@
-<h1 id="tableLabel">Todo Items</h1>
+<h1 id="tableLabel">Todo Items Test</h1>
 <p>{{ message }}</p>
-<table *ngIf="items">
+<table *ngIf="todoItemStoreList">
   <thead>
     <tr>
       <th>Id</th>
@@ -10,6 +10,10 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let item of items" todo-item [item]="item"></tr>
+    <tr
+      *ngFor="let store of todoItemStoreList"
+      todo-item
+      [todoItemStore]="store"
+    ></tr>
   </tbody>
 </table>

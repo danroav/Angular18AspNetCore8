@@ -26,14 +26,12 @@ describe('Todo Items Store', () => {
     //Assert
     expect(testTodoItemsStore.todoItems).toEqual([]);
     expect(testTodoItemsStore.actionMessage).toEqual('');
-    expect(testTodoItemsStore.actionTodoItemValidationErrors).toEqual({});
   });
   describe('Get all todo items', () => {
     it('Should get items from backend', async () => {
       //Arrange
       const givenResponseTodoItems: TodoItem[] = [];
       const givenResponseMessage = '';
-      const expectedResponseValidationErrors = {};
 
       const givenGetAllTodoItemsResponse: GetAllTodoItemsResponse = {
         message: givenResponseMessage,
@@ -53,9 +51,6 @@ describe('Todo Items Store', () => {
               );
               expect(testTodoItemsStore.actionMessage).toEqual(
                 givenResponseMessage
-              );
-              expect(testTodoItemsStore.actionTodoItemValidationErrors).toEqual(
-                expectedResponseValidationErrors
               );
               resolve();
             } catch (error) {

@@ -3,15 +3,15 @@ import {
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { TodoItemComponent } from './todo-item.component';
-import { provideHttpClient } from '@angular/common/http';
-import { TodoItem } from '../models/todo-items-models';
+import { TodoItemStore } from '../stores/todo-items.store';
 
 describe('List Item Component', () => {
   let component: TodoItemComponent;
   let fixture: ComponentFixture<TodoItemComponent>;
   let httpMock: HttpTestingController;
-
+  let httpClient: HttpClient;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [TodoItemComponent],
@@ -23,6 +23,7 @@ describe('List Item Component', () => {
     fixture = TestBed.createComponent(TodoItemComponent);
     component = fixture.componentInstance;
     httpMock = TestBed.inject(HttpTestingController);
+    httpClient = TestBed.inject(HttpClient);
   });
 
   afterEach(() => {
@@ -31,18 +32,23 @@ describe('List Item Component', () => {
 
   it('should create the list item component', async () => {
     expect(component).toBeTruthy();
-    const expectedTodoItem: TodoItem = {
+    const givenTodoItem = {
       description: 'expected item description',
       id: 4862,
       status: 'expected item status',
       dueDate: new Date(),
     };
-    fixture.componentRef.setInput('item', expectedTodoItem);
+    const expectedTodoItemStore: TodoItemStore = new TodoItemStore(
+      givenTodoItem,
+      httpClient
+    );
+    fixture.componentRef.setInput('todoItemStore', expectedTodoItemStore);
     fixture.detectChanges();
     const listItemEl = fixture.nativeElement as HTMLElement;
-    expect(listItemEl.textContent).toContain(expectedTodoItem.description);
-    expect(listItemEl.textContent).toContain(expectedTodoItem.id);
-    expect(listItemEl.textContent).toContain(expectedTodoItem.status);
-    expect(listItemEl.textContent).toContain(expectedTodoItem.dueDate);
+
+    expect(listItemEl.textContent).toContain(givenTodoItem.description);
+    expect(listItemEl.textContent).toContain(givenTodoItem.id);
+    expect(listItemEl.textContent).toContain(givenTodoItem.status);
+    expect(listItemEl.textContent).toContain(givenTodoItem.dueDate);
   });
 });

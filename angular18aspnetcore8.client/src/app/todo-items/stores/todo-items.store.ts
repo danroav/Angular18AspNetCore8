@@ -82,9 +82,6 @@ export class TodoItemStore {
 export class TodoItemsStore {
   todoItems: TodoItemStore[] = [];
   actionMessage: string = '';
-  actionTodoItemValidationErrors: {
-    [todoItemId: number]: ValidationErrors<TodoItem>;
-  } = {};
   constructor(private httpClient: HttpClient) {
     makeAutoObservable(this);
   }
