@@ -117,7 +117,10 @@ describe('Todo Items Store', () => {
         );
       });
       //Act
-      testTodoItemsStore.addNew();
+      const actualResult = testTodoItemsStore.addNew();
+      expect(actualResult).toEqual(
+        new TodoItemStore(expectedNewTodoItem, givenHttpClient)
+      );
       //Assert
       return changePromise;
     });

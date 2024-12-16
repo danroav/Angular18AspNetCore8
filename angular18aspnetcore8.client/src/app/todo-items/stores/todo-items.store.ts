@@ -3,6 +3,7 @@ import { GetAllTodoItemsResponse, TodoItem } from '../models/todo-items-models';
 import { makeAutoObservable, runInAction } from 'mobx';
 import { Injectable } from '@angular/core';
 import { TodoItemStore } from './todo-item.store';
+import { TodoItemsComponent } from '../todo-items.component';
 
 @Injectable({ providedIn: 'root' })
 export class TodoItemsStore {
@@ -30,17 +31,16 @@ export class TodoItemsStore {
       });
     });
   }
-  addNew() {
+  addNew(): TodoItemStore {
     const newTodo: TodoItem = {
       description: '',
       id: 0,
       status: 'To-do',
       dueDate: undefined,
     };
-    this.todoItems = [
-      ...this.todoItems,
-      new TodoItemStore(newTodo, this.httpClient),
-    ];
+    const newTodoStore = new TodoItemStore(newTodo, this.httpClient);
+    this.todoItems = [...this.todoItems, newTodoStore];
     this.actionMessage = 'Adding new todo';
+    return newTodoStore;
   }
 }

@@ -403,4 +403,7 @@ describe('Todo Item store', () => {
       });
     });
   });
+  describe('Remove', () => {
+    it('', () => {});
+  });
 });
