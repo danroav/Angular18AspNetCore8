@@ -125,4 +125,38 @@ describe('Todo Items Store', () => {
       return changePromise;
     });
   });
+  describe('Remove todo', () => {
+    it('should remove todo from list', () => {
+      //Arrange
+      const givenTodoItems: TodoItem[] = [
+        {
+          id: 1,
+          description: 'given description 1',
+          status: 'given status 1',
+          dueDate: new Date(),
+        },
+        {
+          id: 2,
+          description: 'given description 2',
+          status: 'given status 2',
+          dueDate: new Date(),
+        },
+      ];
+      const givenMessage = 'given message';
+      const givenHttpClient: HttpClient = {} as any;
+      testTodoItemsStore = new TodoItemsStore(givenHttpClient);
+      testTodoItemsStore.setTodoItems(givenTodoItems, givenMessage);
+      const givenTodoItemToDelete = testTodoItemsStore.todoItems[1];
+
+      const expectedTodoItems = testTodoItemsStore.todoItems.filter(
+        (_t, index) => index != 1
+      );
+      //Act
+      testTodoItemsStore.remove(givenTodoItemToDelete);
+
+      //Assert
+      expect(testTodoItemsStore.todoItems).toEqual(expectedTodoItems);
+      expect(testTodoItemsStore.actionMessage).toEqual('Removing todo item');
+    });
+  });
 });

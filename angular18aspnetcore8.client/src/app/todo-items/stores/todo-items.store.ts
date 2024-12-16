@@ -3,7 +3,6 @@ import { GetAllTodoItemsResponse, TodoItem } from '../models/todo-items-models';
 import { makeAutoObservable, runInAction } from 'mobx';
 import { Injectable } from '@angular/core';
 import { TodoItemStore } from './todo-item.store';
-import { TodoItemsComponent } from '../todo-items.component';
 
 @Injectable({ providedIn: 'root' })
 export class TodoItemsStore {
@@ -42,5 +41,12 @@ export class TodoItemsStore {
     this.todoItems = [...this.todoItems, newTodoStore];
     this.actionMessage = 'Adding new todo';
     return newTodoStore;
+  }
+  remove(toRemove: TodoItemStore) {
+    const indexToRemove = this.todoItems.indexOf(toRemove);
+    this.todoItems = [
+      ...this.todoItems.filter((t, index) => index != indexToRemove),
+    ];
+    this.actionMessage = 'Removing todo item';
   }
 }
