@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { TodoItemsStore } from './todo-items.store';
+import { TodoItemsStore, TodoItemStore } from './todo-items.store';
 import { reaction } from 'mobx';
 import { GetAllTodoItemsResponse, TodoItem } from '../models/todo-items-models';
 import { of } from 'rxjs';
@@ -63,5 +63,29 @@ describe('Todo Items Store', () => {
       testTodoItemsStore.actionMessage = 'Getting all todo items...';
       return changePromise;
     });
+  });
+});
+describe('Todo Item store', () => {
+  let testTodoItemStore: TodoItemStore;
+  const givenTodoItem: TodoItem = {
+    id: 0,
+    description: 'given todo item',
+    status: 'given status',
+    dueDate: new Date(),
+  };
+  const spyHttpClientGet = jasmine.createSpy('httpClientGet');
+  const mockHttpClient: HttpClient = {
+    get: spyHttpClientGet,
+  } as any;
+  beforeEach(() => {
+    testTodoItemStore = new TodoItemStore(givenTodoItem, mockHttpClient);
+  });
+  it('Have default values', () => {
+    //Arrange
+    //Act
+    //Assert
+    expect(testTodoItemStore.todoItem).toEqual(givenTodoItem);
+    expect(testTodoItemStore.actionMessage).toEqual('');
+    expect(testTodoItemStore.actionValidationErrors).toEqual({});
   });
 });
