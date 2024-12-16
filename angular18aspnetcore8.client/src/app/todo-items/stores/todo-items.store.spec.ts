@@ -62,4 +62,64 @@ describe('Todo Items Store', () => {
       return changePromise;
     });
   });
+
+  describe('Add new todo', async () => {
+    it('should add new todo to list', () => {
+      //Arrange
+      const givenTodoItems: TodoItem[] = [
+        {
+          id: 1,
+          description: 'given description 1',
+          status: 'given status 1',
+          dueDate: new Date(),
+        },
+        {
+          id: 2,
+          description: 'given description 2',
+          status: 'given status 2',
+          dueDate: new Date(),
+        },
+      ];
+      const givenMessage = 'given message';
+      const expectedNewTodoItem: TodoItem = {
+        id: 0,
+        description: '',
+        status: 'To-do',
+        dueDate: undefined,
+      };
+      const givenHttpClient: HttpClient = {} as any;
+      testTodoItemsStore = new TodoItemsStore(givenHttpClient);
+      testTodoItemsStore.setTodoItems(givenTodoItems, givenMessage);
+      const changePromise = new Promise<void>((resolve, reject) => {
+        reaction(
+          () => ({
+            r1: testTodoItemsStore.todoItems,
+            r2: testTodoItemsStore.actionMessage,
+          }),
+          (_arg, _prev, r) => {
+            try {
+              expect(_arg).toEqual({
+                r1: [
+                  ...givenTodoItems.map(
+                    (t) => new TodoItemStore(t, givenHttpClient)
+                  ),
+                  new TodoItemStore(expectedNewTodoItem, givenHttpClient),
+                ],
+                r2: 'Adding new todo',
+              });
+              resolve();
+            } catch (error) {
+              reject();
+            } finally {
+              r.dispose();
+            }
+          }
+        );
+      });
+      //Act
+      testTodoItemsStore.addNew();
+      //Assert
+      return changePromise;
+    });
+  });
 });
