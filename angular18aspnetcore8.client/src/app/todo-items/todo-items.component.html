@@ -1,6 +1,9 @@
 <h1 id="tableLabel">Todo Items Test</h1>
 <p>{{ message }}</p>
-<div><button type="button" title="add" (click)="add()">Add</button></div>
+<div>
+  <button type="button" title="add" (click)="add()">Add</button>
+  <button type="button" title="refresh" (click)="refresh()">Refresh</button>
+</div>
 <table *ngIf="todoItemStoreList">
   <thead>
     <tr>

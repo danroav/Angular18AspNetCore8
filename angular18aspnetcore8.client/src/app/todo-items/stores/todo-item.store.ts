@@ -12,7 +12,9 @@ import {
 export class TodoItemStore {
   actionMessage: string = '';
   actionValidationErrors: ValidationErrors<TodoItem> = {};
-  constructor(public todoItem: TodoItem, private httpClient: HttpClient) {
+  todoItem: TodoItem;
+  constructor(public givenTodoItem: TodoItem, private httpClient: HttpClient) {
+    this.todoItem = givenTodoItem;
     makeAutoObservable(this);
   }
   save(description: string, status: string, dueDate?: Date) {
