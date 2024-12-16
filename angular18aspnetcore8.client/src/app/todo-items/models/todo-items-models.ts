@@ -21,3 +21,11 @@ export interface CreateTodoItemResponse {
   validationErrors: ValidationErrors<TodoItem>;
   message: string;
 }
+export interface UpdateTodoItem {
+  item: TodoItem;
+}
+export interface UpdateTodoItemResponse {
+  item: TodoItem;
+  validationErrors: ValidationErrors<TodoItem>;
+  message: string;
+}
