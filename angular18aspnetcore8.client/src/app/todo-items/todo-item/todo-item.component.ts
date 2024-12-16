@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TodoItem, ValidationErrors } from '../models/todo-items-models';
 import { autorun, IReactionDisposer } from 'mobx';
 import { TodoItemStore } from '../stores/todo-item.store';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { TodoItemsStore } from '../stores/todo-items.store';
 
 @Component({
@@ -52,12 +52,6 @@ export class TodoItemComponent implements OnInit, OnDestroy {
     this.formDescription.setValue(this.todoItem.description);
     this.formStatus.setValue(this.todoItem.status);
     this.formDueDate.setValue(this.todoItem.dueDate);
-    if (this.message !== '') {
-      console.log('setting timeout', this.message);
-      setTimeout(() => {
-        this.message = '';
-      }, 10000);
-    }
   }
   edit() {
     this.mode = 'edit';
