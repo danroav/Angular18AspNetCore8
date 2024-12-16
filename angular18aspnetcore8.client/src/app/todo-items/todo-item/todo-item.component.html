@@ -3,7 +3,11 @@
 <td (dblclick)="edit()">{{ formDescription.value }}</td>
 <td (dblclick)="edit()">{{ formDueDate.value | date }}</td>
 <td (dblclick)="edit()">{{ formStatus.value }}</td>
-<td><button (click)="edit()">Edit</button><button>Delete</button></td>
+<td>
+  <button (click)="edit()">Edit</button>
+  <button>Delete</button>
+  <div *ngIf="message !== ''">{{ message }}</div>
+</td>
 } @if (mode==='edit') {
 <td>
   <input id="description" type="text" [formControl]="formDescription" />
@@ -22,5 +26,8 @@
   </select>
   }
 </td>
-<td><button>Save</button><button (click)="cancel()">Cancel</button></td>
+<td>
+  <button (click)="save()">Save</button
+  ><button (click)="cancel()">Cancel</button>
+</td>
 }

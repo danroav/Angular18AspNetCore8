@@ -29,3 +29,11 @@ export interface UpdateTodoItemResponse {
   validationErrors: ValidationErrors<TodoItem>;
   message: string;
 }
+
+export interface DeleteTodoItem {
+  todoItemId: number;
+}
+export interface DeleteTodoItemResponse {
+  validationErrors: ValidationErrors<TodoItem>;
+  message: string;
+}

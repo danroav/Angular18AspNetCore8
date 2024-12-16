@@ -1,5 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { GetAllTodoItemsResponse, TodoItem } from '../models/todo-items-models';
+import {
+  DeleteTodoItemResponse,
+  GetAllTodoItemsResponse,
+  TodoItem,
+  ValidationErrors,
+} from '../models/todo-items-models';
 import { makeAutoObservable, runInAction } from 'mobx';
 import { Injectable } from '@angular/core';
 import { TodoItemStore } from './todo-item.store';
@@ -8,6 +13,7 @@ import { TodoItemStore } from './todo-item.store';
 export class TodoItemsStore {
   todoItems: TodoItemStore[] = [];
   actionMessage: string = '';
+  actionValidationErrors: ValidationErrors<TodoItem> = {};
   constructor(private httpClient: HttpClient) {
     makeAutoObservable(this);
   }
@@ -42,11 +48,18 @@ export class TodoItemsStore {
     this.actionMessage = 'Adding new todo';
     return newTodoStore;
   }
-  remove(toRemove: TodoItemStore) {
+  delete(toRemove: TodoItemStore) {
     const indexToRemove = this.todoItems.indexOf(toRemove);
-    this.todoItems = [
-      ...this.todoItems.filter((t, index) => index != indexToRemove),
-    ];
-    this.actionMessage = 'Removing todo item';
+    this.httpClient.delete('/api/todo-items/delete').subscribe((result) => {
+      const value = result as DeleteTodoItemResponse;
+      const self = this;
+      runInAction(() => {
+        this.todoItems = [
+          ...this.todoItems.filter((t, index) => index != indexToRemove),
+        ];
+        self.actionMessage = value.message;
+        self.actionValidationErrors = value.validationErrors;
+      });
+    });
   }
 }

@@ -3,6 +3,7 @@ import { TodoItem, ValidationErrors } from '../models/todo-items-models';
 import { autorun, IReactionDisposer } from 'mobx';
 import { TodoItemStore } from '../stores/todo-item.store';
 import { FormGroup, FormControl } from '@angular/forms';
+import { TodoItemsStore } from '../stores/todo-items.store';
 
 @Component({
   selector: '[todo-item]',
@@ -12,6 +13,9 @@ import { FormGroup, FormControl } from '@angular/forms';
 export class TodoItemComponent implements OnInit, OnDestroy {
   @Input({ required: true })
   public todoItemStore!: TodoItemStore;
+  @Input({ required: true })
+  public todoItemsStore!: TodoItemsStore;
+
   private reactionDisposer?: IReactionDisposer;
 
   public todoItem: TodoItem = {
@@ -24,8 +28,8 @@ export class TodoItemComponent implements OnInit, OnDestroy {
   public validationErrors: ValidationErrors<TodoItem> = {};
   public mode: 'view' | 'edit' = 'view';
   formId = new FormControl(0);
-  formDescription = new FormControl('');
-  formStatus = new FormControl('');
+  formDescription = new FormControl<string>('');
+  formStatus = new FormControl<string>('');
   formDueDate = new FormControl<Date | undefined>(undefined);
 
   constructor() {}
@@ -48,6 +52,12 @@ export class TodoItemComponent implements OnInit, OnDestroy {
     this.formDescription.setValue(this.todoItem.description);
     this.formStatus.setValue(this.todoItem.status);
     this.formDueDate.setValue(this.todoItem.dueDate);
+    if (this.message !== '') {
+      console.log('setting timeout', this.message);
+      setTimeout(() => {
+        this.message = '';
+      }, 10000);
+    }
   }
   edit() {
     this.mode = 'edit';
@@ -55,5 +65,16 @@ export class TodoItemComponent implements OnInit, OnDestroy {
   cancel() {
     this.mode = 'view';
     this.setFormData();
+  }
+  save() {
+    this.todoItemStore.save(
+      this.formDescription.value ?? '',
+      this.formStatus.value ?? '',
+      this.formDueDate.value ?? undefined
+    );
+    this.mode = 'view';
+  }
+  delete() {
+    this.todoItemsStore.delete(this.todoItemStore);
   }
 }
