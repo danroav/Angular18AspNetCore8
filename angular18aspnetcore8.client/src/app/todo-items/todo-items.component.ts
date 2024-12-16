@@ -45,7 +45,6 @@ export class TodoItemsComponent implements OnInit {
         },
         error: (error) => {
           this.message = error.error.detail;
-          this.items = [];
         },
       });
   }

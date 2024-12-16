@@ -109,7 +109,22 @@ describe('Todo Items Component', () => {
         message: 'Backend create todo items message',
         validationErrors: {},
       };
+      const givenTodoItems: TodoItem[] = [
+        {
+          description: 'existing 1',
+          id: 1,
+          status: 'st1',
+          dueDate: new Date(),
+        },
+        {
+          description: 'existing 2',
+          id: 2,
+          status: 'st2',
+          dueDate: new Date(),
+        },
+      ];
       //Act
+      component.items = givenTodoItems;
       component.create(givenCreateTodoItem);
       //Assert
       const req = httpMock.expectOne('/api/todo-items/create');
@@ -117,8 +132,54 @@ describe('Todo Items Component', () => {
       expect(req.request.body).toEqual(givenCreateTodoItem);
       req.flush(givenCreateTodoItemResponse);
 
-      expect(component.items).toContain(givenCreateTodoItemResponse.item);
+      expect(component.items).toEqual([
+        ...givenTodoItems,
+        givenCreateTodoItemResponse.item,
+      ]);
       expect(component.message).toEqual(givenCreateTodoItemResponse.message);
+    });
+    it('when unexpected error should show error message from server', () => {
+      //Arrange
+      const givenCreateTodoItem: CreateTodoItem = {
+        description: 'create description',
+        status: 'some status',
+        dueDate: new Date(),
+      };
+      const givenResponseErrorMessage = `error message`;
+      const givenResponse = {
+        type: 'https://tools.ietf.org/html/rfc9110#section-15.6.1',
+        title: 'An error occurred while processing your request.',
+        status: 500,
+        detail: givenResponseErrorMessage,
+        traceId: '00-c43d2d9e194869fa4d67a545628fdf8e-7ff541343c3630e0-00',
+      };
+      const givenTodoItems: TodoItem[] = [
+        {
+          description: 'existing 1',
+          id: 1,
+          status: 'st1',
+          dueDate: new Date(),
+        },
+        {
+          description: 'existing 2',
+          id: 2,
+          status: 'st2',
+          dueDate: new Date(),
+        },
+      ];
+      //Act
+      component.items = givenTodoItems;
+      component.create(givenCreateTodoItem);
+
+      //Assert
+      const req = httpMock.expectOne('/api/todo-items/create');
+      req.flush(givenResponse, {
+        status: 500,
+        statusText: 'Internal Server Error',
+      });
+
+      expect(component.items).toBe(givenTodoItems);
+      expect(component.message).toEqual(givenResponseErrorMessage);
     });
   });
 });
