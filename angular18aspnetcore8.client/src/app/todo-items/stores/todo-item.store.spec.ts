@@ -3,203 +3,404 @@ import {
   CreateTodoItem,
   CreateTodoItemResponse,
   TodoItem,
-  ValidationErrors,
+  UpdateTodoItem,
+  UpdateTodoItemResponse,
 } from '../models/todo-items-models';
 import { TodoItemStore } from './todo-item.store';
 import { Observable, of } from 'rxjs';
 import { reaction } from 'mobx';
 
-describe('Todo Items Store', () => {
-  let testStore: TodoItemStore;
-  const httpClientPostSpy = jasmine.createSpy();
+describe('Todo Item store', () => {
+  let testTodoItemStore: TodoItemStore;
+  const givenTodoItem: TodoItem = {
+    id: 0,
+    description: 'given todo item description',
+    status: 'given todo item status',
+    dueDate: new Date(),
+  };
+  const spyHttpClientPost = jasmine.createSpy('httpClientPost');
   const mockHttpClient: HttpClient = {
-    post: httpClientPostSpy,
+    post: spyHttpClientPost,
   } as any;
   beforeEach(() => {
-    httpClientPostSpy.and.stub().calls.reset();
+    testTodoItemStore = new TodoItemStore(givenTodoItem, mockHttpClient);
   });
-  it('When new instance', () => {
+  afterEach(() => {
+    givenTodoItem.id = 0;
+    givenTodoItem.description = 'given todo item description';
+    givenTodoItem.status = 'given todo item status';
+    givenTodoItem.dueDate = new Date();
+    spyHttpClientPost.calls.reset();
+  });
+  it('Have default values', () => {
     //Arrange
     //Act
-    testStore = new TodoItemStore(mockHttpClient);
     //Assert
-    expect(testStore.description).toEqual('');
-    expect(testStore.dueDate).not.toBeDefined();
-    expect(testStore.id).toEqual(0);
-    expect(testStore.status).toEqual('');
-    expect(testStore.validationErrors).toEqual({});
+    expect(testTodoItemStore.todoItem).toEqual(givenTodoItem);
+    expect(testTodoItemStore.actionMessage).toEqual('');
+    expect(testTodoItemStore.actionValidationErrors).toEqual({});
   });
-  describe('Creating Todo Item', () => {
-    it('When Success', async () => {
-      //Arrange
-      const expectedId = 14;
-      const expectedDescription = 'some description';
-      const expectedStatus = 'some status';
-      const expectedDueDate = undefined;
-      const expectedValidationErrors: ValidationErrors<TodoItem> = {};
-      const expectedMessage = 'some creation message';
+  describe('Save', () => {
+    describe('New todo item', () => {
+      it('should update state when success', async () => {
+        //Arrange
+        const givenCreateTodoItemResponse: CreateTodoItemResponse = {
+          item: {
+            description: 'response description',
+            id: 12,
+            status: 'response status',
+            dueDate: new Date(),
+          },
+          message: 'response message',
+          validationErrors: {},
+        };
+        spyHttpClientPost.and.returnValue(of(givenCreateTodoItemResponse));
 
-      const givenCreateTodoItem: CreateTodoItem = {
-        description: 'create description',
-        dueDate: undefined,
-        status: 'create status',
-      };
-      const givenCreateTodoItemResult: CreateTodoItemResponse = {
-        message: expectedMessage,
-        item: {
-          description: expectedDescription,
-          status: expectedStatus,
-          id: expectedId,
-          dueDate: expectedDueDate,
-        },
-        validationErrors: expectedValidationErrors,
-      };
-
-      httpClientPostSpy.and.returnValue(of(givenCreateTodoItemResult));
-
-      //Act
-      const testTodoItemStore = new TodoItemStore(mockHttpClient);
-
-      const changePromise = new Promise<void>((resolve, reject) => {
-        reaction(
-          () => testTodoItemStore.id,
-          (_arg, _prev, r) => {
-            try {
-              expect(testTodoItemStore.description).toEqual(
-                expectedDescription
-              );
-              expect(testTodoItemStore.dueDate).toEqual(expectedDueDate);
-              expect(testTodoItemStore.id).toEqual(expectedId);
-              expect(testTodoItemStore.status).toEqual(expectedStatus);
-              expect(testTodoItemStore.validationErrors).toEqual(
-                expectedValidationErrors
-              );
-              expect(testTodoItemStore.message).toEqual(expectedMessage);
-              resolve();
-            } catch (error) {
-              reject();
-            } finally {
-              r.dispose();
+        const expectedChangePromise = new Promise<void>((resolve, reject) => {
+          reaction(
+            () => ({
+              r1: testTodoItemStore.todoItem,
+              r2: testTodoItemStore.actionMessage,
+              r3: testTodoItemStore.actionValidationErrors,
+            }),
+            (_arg, _prev, r) => {
+              try {
+                expect(_arg).toEqual({
+                  r1: givenCreateTodoItemResponse.item,
+                  r2: givenCreateTodoItemResponse.message,
+                  r3: givenCreateTodoItemResponse.validationErrors,
+                });
+                resolve();
+              } catch (error) {
+                reject();
+              } finally {
+                r.dispose();
+              }
             }
-          }
+          );
+        });
+        const givenCreateTodoItem: CreateTodoItem = {
+          description: 'create description',
+          status: 'create status',
+          dueDate: new Date(),
+        };
+        //Act
+        testTodoItemStore.save(
+          givenCreateTodoItem.description,
+          givenCreateTodoItem.status,
+          givenCreateTodoItem.dueDate
         );
+        //Assert
+        expect(spyHttpClientPost).toHaveBeenCalledWith(
+          '/api/todo-items/create',
+          givenCreateTodoItem
+        );
+        return expectedChangePromise;
       });
+      it('should update message when unexpected error', async () => {
+        //Arrange
+        const givenResponse = {
+          type: 'https://tools.ietf.org/html/rfc9110#section-15.6.1',
+          title: 'An error occurred while processing your request.',
+          status: 500,
+          detail: 'Response error',
+          traceId: '00-c43d2d9e194869fa4d67a545628fdf8e-7ff541343c3630e0-00',
+        };
+        spyHttpClientPost.and.returnValue(
+          new Observable((subscriber) => {
+            subscriber.error(givenResponse);
+            subscriber.complete();
+          })
+        );
 
-      testTodoItemStore.create(
-        givenCreateTodoItem.description,
-        givenCreateTodoItem.status,
-        givenCreateTodoItem.dueDate
-      );
+        const expectedChangePromise = new Promise<void>((resolve, reject) => {
+          reaction(
+            () => ({
+              r1: testTodoItemStore.todoItem,
+              r2: testTodoItemStore.actionMessage,
+              r3: testTodoItemStore.actionValidationErrors,
+            }),
+            (_arg, _prev, r) => {
+              try {
+                expect(_arg).toEqual({
+                  r1: givenTodoItem,
+                  r2: givenResponse.detail,
+                  r3: {},
+                });
+                resolve();
+              } catch (error) {
+                reject();
+              } finally {
+                r.dispose();
+              }
+            }
+          );
+        });
+        const givenCreateTodoItem: CreateTodoItem = {
+          description: 'create description',
+          status: 'create status',
+          dueDate: new Date(),
+        };
+        //Act
+        testTodoItemStore.save(
+          givenCreateTodoItem.description,
+          givenCreateTodoItem.status,
+          givenCreateTodoItem.dueDate
+        );
+        //Assert
+        expect(spyHttpClientPost).toHaveBeenCalledWith(
+          '/api/todo-items/create',
+          givenCreateTodoItem
+        );
+        return expectedChangePromise;
+      });
+      it('should onlly update message and validation errors when validation errors', async () => {
+        //Arrange
+        const givenCreateTodoItemResponse: CreateTodoItemResponse = {
+          item: {
+            description: 'response description',
+            id: 12,
+            status: 'response status',
+            dueDate: new Date(),
+          },
+          message: 'response message',
+          validationErrors: {
+            description: ['response validation description'],
+          },
+        };
+        spyHttpClientPost.and.returnValue(of(givenCreateTodoItemResponse));
 
-      //Assert
-      expect(mockHttpClient.post).toHaveBeenCalledWith(
-        '/api/todo-items/create',
-        givenCreateTodoItem
-      );
-
-      return changePromise;
+        const expectedChangePromise = new Promise<void>((resolve, reject) => {
+          reaction(
+            () => ({
+              r1: testTodoItemStore.todoItem,
+              r2: testTodoItemStore.actionMessage,
+              r3: testTodoItemStore.actionValidationErrors,
+            }),
+            (_arg, _prev, r) => {
+              try {
+                expect(_arg).toEqual({
+                  r1: givenTodoItem,
+                  r2: givenCreateTodoItemResponse.message,
+                  r3: givenCreateTodoItemResponse.validationErrors,
+                });
+                resolve();
+              } catch (error) {
+                reject();
+              } finally {
+                r.dispose();
+              }
+            }
+          );
+        });
+        const givenCreateTodoItem: CreateTodoItem = {
+          description: 'create description',
+          status: 'create status',
+          dueDate: new Date(),
+        };
+        //Act
+        testTodoItemStore.save(
+          givenCreateTodoItem.description,
+          givenCreateTodoItem.status,
+          givenCreateTodoItem.dueDate
+        );
+        //Assert
+        expect(spyHttpClientPost).toHaveBeenCalledWith(
+          '/api/todo-items/create',
+          givenCreateTodoItem
+        );
+        return expectedChangePromise;
+      });
     });
-    it('When unexpected error', async () => {
-      //Arrange
-      const givenExpectionMessage = 'unexpected exception';
-      const responseObservable = new Observable((subscriber) => {
-        subscriber.error({ status: 500, detail: givenExpectionMessage });
-        subscriber.complete();
-      });
-      httpClientPostSpy.and.returnValue(responseObservable);
+    describe('Existing todo item', () => {
+      it('should update state when success', async () => {
+        //Arrange
+        givenTodoItem.id = 1234;
+        const givenUpdateTodoItemResponse: UpdateTodoItemResponse = {
+          item: {
+            description: 'update response description',
+            id: givenTodoItem.id,
+            status: 'update response status',
+            dueDate: new Date(),
+          },
+          message: 'update response message',
+          validationErrors: {},
+        };
+        spyHttpClientPost.and.returnValue(of(givenUpdateTodoItemResponse));
 
-      //Act
-      const testTodoItemStore = new TodoItemStore(mockHttpClient);
+        const givenUpdateTodoItem: UpdateTodoItem = {
+          item: {
+            id: givenTodoItem.id,
+            description: 'update description',
+            status: 'update status',
+            dueDate: new Date(),
+          },
+        };
 
-      const changePromise = new Promise<void>((resolve, reject) => {
-        reaction(
-          () => testTodoItemStore.message,
-          (arg, _prev, r) => {
-            try {
-              expect(arg).toEqual(givenExpectionMessage);
-              expect(testTodoItemStore.validationErrors).toEqual({});
-              resolve();
-            } catch (error) {
-              reject();
-            } finally {
-              r.dispose();
+        testTodoItemStore = new TodoItemStore(givenTodoItem, mockHttpClient);
+        const expectedChangePromise = new Promise<void>((resolve, reject) => {
+          reaction(
+            () => ({
+              r1: testTodoItemStore.todoItem,
+              r2: testTodoItemStore.actionMessage,
+              r3: testTodoItemStore.actionValidationErrors,
+            }),
+            (_arg, _prev, r) => {
+              try {
+                expect(_arg).toEqual({
+                  r1: givenUpdateTodoItemResponse.item,
+                  r2: givenUpdateTodoItemResponse.message,
+                  r3: givenUpdateTodoItemResponse.validationErrors,
+                });
+                resolve();
+              } catch (error) {
+                reject();
+              } finally {
+                r.dispose();
+              }
             }
-          }
+          );
+        });
+        //Act
+        testTodoItemStore.save(
+          givenUpdateTodoItem.item.description,
+          givenUpdateTodoItem.item.status,
+          givenUpdateTodoItem.item.dueDate
         );
+        //Assert
+        expect(spyHttpClientPost).toHaveBeenCalledWith(
+          '/api/todo-items/update',
+          givenUpdateTodoItem
+        );
+        return expectedChangePromise;
       });
 
-      testTodoItemStore.create(
-        'create description',
-        'create status',
-        undefined
-      );
-
-      //Assert
-      return changePromise;
-    });
-    it('When validation errors', async () => {
-      //Arrange
-      const givenId = 1;
-      const givenDescription = 'some description';
-      const givenStatus = 'some status';
-      const givenDueDate = undefined;
-      const givenValidationErrors: ValidationErrors<TodoItem> = {
-        description: ['Some description error'],
-      };
-      const givenMessage = 'some creation message';
-
-      const givenCreateTodoItem: CreateTodoItem = {
-        description: 'create description',
-        dueDate: undefined,
-        status: 'create status',
-      };
-      const givenCreateTodoItemResult: CreateTodoItemResponse = {
-        message: givenMessage,
-        item: {
-          description: givenDescription,
-          status: givenStatus,
-          id: givenId,
-          dueDate: givenDueDate,
-        },
-        validationErrors: givenValidationErrors,
-      };
-
-      httpClientPostSpy.and.returnValue(of(givenCreateTodoItemResult));
-
-      //Act
-      const testTodoItemStore = new TodoItemStore(mockHttpClient);
-
-      const changePromise = new Promise<void>((resolve, reject) => {
-        reaction(
-          () => testTodoItemStore.validationErrors,
-          (_arg, _prev, r) => {
-            try {
-              expect(testTodoItemStore.description).toEqual('');
-              expect(testTodoItemStore.dueDate).toEqual(undefined);
-              expect(testTodoItemStore.id).toEqual(0);
-              expect(testTodoItemStore.status).toEqual('');
-              expect(testTodoItemStore.validationErrors).toEqual(
-                givenValidationErrors
-              );
-              expect(testTodoItemStore.message).toEqual(givenMessage);
-              resolve();
-            } catch (error) {
-              reject();
-            } finally {
-              r.dispose();
+      it('should update message when unexpected error', async () => {
+        //Arrange
+        givenTodoItem.id = 1234;
+        const givenResponse = {
+          type: 'https://tools.ietf.org/html/rfc9110#section-15.6.1',
+          title: 'An error occurred while processing your request.',
+          status: 500,
+          detail: 'Response error',
+          traceId: '00-c43d2d9e194869fa4d67a545628fdf8e-7ff541343c3630e0-00',
+        };
+        spyHttpClientPost.and.returnValue(
+          new Observable((subscriber) => {
+            subscriber.error(givenResponse);
+            subscriber.complete();
+          })
+        );
+        const givenUpdateTodoItem: UpdateTodoItem = {
+          item: {
+            id: givenTodoItem.id,
+            description: 'update description',
+            status: 'update status',
+            dueDate: new Date(),
+          },
+        };
+        testTodoItemStore = new TodoItemStore(givenTodoItem, mockHttpClient);
+        const expectedChangePromise = new Promise<void>((resolve, reject) => {
+          reaction(
+            () => ({
+              r1: testTodoItemStore.todoItem,
+              r2: testTodoItemStore.actionMessage,
+              r3: testTodoItemStore.actionValidationErrors,
+            }),
+            (_arg, _prev, r) => {
+              try {
+                expect(_arg).toEqual({
+                  r1: givenTodoItem,
+                  r2: givenResponse.detail,
+                  r3: {},
+                });
+                resolve();
+              } catch (error) {
+                reject();
+              } finally {
+                r.dispose();
+              }
             }
-          }
+          );
+        });
+
+        //Act
+        testTodoItemStore.save(
+          givenUpdateTodoItem.item.description,
+          givenUpdateTodoItem.item.status,
+          givenUpdateTodoItem.item.dueDate
         );
+        //Assert
+        expect(spyHttpClientPost).toHaveBeenCalledWith(
+          '/api/todo-items/update',
+          givenUpdateTodoItem
+        );
+        return expectedChangePromise;
       });
 
-      testTodoItemStore.create(
-        givenCreateTodoItem.description,
-        givenCreateTodoItem.status,
-        givenCreateTodoItem.dueDate
-      );
+      it('should onlly update message and validation errors when validation errors', async () => {
+        //Arrange
+        givenTodoItem.id = 4567;
+        const givenUpdateTodoItemResponse: UpdateTodoItemResponse = {
+          item: {
+            description: 'update response description',
+            id: 12,
+            status: 'update response status',
+            dueDate: new Date(),
+          },
+          message: 'update response message',
+          validationErrors: {
+            description: ['update response validation description'],
+          },
+        };
+        spyHttpClientPost.and.returnValue(of(givenUpdateTodoItemResponse));
+        const givenUpdateTodoItem: UpdateTodoItem = {
+          item: {
+            id: givenTodoItem.id,
+            description: 'create description',
+            status: 'create status',
+            dueDate: new Date(),
+          },
+        };
 
-      //Assert
-      return changePromise;
+        testTodoItemStore = new TodoItemStore(givenTodoItem, mockHttpClient);
+        const expectedChangePromise = new Promise<void>((resolve, reject) => {
+          reaction(
+            () => ({
+              r1: testTodoItemStore.todoItem,
+              r2: testTodoItemStore.actionMessage,
+              r3: testTodoItemStore.actionValidationErrors,
+            }),
+            (_arg, _prev, r) => {
+              try {
+                expect(_arg).toEqual({
+                  r1: givenTodoItem,
+                  r2: givenUpdateTodoItemResponse.message,
+                  r3: givenUpdateTodoItemResponse.validationErrors,
+                });
+                resolve();
+              } catch (error) {
+                reject();
+              } finally {
+                r.dispose();
+              }
+            }
+          );
+        });
+
+        //Act
+        testTodoItemStore.save(
+          givenUpdateTodoItem.item.description,
+          givenUpdateTodoItem.item.status,
+          givenUpdateTodoItem.item.dueDate
+        );
+        //Assert
+        expect(spyHttpClientPost).toHaveBeenCalledWith(
+          '/api/todo-items/update',
+          givenUpdateTodoItem
+        );
+        return expectedChangePromise;
+      });
     });
   });
 });

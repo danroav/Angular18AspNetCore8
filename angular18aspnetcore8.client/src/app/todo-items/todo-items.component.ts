@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { TodoItemsStore, TodoItemStore } from './stores/todo-items.store';
+import { TodoItemsStore } from './stores/todo-items.store';
 import { autorun, IReactionDisposer } from 'mobx';
+import { TodoItemStore } from './stores/todo-item.store';
 
 @Component({
   selector: 'todo-items',

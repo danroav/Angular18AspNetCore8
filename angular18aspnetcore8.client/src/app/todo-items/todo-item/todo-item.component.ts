@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TodoItem, ValidationErrors } from '../models/todo-items-models';
-import { TodoItemStore } from '../stores/todo-items.store';
 import { autorun, IReactionDisposer } from 'mobx';
+import { TodoItemStore } from '../stores/todo-item.store';
 
 @Component({
   selector: '[todo-item]',

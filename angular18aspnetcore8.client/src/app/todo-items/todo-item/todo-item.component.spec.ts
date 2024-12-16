@@ -5,7 +5,7 @@ import {
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { TodoItemComponent } from './todo-item.component';
-import { TodoItemStore } from '../stores/todo-items.store';
+import { TodoItemStore } from '../stores/todo-item.store';
 
 describe('List Item Component', () => {
   let component: TodoItemComponent;
