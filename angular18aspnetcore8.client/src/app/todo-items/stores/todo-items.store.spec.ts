@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { TodoItemsStore } from './todo-items.store';
 import { reaction } from 'mobx';
-import { GetAllTodoItemsResult, TodoItem } from '../models/todo-items-models';
+import { GetAllTodoItemsResponse, TodoItem } from '../models/todo-items-models';
 import { of } from 'rxjs';
 
 describe('Todo Items Store', () => {
@@ -28,7 +28,7 @@ describe('Todo Items Store', () => {
       const givenResponseMessage = '';
       const expectedResponseValidationErrors = {};
 
-      const givenGetAllTodoItemsResponse: GetAllTodoItemsResult = {
+      const givenGetAllTodoItemsResponse: GetAllTodoItemsResponse = {
         message: givenResponseMessage,
         todoItems: givenResponseTodoItems,
       };

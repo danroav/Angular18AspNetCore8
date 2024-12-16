@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import {
-  CreateTodoItemResult,
-  GetAllTodoItemsResult,
+  CreateTodoItemResponse,
+  GetAllTodoItemsResponse,
   TodoItem,
   ValidationErrors,
 } from '../models/todo-items-models';
@@ -19,7 +19,7 @@ export class TodoItemsStore {
   getAllTodoItems() {
     this.actionMessage = 'Getting all todo items...';
     this.httpClient.get('/api/todo-items/index').subscribe((result) => {
-      const value = result as GetAllTodoItemsResult;
+      const value = result as GetAllTodoItemsResponse;
       const self = this;
       runInAction(() => {
         self.todoItems = value.todoItems;

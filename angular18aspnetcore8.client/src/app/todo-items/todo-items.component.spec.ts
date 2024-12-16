@@ -5,7 +5,12 @@ import {
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TodoItemsComponent } from './todo-items.component';
 import { provideHttpClient } from '@angular/common/http';
-import { TodoItem, TodoItemsIndexResponse } from './models/todo-items-models';
+import {
+  CreateTodoItem,
+  CreateTodoItemResponse,
+  GetAllTodoItemsResponse,
+  TodoItem,
+} from './models/todo-items-models';
 
 describe('Todo Items Component', () => {
   let component: TodoItemsComponent;
@@ -50,10 +55,9 @@ describe('Todo Items Component', () => {
         },
       ];
       const givenResponseMessage = `2 items retrieved`;
-      const givenResponse: TodoItemsIndexResponse = {
-        count: 2,
+      const givenResponse: GetAllTodoItemsResponse = {
         message: givenResponseMessage,
-        items: givenTodoItems,
+        todoItems: givenTodoItems,
       };
 
       component.ngOnInit();
@@ -85,6 +89,36 @@ describe('Todo Items Component', () => {
 
       expect(component.items).toEqual([]);
       expect(component.message).toEqual(givenResponseErrorMessage);
+    });
+  });
+  describe('Create todo item', () => {
+    it('when create successful should update view', () => {
+      //Arrange
+      const givenCreateTodoItem: CreateTodoItem = {
+        description: 'create description',
+        status: 'some status',
+        dueDate: new Date(),
+      };
+      const givenCreateTodoItemResponse: CreateTodoItemResponse = {
+        item: {
+          description: 'backend create description',
+          id: 2,
+          status: 'backend status',
+          dueDate: new Date(),
+        },
+        message: 'Backend create todo items message',
+        validationErrors: {},
+      };
+      //Act
+      component.create(givenCreateTodoItem);
+      //Assert
+      const req = httpMock.expectOne('/api/todo-items/create');
+      expect(req.request.method).toEqual('POST');
+      expect(req.request.body).toEqual(givenCreateTodoItem);
+      req.flush(givenCreateTodoItemResponse);
+
+      expect(component.items).toContain(givenCreateTodoItemResponse.item);
+      expect(component.message).toEqual(givenCreateTodoItemResponse.message);
     });
   });
 });

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import {
   CreateTodoItem,
-  CreateTodoItemResult,
+  CreateTodoItemResponse,
   TodoItem,
   ValidationErrors,
 } from '../models/todo-items-models';
@@ -44,7 +44,7 @@ describe('Todo Items Store', () => {
         dueDate: undefined,
         status: 'create status',
       };
-      const givenCreateTodoItemResult: CreateTodoItemResult = {
+      const givenCreateTodoItemResult: CreateTodoItemResponse = {
         message: expectedMessage,
         item: {
           description: expectedDescription,
@@ -153,7 +153,7 @@ describe('Todo Items Store', () => {
         dueDate: undefined,
         status: 'create status',
       };
-      const givenCreateTodoItemResult: CreateTodoItemResult = {
+      const givenCreateTodoItemResult: CreateTodoItemResponse = {
         message: givenMessage,
         item: {
           description: givenDescription,

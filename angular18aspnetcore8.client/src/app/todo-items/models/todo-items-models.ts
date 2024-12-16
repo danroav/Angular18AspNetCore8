@@ -7,22 +7,16 @@ export interface TodoItem {
 export type ValidationErrors<T> = {
   [property in keyof T]?: string[];
 };
-export interface GetAllTodoItemsResult {
+export interface GetAllTodoItemsResponse {
   message: string;
   todoItems: TodoItem[];
-}
-
-export interface TodoItemsIndexResponse {
-  count: number;
-  message: string;
-  items: TodoItem[];
 }
 export interface CreateTodoItem {
   description: string;
   dueDate?: Date;
   status: string;
 }
-export interface CreateTodoItemResult {
+export interface CreateTodoItemResponse {
   item: TodoItem;
   validationErrors: ValidationErrors<TodoItem>;
   message: string;
