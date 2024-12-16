@@ -37,7 +37,7 @@ describe('Todo Items Store', () => {
 
       const givenGetAllTodoItemsResponse: GetAllTodoItemsResponse = {
         message: givenResponseMessage,
-        todoItems: givenResponseTodoItems,
+        items: givenResponseTodoItems,
       };
       spyHttpClientGet.and.returnValue(of(givenGetAllTodoItemsResponse));
 
@@ -47,7 +47,9 @@ describe('Todo Items Store', () => {
           (_arg, _prev, r) => {
             try {
               expect(testTodoItemsStore.todoItems).toEqual(
-                givenResponseTodoItems
+                givenResponseTodoItems.map(
+                  (t) => new TodoItemStore(t, mockHttpClient)
+                )
               );
               expect(testTodoItemsStore.actionMessage).toEqual(
                 givenResponseMessage

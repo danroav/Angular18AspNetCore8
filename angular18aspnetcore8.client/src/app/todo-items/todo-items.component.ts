@@ -26,7 +26,7 @@ export class TodoItemsComponent implements OnInit {
   getAllTodoItems() {
     this.http.get<GetAllTodoItemsResponse>('/api/todo-items/index').subscribe({
       next: (result) => {
-        this.items = result.todoItems;
+        this.items = result.items;
         this.message = result.message;
       },
       error: (error) => {

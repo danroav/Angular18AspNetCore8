@@ -9,6 +9,7 @@ import {
   ValidationErrors,
 } from '../models/todo-items-models';
 import { makeAutoObservable, runInAction } from 'mobx';
+import { Injectable } from '@angular/core';
 
 export class TodoItemStore {
   actionMessage: string = '';
@@ -76,8 +77,10 @@ export class TodoItemStore {
       });
   }
 }
+
+@Injectable({ providedIn: 'root' })
 export class TodoItemsStore {
-  todoItems: TodoItem[] = [];
+  todoItems: TodoItemStore[] = [];
   actionMessage: string = '';
   actionTodoItemValidationErrors: {
     [todoItemId: number]: ValidationErrors<TodoItem>;
@@ -91,7 +94,9 @@ export class TodoItemsStore {
       const value = result as GetAllTodoItemsResponse;
       const self = this;
       runInAction(() => {
-        self.todoItems = value.todoItems;
+        self.todoItems = value.items.map(
+          (t) => new TodoItemStore(t, this.httpClient)
+        );
         self.actionMessage = value.message;
       });
     });

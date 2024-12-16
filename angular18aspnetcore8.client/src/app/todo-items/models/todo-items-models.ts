@@ -9,7 +9,7 @@ export type ValidationErrors<T> = {
 };
 export interface GetAllTodoItemsResponse {
   message: string;
-  todoItems: TodoItem[];
+  items: TodoItem[];
 }
 export interface CreateTodoItem {
   description: string;

@@ -57,7 +57,7 @@ describe('Todo Items Component', () => {
       const givenResponseMessage = `2 items retrieved`;
       const givenResponse: GetAllTodoItemsResponse = {
         message: givenResponseMessage,
-        todoItems: givenTodoItems,
+        items: givenTodoItems,
       };
 
       component.ngOnInit();
