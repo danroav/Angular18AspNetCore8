@@ -10,10 +10,11 @@ import { AppComponent } from './app.component';
 import { TodoItemsStore } from './todo-items/stores/todo-items.store';
 import { TodoItemsComponent } from './todo-items/todo-items.component';
 import { TodoItemComponent } from './todo-items/todo-item/todo-item.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent, TodoItemsComponent, TodoItemComponent],
-  imports: [BrowserModule, AppRoutingModule],
+  imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule],
   providers: [provideHttpClient(withInterceptorsFromDi()), TodoItemsStore],
   bootstrap: [AppComponent],
 })

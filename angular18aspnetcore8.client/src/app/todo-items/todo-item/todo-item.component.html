@@ -1,4 +1,26 @@
-﻿<td>{{ todoItem.id }}</td>
-<td>{{ todoItem.description }}</td>
-<td>{{ todoItem.dueDate }}</td>
-<td>{{ todoItem.status }}</td>
+﻿<td (dblclick)="edit()">{{ formId.value }}</td>
+@if(mode==='view'){
+<td (dblclick)="edit()">{{ formDescription.value }}</td>
+<td (dblclick)="edit()">{{ formDueDate.value | date }}</td>
+<td (dblclick)="edit()">{{ formStatus.value }}</td>
+<td><button (click)="edit()">Edit</button><button>Delete</button></td>
+} @if (mode==='edit') {
+<td>
+  <input id="description" type="text" [formControl]="formDescription" />
+</td>
+<td>
+  <input id="due-date" type="date" [formControl]="formDueDate" />
+</td>
+<td>
+  @if (formStatus.value==='Overdue'){
+  {{ formStatus.valueChanges | async }}
+  }@else {
+  <select id="status" [formControl]="formStatus">
+    <option value="To-do">To-do</option>
+    <option value="In Progress">In Progress</option>
+    <option value="Done">Done</option>
+  </select>
+  }
+</td>
+<td><button>Save</button><button (click)="cancel()">Cancel</button></td>
+}
