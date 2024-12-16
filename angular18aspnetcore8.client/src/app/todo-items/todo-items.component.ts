@@ -14,17 +14,18 @@ export class TodoItemsComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    this.getTodoItems();
+    this.getAllTodoItems();
   }
 
-  getTodoItems() {
+  getAllTodoItems() {
     this.http.get<TodoItemsIndexResponse>('/api/todo-items/index').subscribe({
       next: (result) => {
         this.items = result.items;
         this.message = result.message;
       },
       error: (error) => {
-        console.error(error);
+        this.message = error.error.detail;
+        this.items = [];
       },
     });
   }
