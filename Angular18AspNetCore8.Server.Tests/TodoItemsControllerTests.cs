@@ -176,7 +176,7 @@ namespace Angular18AspNetCore8.Server.Tests
             var expectedResult = new UpdateTodoItemResult
             {
                 Item = new TodoItemModel { Description = "Some Description", DueDate = null, Id = 123, Status = TodoItemStatusNames.Format[TodoItemStatus.ToDo] },
-                HasValidationErrors = false,
+                Message = "Update successful",
                 ValidationErrors = new Dictionary<string, string[]>()
             };
             var givenCommand = new UpdateTodoItem
@@ -238,7 +238,7 @@ namespace Angular18AspNetCore8.Server.Tests
             var expectedResult = new UpdateTodoItemResult
             {
                 Item = givenItem,
-                HasValidationErrors = true,
+                Message = "Validation failed",
                 ValidationErrors = new Dictionary<string, string[]>{
           { "someProperty",["Some validation Error"] }
         }

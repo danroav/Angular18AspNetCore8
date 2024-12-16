@@ -49,7 +49,7 @@ public class UpdateTodoItemTests
 
     var expectedResult = new UpdateTodoItemResult
     {
-      HasValidationErrors = false,
+      Message = "Update successful",
       Item = new TodoItemModel
       {
         Id = givenTodoItemToUpdate.Id,
@@ -108,7 +108,7 @@ public class UpdateTodoItemTests
     };
     var expectedResult = new UpdateTodoItemResult
     {
-      HasValidationErrors = true,
+      Message = "Validation failed",
       Item = givenTodoItemToUpdate,
       ValidationErrors = new Dictionary<string, string[]>
         {

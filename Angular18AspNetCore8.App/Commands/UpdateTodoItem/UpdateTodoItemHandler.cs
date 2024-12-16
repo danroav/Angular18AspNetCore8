@@ -13,7 +13,7 @@ public class UpdateTodoItemHandler(ITodoItemsRepository todoItemsRepository, IVa
     {
       return new UpdateTodoItemResult
       {
-        HasValidationErrors = true,
+        Message = "Validation failed",
         Item = command.Item,
         ValidationErrors = validationResult.ToDictionary()
       };
@@ -32,7 +32,7 @@ public class UpdateTodoItemHandler(ITodoItemsRepository todoItemsRepository, IVa
 
     return new UpdateTodoItemResult
     {
-      HasValidationErrors = false,
+      Message = "Update successful",
       Item = mapper.Map(existingTodoItem),
     };
   }

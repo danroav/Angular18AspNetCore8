@@ -4,6 +4,6 @@ namespace Angular18AspNetCore8.App.Commands.UpdateTodoItem;
 public class UpdateTodoItemResult : ITodoItemsHandlerOutput
 {
   public required TodoItemModel Item { get; set; }
-  public bool HasValidationErrors { get; set; } = false;
+  public string Message { get; set; } = "";
   public IDictionary<string, string[]> ValidationErrors { get; set; } = new Dictionary<string, string[]>();
 }
