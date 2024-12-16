@@ -1,4 +1,5 @@
 ﻿using Angular18AspNetCore8.App.Commands.AddNewTodoItem;
+using Angular18AspNetCore8.App.Commands.DeleteTodoItem;
 using Angular18AspNetCore8.App.Commands.UpdateTodoItem;
 using Angular18AspNetCore8.App.Common;
 using Angular18AspNetCore8.App.Queries.GetAllTodoItems;
@@ -9,7 +10,7 @@ namespace Angular18AspNetCore8.Server.Controllers;
 
 [Route("api/todo-items")]
 [ApiController]
-public class TodoItemsController(ITodoItemsHandler<GetAllTodoITems, GetAllTodoItemsResult> getlAllTodoItems, ITodoItemsHandler<App.Commands.AddNewTodoItem.CreateTodoItem, App.Commands.AddNewTodoItem.CreateTodoItemResult> createTodoItemHandler, ITodoItemsHandler<App.Commands.UpdateTodoItem.UpdateTodoItem, App.Commands.UpdateTodoItem.UpdateTodoItemResult> updateTodoItemHandler) : ControllerBase
+public class TodoItemsController(ITodoItemsHandler<GetAllTodoITems, GetAllTodoItemsResult> getlAllTodoItems, ITodoItemsHandler<CreateTodoItem,CreateTodoItemResult> createTodoItemHandler, ITodoItemsHandler<UpdateTodoItem, UpdateTodoItemResult> updateTodoItemHandler, ITodoItemsHandler<DeleteTodoItem, DeleteTodoItemResult> deleteTodoItemHandler) : ControllerBase
 {
     [HttpGet("index")]
     public async Task<ActionResult<GetAllTodoItemsResult>> GetAllTodoItems()
@@ -42,7 +43,29 @@ public class TodoItemsController(ITodoItemsHandler<GetAllTodoITems, GetAllTodoIt
         try
         {
             var result = await updateTodoItemHandler.Execute(input);
-            return result.ValidationErrors.Count>0 ? (ActionResult<UpdateTodoItemResult>)BadRequest(result) : (ActionResult<UpdateTodoItemResult>)Ok(result);
+            if (result.ValidationErrors.Count>0)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return Problem(detail: ex.Message, statusCode: (int)HttpStatusCode.InternalServerError);
+        }
+
+    }
+    [HttpDelete("delete")]
+    public async Task<ActionResult<DeleteTodoItemResult>> DeleteTodoItem([FromBody] DeleteTodoItem input)
+    {
+        try
+        {
+            var result = await deleteTodoItemHandler.Execute(input);
+            if (result.ValidationErrors.Count > 0)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
         catch (Exception ex)
         {

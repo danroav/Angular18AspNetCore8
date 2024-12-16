@@ -26,4 +26,9 @@ public class TodoItemsRepository(AppDbContext appDbContext) : ITodoItemsReposito
   {
     return appDbContext.SaveChangesAsync();
   }
+
+    public void Delete(TodoItem toRemove)
+    {
+        appDbContext.Remove(toRemove);
+    }
 }

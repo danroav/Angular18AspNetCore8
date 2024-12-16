@@ -1,4 +1,5 @@
 using Angular18AspNetCore8.App.Commands.AddNewTodoItem;
+using Angular18AspNetCore8.App.Commands.DeleteTodoItem;
 using Angular18AspNetCore8.App.Commands.UpdateTodoItem;
 using Angular18AspNetCore8.App.Common;
 using Angular18AspNetCore8.App.Queries.GetAllTodoItems;
@@ -17,12 +18,14 @@ namespace Angular18AspNetCore8.Server.Tests
         readonly Mock<ITodoItemsHandler<GetAllTodoITems, GetAllTodoItemsResult>> mockGetAllTodoITems;
         readonly Mock<ITodoItemsHandler<CreateTodoItem, CreateTodoItemResult>> mockAddNewTodoItemHandler;
         readonly Mock<ITodoItemsHandler<UpdateTodoItem, UpdateTodoItemResult>> mockUpdateTodoItemHandler;
+        readonly Mock<ITodoItemsHandler<DeleteTodoItem, DeleteTodoItemResult>> mockDeleteTodoItemHandler;
         public TodoItemsControllerTests()
         {
             mockGetAllTodoITems = new Mock<ITodoItemsHandler<GetAllTodoITems, GetAllTodoItemsResult>>();
             mockAddNewTodoItemHandler = new Mock<ITodoItemsHandler<CreateTodoItem, CreateTodoItemResult>>();
             mockUpdateTodoItemHandler = new Mock<ITodoItemsHandler<UpdateTodoItem, UpdateTodoItemResult>>();
-            todoItemsController = new TodoItemsController(mockGetAllTodoITems.Object, mockAddNewTodoItemHandler.Object, mockUpdateTodoItemHandler.Object);
+            mockDeleteTodoItemHandler = new Mock<ITodoItemsHandler<DeleteTodoItem, DeleteTodoItemResult>>();
+            todoItemsController = new TodoItemsController(mockGetAllTodoITems.Object, mockAddNewTodoItemHandler.Object, mockUpdateTodoItemHandler.Object, mockDeleteTodoItemHandler.Object);
         }
 
         [Fact]
@@ -255,6 +258,87 @@ namespace Angular18AspNetCore8.Server.Tests
 
             //Assert
             actualResult.Should().BeOfType<ActionResult<UpdateTodoItemResult>>();
+            actualResult.Result.Should().NotBeNull();
+            actualResult.Result.Should().BeOfType<BadRequestObjectResult>();
+            ((BadRequestObjectResult)actualResult.Result!).Value.Should().BeEquivalentTo(expectedResult);
+        }
+        [Fact]
+        public async Task DeleteTodoItemSuccess()
+        {
+            //Arrange
+            var expectedResult = new DeleteTodoItemResult
+            {
+                Message = "Delete successful",
+                ValidationErrors = new Dictionary<string, string[]>()
+            };
+            var givenCommand = new DeleteTodoItem
+            {
+                TodoItemId = 123
+            };
+
+            mockDeleteTodoItemHandler.Setup(x => x.Execute(It.IsAny<DeleteTodoItem>())).ReturnsAsync(expectedResult);
+
+            //Act
+            var actualResult = await todoItemsController.DeleteTodoItem(givenCommand);
+
+            //Assert
+            actualResult.Should().BeOfType<ActionResult<DeleteTodoItemResult>>();
+            actualResult.Result.Should().NotBeNull();
+            actualResult.Result.Should().BeOfType<OkObjectResult>();
+            ((OkObjectResult)actualResult.Result!).Value.Should().BeEquivalentTo(expectedResult);
+        }
+        [Fact]
+        public async Task DeleteTodoItemUnexpectedError()
+        {
+            //Arrange
+            var givenCommand = new DeleteTodoItem
+            {
+                TodoItemId = 123
+            };
+            var expectedErrorMessage = "Unexpected error";
+            var expectedStatus = (int)HttpStatusCode.InternalServerError;
+            var expectedProblem = new ProblemDetails
+            {
+                Detail = expectedErrorMessage,
+                Status = expectedStatus
+            };
+
+            mockDeleteTodoItemHandler.Setup(x => x.Execute(It.IsAny<DeleteTodoItem>())).ThrowsAsync(new Exception(expectedErrorMessage));
+
+            //Act
+            var actualResult = await todoItemsController.DeleteTodoItem(givenCommand);
+
+            //Assert
+            actualResult.Should().BeOfType<ActionResult<DeleteTodoItemResult>>();
+            actualResult.Result.Should().NotBeNull();
+            actualResult.Result.Should().BeOfType<ObjectResult>();
+            var problem = ((ObjectResult)actualResult.Result!);
+            problem.StatusCode.Should().Be(expectedStatus);
+            problem.Value.Should().BeEquivalentTo(expectedProblem);
+        }
+        [Fact]
+        public async Task DeleteTodoItemRequestError()
+        {
+            //Arrange
+            var expectedResult = new DeleteTodoItemResult
+            {
+                Message = "Validation failed",
+                ValidationErrors = new Dictionary<string, string[]>{
+                    { "id",["Some validation Error"] }
+                }
+            };
+            var givenCommand = new DeleteTodoItem
+            {
+                TodoItemId = 234
+            };
+
+            mockDeleteTodoItemHandler.Setup(x => x.Execute(It.IsAny<DeleteTodoItem>())).ReturnsAsync(expectedResult);
+
+            //Act
+            var actualResult = await todoItemsController.DeleteTodoItem(givenCommand);
+
+            //Assert
+            actualResult.Should().BeOfType<ActionResult<DeleteTodoItemResult>>();
             actualResult.Result.Should().NotBeNull();
             actualResult.Result.Should().BeOfType<BadRequestObjectResult>();
             ((BadRequestObjectResult)actualResult.Result!).Value.Should().BeEquivalentTo(expectedResult);
