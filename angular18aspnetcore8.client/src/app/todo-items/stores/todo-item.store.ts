@@ -37,6 +37,7 @@ export class TodoItemStore {
             });
           },
           error: (error) => {
+            console.log('error', error);
             runInAction(() => {
               self.actionMessage = error.detail;
               self.actionValidationErrors = {};

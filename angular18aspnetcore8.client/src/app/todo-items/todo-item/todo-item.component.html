@@ -5,7 +5,7 @@
 <td (dblclick)="edit()">{{ formStatus.value }}</td>
 <td>
   <button type="button" (click)="edit()">Edit</button>
-  <button type="button">Delete</button>
+  <button type="button" (click)="delete()">Delete</button>
   <div *ngIf="message !== ''">{{ message }}</div>
 </td>
 } @if (mode==='edit') {
@@ -31,7 +31,7 @@
   }@else {
   <select id="status" title="status" [formControl]="formStatus">
     <option value="To-do">To-do</option>
-    <option value="In Progress">In Progress</option>
+    <option value="In progress">In Progress</option>
     <option value="Done">Done</option>
   </select>
   }

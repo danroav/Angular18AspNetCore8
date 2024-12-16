@@ -33,4 +33,11 @@ export class TodoItemsComponent implements OnInit, OnDestroy {
     });
     this.todoItemsStore.getAllTodoItems();
   }
+
+  refresh() {
+    this.todoItemsStore.getAllTodoItems();
+  }
+  add() {
+    this.todoItemsStore.addNew();
+  }
 }
