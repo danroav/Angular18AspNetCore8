@@ -13,10 +13,10 @@ import { TodoItemStore } from './todo-item.store';
 describe('Todo Items Store', () => {
   let testTodoItemsStore: TodoItemsStore;
   const spyHttpClientGet = jasmine.createSpy('httpClientGet');
-  const spyHttpClientDelete = jasmine.createSpy('httpClientDelete');
+  const spyHttpClientPost = jasmine.createSpy('httpClientPost');
   const mockHttpClient: HttpClient = {
     get: spyHttpClientGet,
-    delete: spyHttpClientDelete,
+    delete: spyHttpClientPost,
   } as any;
   beforeEach(() => {
     testTodoItemsStore = new TodoItemsStore(mockHttpClient);
@@ -94,8 +94,8 @@ describe('Todo Items Store', () => {
         status: 'To-do',
         dueDate: undefined,
       };
-      const givenHttpClient: HttpClient = {} as any;
-      testTodoItemsStore = new TodoItemsStore(givenHttpClient);
+      const givenLighterHttpClient: HttpClient = {} as any;
+      testTodoItemsStore = new TodoItemsStore(givenLighterHttpClient);
       testTodoItemsStore.setTodoItems(givenTodoItems, givenMessage);
       const changePromise = new Promise<void>((resolve, reject) => {
         reaction(
@@ -108,9 +108,12 @@ describe('Todo Items Store', () => {
               expect(_arg).toEqual({
                 r1: [
                   ...givenTodoItems.map(
-                    (t) => new TodoItemStore(t, givenHttpClient)
+                    (t) => new TodoItemStore(t, givenLighterHttpClient)
                   ),
-                  new TodoItemStore(expectedNewTodoItem, givenHttpClient),
+                  new TodoItemStore(
+                    expectedNewTodoItem,
+                    givenLighterHttpClient
+                  ),
                 ],
                 r2: 'Adding new todo',
               });
@@ -126,14 +129,14 @@ describe('Todo Items Store', () => {
       //Act
       const actualResult = testTodoItemsStore.addNew();
       expect(actualResult).toEqual(
-        new TodoItemStore(expectedNewTodoItem, givenHttpClient)
+        new TodoItemStore(expectedNewTodoItem, givenLighterHttpClient)
       );
       //Assert
       return changePromise;
     });
   });
   describe('Delete todo', () => {
-    it('should delete in backend and remove todo from list on success', () => {
+    it('should delete in backend and remove todo from list on success', async () => {
       //Arrange
       const givenTodoItems: TodoItem[] = [
         {
@@ -150,35 +153,86 @@ describe('Todo Items Store', () => {
         },
       ];
       const givenMessage = 'given message';
-      const givenHttpClient: HttpClient = {} as any;
-      testTodoItemsStore = new TodoItemsStore(givenHttpClient);
+
+      const givenLighterHttpClient: HttpClient = {
+        post: spyHttpClientPost,
+      } as any;
+
+      testTodoItemsStore = new TodoItemsStore(givenLighterHttpClient);
       testTodoItemsStore.setTodoItems(givenTodoItems, givenMessage);
+
       const givenTodoItemToDelete = testTodoItemsStore.todoItems[1];
 
       const expectedTodoItems = testTodoItemsStore.todoItems.filter(
-        (_t, index) => index != 1
+        (t) => t !== givenTodoItemToDelete
       );
-      const givenDeleteResponse: DeleteTodoItemResponse = {
+      const givenResponse: DeleteTodoItemResponse = {
         message: 'response delete given message',
         validationErrors: {},
       };
-      const expectedDeleteTodoItem: DeleteTodoItem = {
-        todoItemId: givenTodoItemToDelete.todoItem.id,
-      };
-      spyHttpClientDelete.and.returnValue(givenDeleteResponse);
+
+      const expectedChangePromise = new Promise<void>((resolve, reject) => {
+        reaction(
+          () => ({
+            r1: testTodoItemsStore.todoItems,
+            r2: testTodoItemsStore.actionMessage,
+            r3: testTodoItemsStore.actionValidationErrors,
+          }),
+          (_arg, _prev, r) => {
+            try {
+              expect(_arg).toEqual({
+                r1: expectedTodoItems,
+                r2: givenResponse.message,
+                r3: givenResponse.validationErrors,
+              });
+              resolve();
+            } catch (error) {
+              reject();
+            } finally {
+              r.dispose();
+            }
+          }
+        );
+      });
+      spyHttpClientPost.and.returnValue(of(givenResponse));
+
       //Act
       testTodoItemsStore.delete(givenTodoItemToDelete);
 
       //Assert
-      expect(spyHttpClientDelete).toHaveBeenCalledWith(
-        '/api/todo-items/delete',
-        expectedDeleteTodoItem
-      );
-      expect(testTodoItemsStore.todoItems).toEqual(expectedTodoItems);
-      expect(testTodoItemsStore.actionMessage).toEqual('Removing todo item');
+      expect(spyHttpClientPost).toHaveBeenCalledWith('/api/todo-items/delete', {
+        todoItemId: givenTodoItemToDelete.todoItem.id,
+      } as DeleteTodoItem);
+      return expectedChangePromise;
     });
+
     it('should update message when unexpected error', async () => {
       //Arrange
+      const givenTodoItems: TodoItem[] = [
+        {
+          id: 1,
+          description: 'given description 1',
+          status: 'given status 1',
+          dueDate: new Date(),
+        },
+        {
+          id: 2,
+          description: 'given description 2',
+          status: 'given status 2',
+          dueDate: new Date(),
+        },
+      ];
+      const givenMessage = 'given message';
+
+      const givenLighterHttpClient: HttpClient = {
+        post: spyHttpClientPost,
+      } as any;
+
+      testTodoItemsStore = new TodoItemsStore(givenLighterHttpClient);
+      testTodoItemsStore.setTodoItems(givenTodoItems, givenMessage);
+
+      const givenTodoItemStoreToDelete = testTodoItemsStore.todoItems[1];
+
       const givenResponse = {
         type: 'https://tools.ietf.org/html/rfc9110#section-15.6.1',
         title: 'An error occurred while processing your request.',
@@ -186,7 +240,7 @@ describe('Todo Items Store', () => {
         detail: 'Response error',
         traceId: '00-c43d2d9e194869fa4d67a545628fdf8e-7ff541343c3630e0-00',
       };
-      spyHttpClientDelete.and.returnValue(
+      spyHttpClientPost.and.returnValue(
         new Observable((subscriber) => {
           subscriber.error(givenResponse);
           subscriber.complete();
@@ -203,7 +257,7 @@ describe('Todo Items Store', () => {
           (_arg, _prev, r) => {
             try {
               expect(_arg).toEqual({
-                r1: [],
+                r1: testTodoItemsStore.todoItems,
                 r2: givenResponse.detail,
                 r3: {},
               });
@@ -217,27 +271,51 @@ describe('Todo Items Store', () => {
         );
       });
       const givenDeleteTodoItem: DeleteTodoItem = {
-        todoItemId: 1234,
+        todoItemId: givenTodoItemStoreToDelete.todoItem.id,
       };
-      const givenTodoItemStore: TodoItemStore = {} as any;
       //Act
-      testTodoItemsStore.delete(givenTodoItemStore);
+      testTodoItemsStore.delete(givenTodoItemStoreToDelete);
+
       //Assert
-      expect(spyHttpClientDelete).toHaveBeenCalledWith(
-        '/api/todo-items/create',
+      expect(spyHttpClientPost).toHaveBeenCalledWith(
+        '/api/todo-items/delete',
         givenDeleteTodoItem
       );
       return expectedChangePromise;
     });
-    it('should onlly update message and validation errors when validation errors', async () => {
+
+    it('should only update message and validation errors when validation errors', async () => {
       //Arrange
+      const givenTodoItems: TodoItem[] = [
+        {
+          id: 1,
+          description: 'given description 1',
+          status: 'given status 1',
+          dueDate: new Date(),
+        },
+        {
+          id: 2,
+          description: 'given description 2',
+          status: 'given status 2',
+          dueDate: new Date(),
+        },
+      ];
+      const givenMessage = 'given message';
+      const givenLighterHttpClient: HttpClient = {
+        post: spyHttpClientPost,
+      } as any;
+      testTodoItemsStore = new TodoItemsStore(givenLighterHttpClient);
+      testTodoItemsStore.setTodoItems(givenTodoItems, givenMessage);
+
+      const givenTodoItemStoreToDelete = testTodoItemsStore.todoItems[1];
+
       const givenDeleteTodoItemResponse: DeleteTodoItemResponse = {
         message: 'response message',
         validationErrors: {
           description: ['response validation description'],
         },
       };
-      spyHttpClientDelete.and.returnValue(of(givenDeleteTodoItemResponse));
+      spyHttpClientPost.and.returnValue(of(givenDeleteTodoItemResponse));
 
       const expectedChangePromise = new Promise<void>((resolve, reject) => {
         reaction(
@@ -261,13 +339,12 @@ describe('Todo Items Store', () => {
         );
       });
       const givenDeleteTodoItem: DeleteTodoItem = {
-        todoItemId: 1234,
+        todoItemId: givenTodoItemStoreToDelete.todoItem.id,
       };
-      const givenTodoItemStore: TodoItemStore = {} as any;
       //Act
-      testTodoItemsStore.delete(givenTodoItemStore);
+      testTodoItemsStore.delete(givenTodoItemStoreToDelete);
       //Assert
-      expect(spyHttpClientDelete).toHaveBeenCalledWith(
+      expect(spyHttpClientPost).toHaveBeenCalledWith(
         '/api/todo-items/delete',
         givenDeleteTodoItem
       );

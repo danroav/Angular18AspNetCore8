@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import {
+  DeleteTodoItem,
   DeleteTodoItemResponse,
   GetAllTodoItemsResponse,
   TodoItem,
@@ -49,17 +50,40 @@ export class TodoItemsStore {
     return newTodoStore;
   }
   delete(toRemove: TodoItemStore) {
-    const indexToRemove = this.todoItems.indexOf(toRemove);
-    this.httpClient.delete('/api/todo-items/delete').subscribe((result) => {
-      const value = result as DeleteTodoItemResponse;
-      const self = this;
-      runInAction(() => {
-        this.todoItems = [
-          ...this.todoItems.filter((t, index) => index != indexToRemove),
-        ];
-        self.actionMessage = value.message;
-        self.actionValidationErrors = value.validationErrors;
+    const expectedTodoItemsAfterDelete = [
+      ...this.todoItems.filter((t) => t !== toRemove),
+    ];
+    if (!this.todoItems.includes(toRemove)) {
+      this.actionMessage = 'Todo Item to delete not found';
+      this.actionValidationErrors = {};
+      return;
+    }
+    if (toRemove.todoItem.id === 0) {
+      this.todoItems = expectedTodoItemsAfterDelete;
+      this.actionMessage = 'New todo cancelled';
+      this.actionValidationErrors = {};
+      return;
+    }
+    const self = this;
+    this.httpClient
+      .post('/api/todo-items/delete', {
+        todoItemId: toRemove.todoItem.id,
+      } as DeleteTodoItem)
+      .subscribe({
+        next: (result) => {
+          const value = result as DeleteTodoItemResponse;
+          runInAction(() => {
+            self.todoItems = expectedTodoItemsAfterDelete;
+            self.actionMessage = value.message;
+            self.actionValidationErrors = value.validationErrors;
+          });
+        },
+        error: (error) => {
+          runInAction(() => {
+            self.actionMessage = error.detail;
+            self.actionValidationErrors = {};
+          });
+        },
       });
-    });
   }
 }
