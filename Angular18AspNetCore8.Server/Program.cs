@@ -1,4 +1,5 @@
 using Angular18AspNetCore8.App.Commands.AddNewTodoItem;
+using Angular18AspNetCore8.App.Commands.DeleteTodoItem;
 using Angular18AspNetCore8.App.Commands.UpdateTodoItem;
 using Angular18AspNetCore8.App.Common;
 using Angular18AspNetCore8.App.Queries.GetAllTodoItems;
@@ -18,6 +19,8 @@ builder.Services.AddScoped<ITodoItemsHandler<CreateTodoItem, CreateTodoItemResul
 
 builder.Services.AddTransient<IValidator<UpdateTodoItem>, UpdateTodoItemValidator>();
 builder.Services.AddScoped<ITodoItemsHandler<UpdateTodoItem, UpdateTodoItemResult>, UpdateTodoItemHandler>();
+
+builder.Services.AddScoped<ITodoItemsHandler<DeleteTodoItem, DeleteTodoItemResult>, DeleteTodoItemHandler>();
 
 builder.Services.AddTransient<TodoItemMapper>();
 
