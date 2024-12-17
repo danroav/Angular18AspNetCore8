@@ -34,6 +34,7 @@ export interface DeleteTodoItem {
   todoItemId: number;
 }
 export interface DeleteTodoItemResponse {
+  item?: TodoItem;
   validationErrors: ValidationErrors<TodoItem>;
   message: string;
 }

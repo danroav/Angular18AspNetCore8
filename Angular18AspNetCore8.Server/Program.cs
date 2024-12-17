@@ -35,7 +35,7 @@ app.UseDefaultFiles();
 app.UseStaticFiles();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.EnvironmentName.StartsWith("Development"))
 {
   app.UseSwagger();
   app.UseSwaggerUI();

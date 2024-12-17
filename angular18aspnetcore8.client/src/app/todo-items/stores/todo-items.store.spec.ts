@@ -167,6 +167,12 @@ describe('Todo Items Store', () => {
         (t) => t !== givenTodoItemToDelete
       );
       const givenResponse: DeleteTodoItemResponse = {
+        item: {
+          id: givenTodoItemToDelete.todoItem.id,
+          description: givenTodoItemToDelete.todoItem.description,
+          status: givenTodoItemToDelete.todoItem.status,
+          dueDate: givenTodoItemToDelete.todoItem.dueDate,
+        },
         message: 'response delete given message',
         validationErrors: {},
       };

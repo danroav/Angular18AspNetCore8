@@ -55,7 +55,7 @@ public class TodoItemsController(ITodoItemsHandler<GetAllTodoITems, GetAllTodoIt
     }
 
   }
-  [HttpDelete("delete")]
+  [HttpPost("delete")]
   public async Task<ActionResult<DeleteTodoItemResult>> DeleteTodoItem([FromBody] DeleteTodoItem input)
   {
     try
