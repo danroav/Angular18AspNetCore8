@@ -34,7 +34,7 @@ namespace Angular18AspNetCore8.App.Tests
       var expectedResult = new CreateTodoItemResult
       {
         Message = "Todo item created successfully",
-        Item = mapper.Map(newTodoITem),
+        Item = mapper.Map(newTodoITem)!,
       };
       //Act
       var actualResult = await testHandler.Execute(givenCommand);

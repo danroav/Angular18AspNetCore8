@@ -28,7 +28,7 @@ namespace Angular18AspNetCore8.App.Tests
       mockTodoItemsRepository.Setup(x => x.GetAll()).ReturnsAsync(givenTaskEntities);
       var expectedResult = new GetAllTodoItemsResult
       {
-        Items = givenTaskEntities.Select(e => mapper.Map(e)),
+        Items = givenTaskEntities.Select(e => mapper.Map(e)!),
         Message = "2 tasks retrieved"
       };
       //Act

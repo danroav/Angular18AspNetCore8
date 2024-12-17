@@ -9,7 +9,7 @@ public class GetAllTodoITemsHandler(ITodoItemsRepository todoItemsRepository, To
   {
     var entities = await todoItemsRepository.GetAll();
 
-    var items = entities.Select(e => mapper.Map(e)).ToList();
+    var items = entities.Select(e => mapper.Map(e)!).ToList();
 
     return new GetAllTodoItemsResult
     {

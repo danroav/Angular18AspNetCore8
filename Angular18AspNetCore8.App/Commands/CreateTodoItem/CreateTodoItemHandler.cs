@@ -30,7 +30,7 @@ namespace Angular18AspNetCore8.App.Commands.CreateTodoItem
       return new CreateTodoItemResult
       {
         Message = "Todo item created successfully",
-        Item = mapper.Map(newTodoItem),
+        Item = mapper.Map(newTodoItem)!,
       };
     }
   }

@@ -33,7 +33,7 @@ public class UpdateTodoItemHandler(ITodoItemsRepository todoItemsRepository, IVa
     return new UpdateTodoItemResult
     {
       Message = "Update successful",
-      Item = mapper.Map(existingTodoItem),
+      Item = mapper.Map(existingTodoItem)!,
     };
   }
 }
