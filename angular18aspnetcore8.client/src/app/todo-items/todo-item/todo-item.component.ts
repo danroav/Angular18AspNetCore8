@@ -1,8 +1,12 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { TodoItem, ValidationErrors } from '../models/todo-items-models';
+import {
+  StoreMode,
+  TodoItem,
+  ValidationErrors,
+} from '../models/todo-items-models';
 import { autorun, IReactionDisposer } from 'mobx';
 import { TodoItemStore } from '../stores/todo-item.store';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { TodoItemsStore } from '../stores/todo-items.store';
 
 @Component({
@@ -12,61 +16,82 @@ import { TodoItemsStore } from '../stores/todo-items.store';
 })
 export class TodoItemComponent implements OnInit, OnDestroy {
   @Input({ required: true })
-  public todoItemStore!: TodoItemStore;
+  todoItemStore!: TodoItemStore;
   @Input({ required: true })
-  public todoItemsStore!: TodoItemsStore;
+  todoItemsStore!: TodoItemsStore;
 
-  private reactionDisposer?: IReactionDisposer;
-
-  public todoItem: TodoItem = {
+  todoItem: TodoItem = {
     description: '',
     id: 0,
     status: '',
     dueDate: undefined,
   };
-  public message: string = '';
-  public validationErrors: ValidationErrors<TodoItem> = {};
-  public mode: 'view' | 'edit' = 'view';
-  formId = new FormControl(0);
-  formDescription = new FormControl<string>('');
-  formStatus = new FormControl<string>('');
-  formDueDate = new FormControl<Date | undefined>(undefined);
+  actionMessage: string = '';
+  actionValidationErrors: ValidationErrors<TodoItem> = {};
+  mode: StoreMode = 'view';
+
+  formGroup = new FormGroup({
+    id: new FormControl<number | undefined>(0),
+    description: new FormControl<string | undefined>(''),
+    status: new FormControl<string | undefined>(''),
+    dueDate: new FormControl<Date | undefined>(undefined),
+  });
+  runs: number[] = [0, 0, 0];
+  private reactionDisposers: IReactionDisposer[] = [];
 
   constructor() {}
   ngOnDestroy(): void {
-    if (this.reactionDisposer) {
-      this.reactionDisposer!();
+    for (let reactionDisposer of this.reactionDisposers) {
+      reactionDisposer();
     }
   }
 
   ngOnInit() {
-    this.reactionDisposer = autorun(() => {
-      this.todoItem = this.todoItemStore.todoItem;
-      this.message = this.todoItemStore.actionMessage;
-      this.validationErrors = this.todoItemStore.actionValidationErrors;
-      this.setFormData();
-    });
-  }
-  setFormData() {
-    this.formId.setValue(this.todoItem.id);
-    this.formDescription.setValue(this.todoItem.description);
-    this.formStatus.setValue(this.todoItem.status);
-    this.formDueDate.setValue(this.todoItem.dueDate);
+    this.reactionDisposers.push(
+      autorun(() => {
+        this.runs[0]++;
+        console.log('mode runs', this.runs[0]);
+        this.mode = this.todoItemStore.mode;
+      })
+    );
+    this.reactionDisposers.push(
+      autorun(() => {
+        this.runs[1]++;
+        console.log('item runs', this.runs[1]);
+        this.todoItem = this.todoItemStore.todoItem;
+        this.formGroup.setValue(this.todoItem as any);
+      })
+    );
+    this.reactionDisposers.push(
+      autorun(() => {
+        this.runs[2]++;
+        console.log('messages runs', this.runs[2]);
+
+        this.actionMessage = this.todoItemStore.actionMessage;
+        this.actionValidationErrors = this.todoItemStore.actionValidationErrors;
+        this.formGroup.setErrors(null);
+        for (let [key, value] of Object.entries(this.actionValidationErrors)) {
+          this.formGroup.get(key)?.setErrors({ error: value });
+        }
+      })
+    );
   }
   edit() {
-    this.mode = 'edit';
+    this.todoItemStore.setMode('edit');
   }
   cancel() {
-    this.mode = 'view';
-    this.setFormData();
+    if (this.todoItem.id === 0) {
+      this.delete();
+    }
+    this.todoItem = this.todoItemStore.todoItem;
+    this.todoItemStore.setMode('view');
   }
   save() {
     this.todoItemStore.save(
-      this.formDescription.value ?? '',
-      this.formStatus.value ?? '',
-      this.formDueDate.value ?? undefined
+      this.formGroup.value.description ?? '',
+      this.formGroup.value.status ?? '',
+      this.formGroup.value.dueDate ?? undefined
     );
-    this.mode = 'view';
   }
   delete() {
     this.todoItemsStore.delete(this.todoItemStore);

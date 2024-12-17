@@ -13,18 +13,22 @@ import { TodoItemStore } from './todo-item.store';
 @Injectable({ providedIn: 'root' })
 export class TodoItemsStore {
   todoItems: TodoItemStore[] = [];
+  action: 'setTodoItems' | 'getAllTodoItems' | 'addNew' | 'delete' | undefined =
+    undefined;
   actionMessage: string = '';
   actionValidationErrors: ValidationErrors<TodoItem> = {};
   constructor(private httpClient: HttpClient) {
     makeAutoObservable(this);
   }
   setTodoItems(todoItems: TodoItem[], message: string) {
+    this.action = 'setTodoItems';
     this.todoItems = todoItems.map(
       (t) => new TodoItemStore(t, this.httpClient)
     );
     this.actionMessage = message;
   }
   getAllTodoItems() {
+    this.action = 'getAllTodoItems';
     this.actionMessage = 'Getting all todo items...';
     this.httpClient.get('/api/todo-items/index').subscribe((result) => {
       const value = result as GetAllTodoItemsResponse;
@@ -38,6 +42,7 @@ export class TodoItemsStore {
     });
   }
   addNew(): TodoItemStore {
+    this.action = 'addNew';
     const newTodo: TodoItem = {
       description: '',
       id: 0,
@@ -50,6 +55,7 @@ export class TodoItemsStore {
     return newTodoStore;
   }
   delete(toRemove: TodoItemStore) {
+    this.action = 'delete';
     const expectedTodoItemsAfterDelete = [
       ...this.todoItems.filter((t) => t !== toRemove),
     ];

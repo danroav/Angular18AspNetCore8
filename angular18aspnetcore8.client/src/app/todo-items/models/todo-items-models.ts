@@ -1,12 +1,13 @@
+export type ValidationErrors<T> = {
+  [property in keyof T]?: string[];
+};
+export type StoreMode = 'edit' | 'view';
 export interface TodoItem {
   id: number;
   description: string;
   dueDate?: Date;
   status: string;
 }
-export type ValidationErrors<T> = {
-  [property in keyof T]?: string[];
-};
 export interface GetAllTodoItemsResponse {
   message: string;
   items: TodoItem[];

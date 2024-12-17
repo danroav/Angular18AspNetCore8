@@ -1,12 +1,12 @@
-﻿<td (dblclick)="edit()">{{ formId.value }}</td>
+﻿<td (dblclick)="edit()">{{ formGroup.controls.id.value }}</td>
 @if(mode==='view'){
-<td (dblclick)="edit()">{{ formDescription.value }}</td>
-<td (dblclick)="edit()">{{ formDueDate.value | date }}</td>
-<td (dblclick)="edit()">{{ formStatus.value }}</td>
+<td (dblclick)="edit()">{{ formGroup.controls.description.value }}</td>
+<td (dblclick)="edit()">{{ formGroup.controls.dueDate.value | date }}</td>
+<td (dblclick)="edit()">{{ formGroup.controls.status.value }}</td>
 <td>
   <button type="button" (click)="edit()">Edit</button>
   <button type="button" (click)="delete()">Delete</button>
-  <div *ngIf="message !== ''">{{ message }}</div>
+  <span *ngIf="actionMessage !== ''">{{ actionMessage }}</span>
 </td>
 } @if (mode==='edit') {
 <td>
@@ -14,26 +14,35 @@
     id="description"
     title="description"
     type="text"
-    [formControl]="formDescription"
+    [formControl]="formGroup.controls.description"
   />
+  <div *ngIf="this.formGroup.controls.description.hasError('error')">
+    {{ this.formGroup.controls.description.getError("error") }}
+  </div>
 </td>
 <td>
   <input
     id="due-date"
     title="due-date"
     type="date"
-    [formControl]="formDueDate"
+    [formControl]="formGroup.controls.dueDate"
   />
+  <div *ngIf="this.formGroup.controls.dueDate.hasError('error')">
+    {{ this.formGroup.controls.dueDate.getError("error") }}
+  </div>
 </td>
 <td>
-  @if (formStatus.value==='Overdue'){
-  {{ formStatus.valueChanges | async }}
+  @if (formGroup.controls.status.value==='Overdue'){
+  {{ formGroup.controls.status.value }}
   }@else {
-  <select id="status" title="status" [formControl]="formStatus">
+  <select id="status" title="status" [formControl]="formGroup.controls.status">
     <option value="To-do">To-do</option>
     <option value="In progress">In progress</option>
     <option value="Done">Done</option>
   </select>
+  <div *ngIf="this.formGroup.controls.status.hasError('error')">
+    {{ this.formGroup.controls.status.getError("error") }}
+  </div>
   }
 </td>
 <td>

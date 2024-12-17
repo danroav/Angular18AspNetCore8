@@ -84,7 +84,7 @@ public class DeleteTodoItemTests
       DueDate = null,
       Id = givenTodoItemId
     };
-    List<TodoItem> givenExistingTodoItems = new();
+    List<TodoItem> givenExistingTodoItems = [];
     for (int i = 0; i < existingTodoItemCount; i++)
     {
       givenExistingTodoItems.Add(givenExistingTodoItem);

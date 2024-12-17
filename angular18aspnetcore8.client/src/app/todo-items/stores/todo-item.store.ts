@@ -3,19 +3,23 @@ import { makeAutoObservable, runInAction } from 'mobx';
 import {
   CreateTodoItem,
   CreateTodoItemResponse,
+  StoreMode,
   TodoItem,
   UpdateTodoItem,
   UpdateTodoItemResponse,
   ValidationErrors,
 } from '../models/todo-items-models';
-
 export class TodoItemStore {
+  mode: StoreMode = 'view';
   actionMessage: string = '';
   actionValidationErrors: ValidationErrors<TodoItem> = {};
   todoItem: TodoItem;
   constructor(public givenTodoItem: TodoItem, private httpClient: HttpClient) {
     this.todoItem = givenTodoItem;
     makeAutoObservable(this);
+  }
+  setMode(mode: StoreMode) {
+    this.mode = mode;
   }
   save(description: string, status: string, dueDate?: Date) {
     const self = this;
@@ -29,6 +33,7 @@ export class TodoItemStore {
         .post('/api/todo-items/create', newTodoPostBody)
         .subscribe({
           next: (result) => {
+            console.log('next', result);
             const value = result as CreateTodoItemResponse;
             runInAction(() => {
               if (Object.keys(value.validationErrors).length === 0) {
@@ -36,6 +41,7 @@ export class TodoItemStore {
               }
               self.actionMessage = value.message;
               self.actionValidationErrors = value.validationErrors;
+              self.mode = 'view';
             });
           },
           error: (error) => {
@@ -43,6 +49,7 @@ export class TodoItemStore {
             runInAction(() => {
               self.actionMessage = error.detail;
               self.actionValidationErrors = {};
+              self.mode = 'edit';
             });
           },
         });
@@ -67,12 +74,14 @@ export class TodoItemStore {
             }
             self.actionMessage = value.message;
             self.actionValidationErrors = value.validationErrors;
+            self.mode = 'view';
           });
         },
         error: (error) => {
           runInAction(() => {
             self.actionMessage = error.detail;
             self.actionValidationErrors = {};
+            self.mode = 'edit';
           });
         },
       });
