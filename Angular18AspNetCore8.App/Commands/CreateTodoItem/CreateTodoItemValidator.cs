@@ -1,7 +1,7 @@
 ﻿using Angular18AspNetCore8.Core.Entities;
 using FluentValidation;
 
-namespace Angular18AspNetCore8.App.Commands.AddNewTodoItem;
+namespace Angular18AspNetCore8.App.Commands.CreateTodoItem;
 
 public class CreateTodoItemValidator : AbstractValidator<CreateTodoItem>
 {

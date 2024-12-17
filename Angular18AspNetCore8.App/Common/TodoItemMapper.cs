@@ -4,8 +4,12 @@ namespace Angular18AspNetCore8.App.Common
 {
   public class TodoItemMapper
   {
-    public TodoItemModel Map(TodoItem todoItem)
+    public TodoItemModel? Map(TodoItem? todoItem)
     {
+      if (todoItem == null)
+      {
+        return null;
+      }
       return new TodoItemModel
       {
         Description = todoItem.Description,
