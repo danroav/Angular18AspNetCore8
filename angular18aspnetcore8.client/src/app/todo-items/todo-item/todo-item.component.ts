@@ -36,7 +36,6 @@ export class TodoItemComponent implements OnInit, OnDestroy {
     status: new FormControl<string | undefined>(''),
     dueDate: new FormControl<Date | undefined>(undefined),
   });
-  runs: number[] = [0, 0, 0];
   private reactionDisposers: IReactionDisposer[] = [];
 
   constructor() {}
@@ -49,21 +48,17 @@ export class TodoItemComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.reactionDisposers.push(
       autorun(() => {
-        this.runs[0]++;
         this.mode = this.todoItemStore.mode;
       })
     );
     this.reactionDisposers.push(
       autorun(() => {
-        this.runs[1]++;
         this.todoItem = this.todoItemStore.todoItem;
         this.formGroup.setValue(this.todoItem as any);
       })
     );
     this.reactionDisposers.push(
       autorun(() => {
-        this.runs[2]++;
-
         this.actionMessage = this.todoItemStore.actionMessage;
         this.actionValidationErrors = this.todoItemStore.actionValidationErrors;
         this.formGroup.setErrors(null);

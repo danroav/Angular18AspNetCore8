@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { makeAutoObservable, runInAction } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 import {
   CreateTodoItem,
   CreateTodoItemResponse,
@@ -96,7 +96,6 @@ export class TodoItemStore {
     this.mode = 'edit';
   }
   cancelEdit() {
-    console.log('todoitem', this.todoItem.id);
     if (this.todoItem.id === 0) {
       this.delete();
       return;
