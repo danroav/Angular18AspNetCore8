@@ -6,7 +6,7 @@ public class DeleteTodoItemHandler(ITodoItemsRepository todoItemsRepository, Tod
 {
   public async Task<DeleteTodoItemResult> Execute(DeleteTodoItem command)
   {
-    var validationErrors = new Dictionary<string, string[]>() { { "id", ["No item found to delete"] } };
+    var validationErrors = new Dictionary<string, string[]>();
     var message = "Validation failed";
     TodoItem? todoItem = null;
     var existingTodoItems = await todoItemsRepository.GetByIds([command.TodoItemId]);
@@ -20,8 +20,8 @@ public class DeleteTodoItemHandler(ITodoItemsRepository todoItemsRepository, Tod
     }
     if (existingTodoItems.Count != 1)
     {
-      message = $"{existingTodoItems.Count} found";
-      validationErrors["id"] = ["There should be exactly one todo item to delete"];
+      message = $"{existingTodoItems.Count} todo item(s) found";
+      validationErrors["Item.Id"] = ["No todo items or more than one todo item correspondence to delete"];
     }
 
     return new DeleteTodoItemResult
