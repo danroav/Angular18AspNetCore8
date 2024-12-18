@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {
   CreateTodoItem,
   CreateTodoItemResponse,
@@ -164,9 +164,9 @@ describe('Todo Item store', () => {
         );
         return expectedChangePromise;
       });
-      it('should onlly update message and validation errors when validation errors', async () => {
+      it('should update message and validation errors when validation errors', async () => {
         //Arrange
-        const givenCreateTodoItemResponse: CreateTodoItemResponse = {
+        const givenResponse: CreateTodoItemResponse = {
           item: {
             description: 'response description',
             id: 12,
@@ -178,8 +178,17 @@ describe('Todo Item store', () => {
             description: ['response validation description'],
           },
         };
-        spyHttpClientPost.and.returnValue(of(givenCreateTodoItemResponse));
-
+        spyHttpClientPost.and.returnValue(
+          new Observable((subscriber) => {
+            subscriber.error(
+              new HttpErrorResponse({
+                error: givenResponse,
+                status: 400,
+              })
+            );
+            subscriber.complete();
+          })
+        );
         const expectedChangePromise = new Promise<void>((resolve, reject) => {
           reaction(
             () => ({
@@ -191,8 +200,8 @@ describe('Todo Item store', () => {
               try {
                 expect(_arg).toEqual({
                   r1: givenTodoItem,
-                  r2: givenCreateTodoItemResponse.message,
-                  r3: givenCreateTodoItemResponse.validationErrors,
+                  r2: givenResponse.message,
+                  r3: givenResponse.validationErrors,
                 });
                 resolve();
               } catch (error) {
@@ -356,10 +365,10 @@ describe('Todo Item store', () => {
         return expectedChangePromise;
       });
 
-      it('should onlly update message and validation errors when validation errors', async () => {
+      it('should update message and validation errors when validation errors', async () => {
         //Arrange
         givenTodoItem.id = 4567;
-        const givenUpdateTodoItemResponse: UpdateTodoItemResponse = {
+        const givenResponse: UpdateTodoItemResponse = {
           item: {
             description: 'update response description',
             id: 12,
@@ -371,7 +380,14 @@ describe('Todo Item store', () => {
             description: ['update response validation description'],
           },
         };
-        spyHttpClientPost.and.returnValue(of(givenUpdateTodoItemResponse));
+        spyHttpClientPost.and.returnValue(
+          new Observable((subscriber) => {
+            subscriber.error(
+              new HttpErrorResponse({ error: givenResponse, status: 400 })
+            );
+            subscriber.complete();
+          })
+        );
         const givenUpdateTodoItem: UpdateTodoItem = {
           item: {
             id: givenTodoItem.id,
@@ -397,8 +413,8 @@ describe('Todo Item store', () => {
               try {
                 expect(_arg).toEqual({
                   r1: givenTodoItem,
-                  r2: givenUpdateTodoItemResponse.message,
-                  r3: givenUpdateTodoItemResponse.validationErrors,
+                  r2: givenResponse.message,
+                  r3: givenResponse.validationErrors,
                 });
                 resolve();
               } catch (error) {

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { makeAutoObservable, runInAction } from 'mobx';
 import {
   CreateTodoItem,
@@ -23,8 +23,35 @@ export class TodoItemStore {
     this.todoItem = givenTodoItem;
     makeAutoObservable(this);
   }
+  handleCreateResponse(result: CreateTodoItemResponse) {
+    if (Object.keys(result.validationErrors).length === 0) {
+      this.todoItem = result.item;
+    }
+    this.actionMessage = result.message;
+    this.actionValidationErrors = result.validationErrors;
+    this.mode = 'view';
+  }
+  handleUpdateResponse(result: UpdateTodoItemResponse) {
+    if (Object.keys(result.validationErrors).length === 0) {
+      this.todoItem = result.item;
+    }
+    this.actionMessage = result.message;
+    this.actionValidationErrors = result.validationErrors;
+    this.mode = 'view';
+  }
+  handleErrorResponse(error: any) {
+    if (error['status'] === 400) {
+      const badRequest = error as HttpErrorResponse;
+      this.actionMessage = badRequest.error.message;
+      this.actionValidationErrors = badRequest.error.validationErrors;
+      this.mode = 'edit';
+      return;
+    }
+    this.actionMessage = error.detail;
+    this.actionValidationErrors = {};
+    this.mode = 'edit';
+  }
   save(description: string, status: string, dueDate?: Date) {
-    const self = this;
     if (this.todoItem.id === 0) {
       const newTodoPostBody: CreateTodoItem = {
         description: description,
@@ -32,57 +59,36 @@ export class TodoItemStore {
         dueDate: dueDate,
       };
       this.httpClient
-        .post('/api/todo-items/create', newTodoPostBody)
+        .post<CreateTodoItemResponse>('/api/todo-items/create', newTodoPostBody)
         .subscribe({
           next: (result) => {
-            const value = result as CreateTodoItemResponse;
-            runInAction(() => {
-              if (Object.keys(value.validationErrors).length === 0) {
-                self.todoItem = value.item;
-              }
-              self.actionMessage = value.message;
-              self.actionValidationErrors = value.validationErrors;
-              self.mode = 'view';
-            });
+            this.handleCreateResponse(result);
           },
           error: (error) => {
-            runInAction(() => {
-              self.actionMessage = error.detail;
-              self.actionValidationErrors = {};
-              self.mode = 'edit';
-            });
+            this.handleErrorResponse(error);
           },
         });
       return;
     }
     const updateTodoPostBody: UpdateTodoItem = {
       item: {
-        id: self.todoItem.id,
+        id: this.todoItem.id,
         description: description,
         status: status,
         dueDate: dueDate,
       },
     };
     this.httpClient
-      .post('/api/todo-items/update', updateTodoPostBody)
+      .post<UpdateTodoItemResponse>(
+        '/api/todo-items/update',
+        updateTodoPostBody
+      )
       .subscribe({
         next: (result) => {
-          const value = result as UpdateTodoItemResponse;
-          runInAction(() => {
-            if (Object.keys(value.validationErrors).length === 0) {
-              self.todoItem = value.item;
-            }
-            self.actionMessage = value.message;
-            self.actionValidationErrors = value.validationErrors;
-            self.mode = 'view';
-          });
+          this.handleUpdateResponse(result);
         },
         error: (error) => {
-          runInAction(() => {
-            self.actionMessage = error.detail;
-            self.actionValidationErrors = {};
-            self.mode = 'edit';
-          });
+          this.handleErrorResponse(error);
         },
       });
   }
