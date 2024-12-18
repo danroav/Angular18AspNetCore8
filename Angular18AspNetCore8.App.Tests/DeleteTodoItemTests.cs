@@ -93,10 +93,10 @@ public class DeleteTodoItemTests
     var expectedResult = new DeleteTodoItemResult
     {
       Item = null,
-      Message = $"{existingTodoItemCount} found",
+      Message = $"{existingTodoItemCount} todo item(s) found",
       ValidationErrors = new Dictionary<string, string[]>
       {
-        {"id",["There should be exactly one todo item to delete"] }
+        {"Item.Id",["No todo items or more than one todo item correspondence to delete"] }
       }
     };
     mockTodoItemsRepository.Setup(x => x.GetByIds(It.IsAny<IList<int>>())).ReturnsAsync([.. givenExistingTodoItems]);
