@@ -9,17 +9,19 @@ import {
   UpdateTodoItemResponse,
   ValidationErrors,
 } from '../models/todo-items-models';
+import { TodoItemsStore } from './todo-items.store';
 export class TodoItemStore {
   mode: StoreMode = 'view';
   actionMessage: string = '';
   actionValidationErrors: ValidationErrors<TodoItem> = {};
   todoItem: TodoItem;
-  constructor(public givenTodoItem: TodoItem, private httpClient: HttpClient) {
+  constructor(
+    public givenTodoItem: TodoItem,
+    private todoItemsStore: TodoItemsStore,
+    private httpClient: HttpClient
+  ) {
     this.todoItem = givenTodoItem;
     makeAutoObservable(this);
-  }
-  setMode(mode: StoreMode) {
-    this.mode = mode;
   }
   save(description: string, status: string, dueDate?: Date) {
     const self = this;
@@ -33,7 +35,6 @@ export class TodoItemStore {
         .post('/api/todo-items/create', newTodoPostBody)
         .subscribe({
           next: (result) => {
-            console.log('next', result);
             const value = result as CreateTodoItemResponse;
             runInAction(() => {
               if (Object.keys(value.validationErrors).length === 0) {
@@ -45,7 +46,6 @@ export class TodoItemStore {
             });
           },
           error: (error) => {
-            console.log('error', error);
             runInAction(() => {
               self.actionMessage = error.detail;
               self.actionValidationErrors = {};
@@ -85,5 +85,20 @@ export class TodoItemStore {
           });
         },
       });
+  }
+  startEdit() {
+    this.mode = 'edit';
+  }
+  cancelEdit() {
+    console.log('todoitem', this.todoItem.id);
+    if (this.todoItem.id === 0) {
+      this.delete();
+      return;
+    }
+    this.todoItem = this.givenTodoItem;
+    this.mode = 'view';
+  }
+  delete() {
+    this.todoItemsStore.delete(this);
   }
 }

@@ -50,14 +50,12 @@ export class TodoItemComponent implements OnInit, OnDestroy {
     this.reactionDisposers.push(
       autorun(() => {
         this.runs[0]++;
-        console.log('mode runs', this.runs[0]);
         this.mode = this.todoItemStore.mode;
       })
     );
     this.reactionDisposers.push(
       autorun(() => {
         this.runs[1]++;
-        console.log('item runs', this.runs[1]);
         this.todoItem = this.todoItemStore.todoItem;
         this.formGroup.setValue(this.todoItem as any);
       })
@@ -65,7 +63,6 @@ export class TodoItemComponent implements OnInit, OnDestroy {
     this.reactionDisposers.push(
       autorun(() => {
         this.runs[2]++;
-        console.log('messages runs', this.runs[2]);
 
         this.actionMessage = this.todoItemStore.actionMessage;
         this.actionValidationErrors = this.todoItemStore.actionValidationErrors;
@@ -77,14 +74,10 @@ export class TodoItemComponent implements OnInit, OnDestroy {
     );
   }
   edit() {
-    this.todoItemStore.setMode('edit');
+    this.todoItemStore.startEdit();
   }
   cancel() {
-    if (this.todoItem.id === 0) {
-      this.delete();
-    }
-    this.todoItem = this.todoItemStore.todoItem;
-    this.todoItemStore.setMode('view');
+    this.todoItemStore.cancelEdit();
   }
   save() {
     this.todoItemStore.save(
@@ -94,6 +87,6 @@ export class TodoItemComponent implements OnInit, OnDestroy {
     );
   }
   delete() {
-    this.todoItemsStore.delete(this.todoItemStore);
+    this.todoItemStore.delete();
   }
 }

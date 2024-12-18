@@ -47,7 +47,8 @@ describe('Todo Items Store', () => {
             try {
               expect(testTodoItemsStore.todoItems).toEqual(
                 givenResponseTodoItems.map(
-                  (t) => new TodoItemStore(t, mockHttpClient)
+                  (t) =>
+                    new TodoItemStore(t, testTodoItemsStore, mockHttpClient)
                 )
               );
               expect(testTodoItemsStore.actionMessage).toEqual(
@@ -108,10 +109,16 @@ describe('Todo Items Store', () => {
               expect(_arg).toEqual({
                 r1: [
                   ...givenTodoItems.map(
-                    (t) => new TodoItemStore(t, givenLighterHttpClient)
+                    (t) =>
+                      new TodoItemStore(
+                        t,
+                        testTodoItemsStore,
+                        givenLighterHttpClient
+                      )
                   ),
                   new TodoItemStore(
                     expectedNewTodoItem,
+                    testTodoItemsStore,
                     givenLighterHttpClient
                   ),
                 ],
@@ -129,7 +136,11 @@ describe('Todo Items Store', () => {
       //Act
       const actualResult = testTodoItemsStore.addNew();
       expect(actualResult).toEqual(
-        new TodoItemStore(expectedNewTodoItem, givenLighterHttpClient)
+        new TodoItemStore(
+          expectedNewTodoItem,
+          testTodoItemsStore,
+          givenLighterHttpClient
+        )
       );
       //Assert
       return changePromise;

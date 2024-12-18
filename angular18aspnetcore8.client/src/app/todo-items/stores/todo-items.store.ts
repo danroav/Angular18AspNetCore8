@@ -23,19 +23,19 @@ export class TodoItemsStore {
   setTodoItems(todoItems: TodoItem[], message: string) {
     this.action = 'setTodoItems';
     this.todoItems = todoItems.map(
-      (t) => new TodoItemStore(t, this.httpClient)
+      (t) => new TodoItemStore(t, this, this.httpClient)
     );
     this.actionMessage = message;
   }
   getAllTodoItems() {
     this.action = 'getAllTodoItems';
     this.actionMessage = 'Getting all todo items...';
+    const self = this;
     this.httpClient.get('/api/todo-items/index').subscribe((result) => {
       const value = result as GetAllTodoItemsResponse;
-      const self = this;
       runInAction(() => {
         self.todoItems = value.items.map(
-          (t) => new TodoItemStore(t, this.httpClient)
+          (t) => new TodoItemStore(t, this, this.httpClient)
         );
         self.actionMessage = value.message;
       });
@@ -49,7 +49,7 @@ export class TodoItemsStore {
       status: 'To-do',
       dueDate: undefined,
     };
-    const newTodoStore = new TodoItemStore(newTodo, this.httpClient);
+    const newTodoStore = new TodoItemStore(newTodo, this, this.httpClient);
     this.todoItems = [...this.todoItems, newTodoStore];
     this.actionMessage = 'Adding new todo';
     return newTodoStore;
