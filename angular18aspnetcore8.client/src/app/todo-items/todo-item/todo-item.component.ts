@@ -7,7 +7,6 @@ import {
 import { autorun, IReactionDisposer } from 'mobx';
 import { TodoItemStore } from '../stores/todo-item.store';
 import { FormControl, FormGroup } from '@angular/forms';
-import { TodoItemsStore } from '../stores/todo-items.store';
 
 @Component({
   selector: '[todo-item]',
@@ -17,8 +16,6 @@ import { TodoItemsStore } from '../stores/todo-items.store';
 export class TodoItemComponent implements OnInit, OnDestroy {
   @Input({ required: true })
   todoItemStore!: TodoItemStore;
-  @Input({ required: true })
-  todoItemsStore!: TodoItemsStore;
 
   todoItem: TodoItem = {
     description: '',
