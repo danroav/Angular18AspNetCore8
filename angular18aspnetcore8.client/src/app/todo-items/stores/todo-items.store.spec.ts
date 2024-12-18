@@ -5,6 +5,7 @@ import {
   DeleteTodoItem,
   DeleteTodoItemResponse,
   GetAllTodoItemsResponse,
+  mapTodoItemValidationErrors,
   TodoItem,
 } from '../models/todo-items-models';
 import { Observable, of } from 'rxjs';
@@ -344,7 +345,9 @@ describe('Todo Items Store', () => {
             try {
               expect(_arg).toEqual({
                 r2: givenDeleteTodoItemResponse.message,
-                r3: givenDeleteTodoItemResponse.validationErrors,
+                r3: mapTodoItemValidationErrors(
+                  givenDeleteTodoItemResponse.validationErrors
+                ),
               });
               resolve();
             } catch (error) {

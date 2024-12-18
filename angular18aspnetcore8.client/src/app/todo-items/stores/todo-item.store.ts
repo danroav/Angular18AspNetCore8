@@ -3,6 +3,7 @@ import { makeAutoObservable } from 'mobx';
 import {
   CreateTodoItem,
   CreateTodoItemResponse,
+  mapTodoItemValidationErrors,
   StoreMode,
   TodoItem,
   UpdateTodoItem,
@@ -28,7 +29,9 @@ export class TodoItemStore {
       this.todoItem = result.item;
     }
     this.actionMessage = result.message;
-    this.actionValidationErrors = result.validationErrors;
+    this.actionValidationErrors = mapTodoItemValidationErrors(
+      result.validationErrors
+    );
     this.mode = 'view';
   }
   handleUpdateResponse(result: UpdateTodoItemResponse) {
@@ -36,14 +39,18 @@ export class TodoItemStore {
       this.todoItem = result.item;
     }
     this.actionMessage = result.message;
-    this.actionValidationErrors = result.validationErrors;
+    this.actionValidationErrors = mapTodoItemValidationErrors(
+      result.validationErrors
+    );
     this.mode = 'view';
   }
   handleErrorResponse(error: any) {
     if (error['status'] === 400) {
       const badRequest = error as HttpErrorResponse;
       this.actionMessage = badRequest.error.message;
-      this.actionValidationErrors = badRequest.error.validationErrors;
+      this.actionValidationErrors = mapTodoItemValidationErrors(
+        badRequest.error.validationErrors
+      );
       this.mode = 'edit';
       return;
     }

@@ -1,3 +1,22 @@
+export function mapTodoItemValidationErrors(
+  validationErrors: ValidationErrors<{ [key: string]: string[] }>
+) {
+  const result: ValidationErrors<TodoItem> = {};
+  if (Object.hasOwn(validationErrors, 'Item.Id')) {
+    result.id = validationErrors['Item.Id'];
+  }
+  if (Object.hasOwn(validationErrors, 'Item.Description')) {
+    result.description = validationErrors['Item.Description'];
+  }
+  if (Object.hasOwn(validationErrors, 'Item.DueDate')) {
+    result.dueDate = validationErrors['Item.DueDate'];
+  }
+  if (Object.hasOwn(validationErrors, 'Item.Status')) {
+    result.status = validationErrors['Item.Status'];
+  }
+  return result;
+}
+
 export type ValidationErrors<T> = {
   [property in keyof T]?: string[];
 };
@@ -19,7 +38,7 @@ export interface CreateTodoItem {
 }
 export interface CreateTodoItemResponse {
   item: TodoItem;
-  validationErrors: ValidationErrors<TodoItem>;
+  validationErrors: ValidationErrors<{ [key: string]: string[] }>;
   message: string;
 }
 export interface UpdateTodoItem {
@@ -27,7 +46,7 @@ export interface UpdateTodoItem {
 }
 export interface UpdateTodoItemResponse {
   item: TodoItem;
-  validationErrors: ValidationErrors<TodoItem>;
+  validationErrors: ValidationErrors<{ [key: string]: string[] }>;
   message: string;
 }
 
@@ -36,6 +55,6 @@ export interface DeleteTodoItem {
 }
 export interface DeleteTodoItemResponse {
   item?: TodoItem;
-  validationErrors: ValidationErrors<TodoItem>;
+  validationErrors: ValidationErrors<{ [key: string]: string[] }>;
   message: string;
 }

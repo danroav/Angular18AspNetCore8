@@ -4,7 +4,7 @@ import {
   TodoItem,
   ValidationErrors,
 } from '../models/todo-items-models';
-import { autorun, IReactionDisposer } from 'mobx';
+import { autorun, IReactionDisposer, toJS } from 'mobx';
 import { TodoItemStore } from '../stores/todo-item.store';
 import { FormControl, FormGroup } from '@angular/forms';
 
@@ -33,7 +33,7 @@ export class TodoItemComponent implements OnInit, OnDestroy {
     status: new FormControl<string | undefined>(''),
     dueDate: new FormControl<Date | undefined>(undefined),
   });
-  private reactionDisposers: IReactionDisposer[] = [];
+  private readonly reactionDisposers: IReactionDisposer[] = [];
 
   constructor() {}
   ngOnDestroy(): void {
@@ -59,8 +59,10 @@ export class TodoItemComponent implements OnInit, OnDestroy {
         this.actionMessage = this.todoItemStore.actionMessage;
         this.actionValidationErrors = this.todoItemStore.actionValidationErrors;
         this.formGroup.setErrors(null);
-        for (let [key, value] of Object.entries(this.actionValidationErrors)) {
-          this.formGroup.get(key)?.setErrors({ error: value });
+        for (let [key, value] of Object.entries(
+          toJS(this.actionValidationErrors)
+        )) {
+          this.formGroup.get(key)?.setErrors({ error: value.join('. ') });
         }
       })
     );

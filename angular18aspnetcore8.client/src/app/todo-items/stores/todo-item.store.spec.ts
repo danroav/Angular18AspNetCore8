@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {
   CreateTodoItem,
   CreateTodoItemResponse,
+  mapTodoItemValidationErrors,
   TodoItem,
   UpdateTodoItem,
   UpdateTodoItemResponse,
@@ -201,7 +202,9 @@ describe('Todo Item store', () => {
                 expect(_arg).toEqual({
                   r1: givenTodoItem,
                   r2: givenResponse.message,
-                  r3: givenResponse.validationErrors,
+                  r3: mapTodoItemValidationErrors(
+                    givenResponse.validationErrors
+                  ),
                 });
                 resolve();
               } catch (error) {
@@ -414,7 +417,9 @@ describe('Todo Item store', () => {
                 expect(_arg).toEqual({
                   r1: givenTodoItem,
                   r2: givenResponse.message,
-                  r3: givenResponse.validationErrors,
+                  r3: mapTodoItemValidationErrors(
+                    givenResponse.validationErrors
+                  ),
                 });
                 resolve();
               } catch (error) {

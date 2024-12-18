@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {
   DeleteTodoItem,
   DeleteTodoItemResponse,
   GetAllTodoItemsResponse,
+  mapTodoItemValidationErrors,
   TodoItem,
   ValidationErrors,
 } from '../models/todo-items-models';
@@ -72,20 +73,29 @@ export class TodoItemsStore {
     }
     const self = this;
     this.httpClient
-      .post('/api/todo-items/delete', {
+      .post<DeleteTodoItemResponse>('/api/todo-items/delete', {
         todoItemId: toRemove.todoItem.id,
       } as DeleteTodoItem)
       .subscribe({
         next: (result) => {
-          const value = result as DeleteTodoItemResponse;
           runInAction(() => {
             self.todoItems = expectedTodoItemsAfterDelete;
-            self.actionMessage = value.message;
-            self.actionValidationErrors = value.validationErrors;
+            self.actionMessage = result.message;
+            self.actionValidationErrors = mapTodoItemValidationErrors(
+              result.validationErrors
+            );
           });
         },
         error: (error) => {
           runInAction(() => {
+            if (error['status'] === 400) {
+              const badRequest = error as HttpErrorResponse;
+              self.actionMessage = badRequest.error.message;
+              self.actionValidationErrors = mapTodoItemValidationErrors(
+                badRequest.error.validationErrors
+              );
+              return;
+            }
             self.actionMessage = error.detail;
             self.actionValidationErrors = {};
           });
