@@ -11,11 +11,12 @@ import { TodoItemsStore } from './todo-items/stores/todo-items.store';
 import { TodoItemsComponent } from './todo-items/todo-items.component';
 import { TodoItemComponent } from './todo-items/todo-item/todo-item.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 @NgModule({
   declarations: [AppComponent, TodoItemsComponent, TodoItemComponent],
   imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule],
-  providers: [provideHttpClient(withInterceptorsFromDi()), TodoItemsStore],
+  providers: [provideHttpClient(withInterceptorsFromDi()), TodoItemsStore, provideAnimationsAsync()],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
