@@ -25,7 +25,7 @@
     id="due-date"
     title="due-date"
     type="date"
-    [formControl]="formGroup.controls.dueDate"
+    [formControl]="formGroup.controls.dueDateRead"
   />
   <div *ngIf="this.formGroup.controls.dueDate.hasError('error')">
     {{ this.formGroup.controls.dueDate.getError("error") }}

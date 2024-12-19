@@ -7,6 +7,7 @@ import {
 import { autorun, IReactionDisposer, toJS } from 'mobx';
 import { TodoItemStore } from '../stores/todo-item.store';
 import { FormControl, FormGroup } from '@angular/forms';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: '[todo-item]',
@@ -32,6 +33,7 @@ export class TodoItemComponent implements OnInit, OnDestroy {
     description: new FormControl<string | undefined>(''),
     status: new FormControl<string | undefined>(''),
     dueDate: new FormControl<Date | undefined>(undefined),
+    dueDateRead: new FormControl<string | undefined>(''),
   });
   private readonly reactionDisposers: IReactionDisposer[] = [];
 
@@ -51,7 +53,12 @@ export class TodoItemComponent implements OnInit, OnDestroy {
     this.reactionDisposers.push(
       autorun(() => {
         this.todoItem = this.todoItemStore.todoItem;
-        this.formGroup.setValue(this.todoItem as any);
+        this.formGroup.setValue({
+          ...(this.todoItem as any),
+          dueDateRead: this.todoItem.dueDate
+            ? formatDate(this.todoItem.dueDate, 'yyyy-MM-dd', 'en', '-0400')
+            : '',
+        });
       })
     );
     this.reactionDisposers.push(
@@ -74,10 +81,14 @@ export class TodoItemComponent implements OnInit, OnDestroy {
     this.todoItemStore.cancelEdit();
   }
   save() {
+    console.log('formgroup', this.formGroup);
+
     this.todoItemStore.save(
       this.formGroup.value.description ?? '',
       this.formGroup.value.status ?? '',
-      this.formGroup.value.dueDate ?? undefined
+      this.formGroup.value.dueDateRead
+        ? new Date(this.formGroup.value.dueDateRead! + 'T00:00:00-04:00')
+        : undefined
     );
   }
   delete() {
